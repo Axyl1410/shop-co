@@ -1,4 +1,4 @@
-import './assets/main.css'
+import './assets/base.css'
 
 import { VueQueryPlugin } from '@tanstack/vue-query'
 import { createPinia } from 'pinia'

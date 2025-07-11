@@ -5,7 +5,7 @@ import 'vue-sonner/style.css'
 </script>
 
 <template>
-  <Toaster :close-button="true" />
+  <Toaster close-button />
   <div class="">
     <header>
       <div class="">

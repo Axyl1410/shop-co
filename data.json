@@ -415,5 +415,176 @@
       "color": "Xanh đậm"
     }
   ],
-  "cart": []
+  "cart": [],
+  "orders": [
+    {
+      "id": 1,
+      "userId": 1,
+      "items": [
+        {
+          "id": 1,
+          "productId": 1,
+          "quantity": 2,
+          "size": "M",
+          "color": "Black",
+          "price": 120,
+          "productTitle": "T-shirt with Tape Details",
+          "productImage": "/images/pic1.png"
+        },
+        {
+          "id": 2,
+          "productId": 3,
+          "quantity": 1,
+          "size": "L",
+          "color": "Red",
+          "price": 180,
+          "productTitle": "Chechered Shirt",
+          "productImage": "/images/pic3.png"
+        }
+      ],
+      "totalAmount": 420,
+      "status": "delivered",
+      "orderDate": "2024-01-15",
+      "shippingAddress": {
+        "fullName": "John Smith",
+        "address": "123 Main Street",
+        "city": "New York",
+        "postalCode": "10001",
+        "phone": "+1-555-0123"
+      },
+      "paymentMethod": "credit_card",
+      "trackingNumber": "TRK123456789",
+      "estimatedDelivery": "2024-01-20"
+    },
+    {
+      "id": 2,
+      "userId": 2,
+      "items": [
+        {
+          "id": 3,
+          "productId": 2,
+          "quantity": 1,
+          "size": "32",
+          "color": "Dark Blue",
+          "price": 260,
+          "productTitle": "Skinny Fit Jeans",
+          "productImage": "/images/pic2.png"
+        }
+      ],
+      "totalAmount": 260,
+      "status": "shipped",
+      "orderDate": "2024-01-18",
+      "shippingAddress": {
+        "fullName": "Sarah Johnson",
+        "address": "456 Oak Avenue",
+        "city": "Los Angeles",
+        "postalCode": "90210",
+        "phone": "+1-555-0456"
+      },
+      "paymentMethod": "paypal",
+      "trackingNumber": "TRK987654321",
+      "estimatedDelivery": "2024-01-25"
+    },
+    {
+      "id": 3,
+      "userId": 3,
+      "items": [
+        {
+          "id": 4,
+          "productId": 5,
+          "quantity": 1,
+          "size": "L",
+          "color": "White",
+          "price": 242,
+          "productTitle": "Polo with Contrast Trims",
+          "productImage": "/images/pic12.png"
+        },
+        {
+          "id": 5,
+          "productId": 8,
+          "quantity": 2,
+          "size": "M",
+          "color": "Black",
+          "price": 150,
+          "productTitle": "Black Striped T-shirt",
+          "productImage": "/images/pic15.png"
+        }
+      ],
+      "totalAmount": 542,
+      "status": "processing",
+      "orderDate": "2024-01-20",
+      "shippingAddress": {
+        "fullName": "Michael Brown",
+        "address": "789 Pine Street",
+        "city": "Chicago",
+        "postalCode": "60601",
+        "phone": "+1-555-0789"
+      },
+      "paymentMethod": "credit_card"
+    },
+    {
+      "id": 4,
+      "userId": 4,
+      "items": [
+        {
+          "id": 6,
+          "productId": 9,
+          "quantity": 1,
+          "size": "M",
+          "color": "Blue",
+          "price": 232,
+          "productTitle": "Vertical Striped Shirt",
+          "productImage": "/images/pic5.png"
+        }
+      ],
+      "totalAmount": 232,
+      "status": "pending",
+      "orderDate": "2024-01-22",
+      "shippingAddress": {
+        "fullName": "Emily Davis",
+        "address": "321 Elm Street",
+        "city": "Houston",
+        "postalCode": "77001",
+        "phone": "+1-555-0321"
+      },
+      "paymentMethod": "cash_on_delivery"
+    },
+    {
+      "id": 5,
+      "userId": 5,
+      "items": [
+        {
+          "id": 7,
+          "productId": 12,
+          "quantity": 1,
+          "size": "30",
+          "color": "Light Blue",
+          "price": 210,
+          "productTitle": "Faded Skinny Jeans",
+          "productImage": "/images/pic8.png"
+        },
+        {
+          "id": 8,
+          "productId": 11,
+          "quantity": 1,
+          "size": "L",
+          "color": "Beige",
+          "price": 80,
+          "productTitle": "Loose Fit Bermuda Shorts",
+          "productImage": "/images/pic7.png"
+        }
+      ],
+      "totalAmount": 290,
+      "status": "cancelled",
+      "orderDate": "2024-01-19",
+      "shippingAddress": {
+        "fullName": "David Wilson",
+        "address": "654 Maple Drive",
+        "city": "Phoenix",
+        "postalCode": "85001",
+        "phone": "+1-555-0654"
+      },
+      "paymentMethod": "credit_card"
+    }
+  ]
 }

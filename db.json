@@ -1,0 +1,182 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "ten": "Nguyễn Văn A",
+      "matkhau": "123456",
+      "email": "vana@gmail.com"
+    },
+    {
+      "id": 2,
+      "ten": "Trần Thị B",
+      "matkhau": "abcdef",
+      "email": "tranb@gmail.com"
+    },
+    {
+      "id": 3,
+      "ten": "Lê Văn C",
+      "matkhau": "matkhau123",
+      "email": "levanc@gmail.com"
+    },
+    {
+      "name": "Trần anh tú",
+      "email": "tu@gmail.com",
+      "password": "123456789",
+      "id": 4
+    },
+    {
+      "ten": "Trần anh hào",
+      "email": "hao@gmail.com",
+      "matkhau": "123456789",
+      "id": 5
+    }
+  ],
+  "categories": [
+    {
+      "id": 1,
+      "tendm": "Trà sữa"
+    },
+    {
+      "id": 2,
+      "tendm": "Cà phê"
+    },
+    {
+      "id": 3,
+      "tendm": "Nước ép"
+    }
+  ],
+  "products": [
+    {
+      "id": 1,
+      "tensp": "Trà sữa truyền thống",
+      "gia": 30000,
+      "category_id": 1,
+      "hinh": "trasua1.jpg"
+    },
+    {
+      "id": 2,
+      "tensp": "Trà sữa trân châu đường đen",
+      "gia": 35000,
+      "category_id": 1,
+      "hinh": "trasua2.jpg"
+    },
+    {
+      "id": 3,
+      "tensp": "Cà phê sữa đá",
+      "gia": 25000,
+      "category_id": 2,
+      "hinh": "caphe1.jpg"
+    },
+    {
+      "id": 4,
+      "tensp": "Nước ép cam",
+      "gia": 40000,
+      "category_id": 3,
+      "hinh": "nuocep1.jpg"
+    }
+  ],
+  "sizes": [
+    {
+      "id": 1,
+      "tensize": "Nhỏ",
+      "price": 0
+    },
+    {
+      "id": 2,
+      "tensize": "Vừa",
+      "price": 5000
+    },
+    {
+      "id": 3,
+      "tensize": "Lớn",
+      "price": 10000
+    }
+  ],
+  "toppings": [
+    {
+      "id": 1,
+      "tentopping": "Trân châu đen",
+      "price": 5000
+    },
+    {
+      "id": 2,
+      "tentopping": "Trân châu trắng",
+      "price": 7000
+    },
+    {
+      "id": 3,
+      "tentopping": "Pudding trứng",
+      "price": 8000
+    },
+    {
+      "id": 4,
+      "tentopping": "Thạch trái cây",
+      "price": 6000
+    }
+  ],
+  "orders": [
+    {
+      "id": 1,
+      "user_id": 1,
+      "total": 75000,
+      "tranthai": "Đã thanh toán",
+      "ngayhd": "2024-06-29T00:00:00"
+    },
+    {
+      "id": 2,
+      "user_id": 2,
+      "total": 50000,
+      "tranthai": "Đang xử lý",
+      "ngayhd": "2024-06-29T00:00:00"
+    }
+  ],
+  "order_details": [
+    {
+      "id": 1,
+      "order_id": 1,
+      "product_id": 1,
+      "size_id": 2,
+      "soluongmua": 1,
+      "price": 35000
+    },
+    {
+      "id": 2,
+      "order_id": 1,
+      "product_id": 2,
+      "size_id": 3,
+      "soluongmua": 1,
+      "price": 45000
+    },
+    {
+      "id": 3,
+      "order_id": 2,
+      "product_id": 3,
+      "size_id": 1,
+      "soluongmua": 2,
+      "price": 50000
+    }
+  ],
+  "order_detail_toppings": [
+    {
+      "id": 1,
+      "order_detail_id": 1,
+      "topping_id": 1
+    },
+    {
+      "id": 2,
+      "order_detail_id": 1,
+      "topping_id": 4
+    },
+    {
+      "id": 3,
+      "order_detail_id": 2,
+      "topping_id": 2
+    },
+    {
+      "id": 4,
+      "order_detail_id": 3,
+      "topping_id": 3
+    }
+  ],
+  "cart": []
+}

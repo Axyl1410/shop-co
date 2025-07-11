@@ -1,0 +1,419 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "ten": "John Smith",
+      "matkhau": "123456",
+      "email": "john@gmail.com"
+    },
+    {
+      "id": 2,
+      "ten": "Sarah Johnson",
+      "matkhau": "abcdef",
+      "email": "sarah@gmail.com"
+    },
+    {
+      "id": 3,
+      "ten": "Michael Brown",
+      "matkhau": "password123",
+      "email": "michael@gmail.com"
+    },
+    {
+      "ten": "Emily Davis",
+      "email": "emily@gmail.com",
+      "matkhau": "123456789",
+      "id": 4
+    },
+    {
+      "ten": "David Wilson",
+      "email": "david@gmail.com",
+      "matkhau": "123456789",
+      "id": 5
+    }
+  ],
+  "product": [
+    {
+      "id": 1,
+      "title": "T-shirt with Tape Details",
+      "srcUrl": "/images/pic1.png",
+      "gallery": ["/images/pic1.png", "/images/pic10.png", "/images/pic11.png"],
+      "price": 120,
+      "discount": {
+        "amount": 0,
+        "percentage": 0
+      },
+      "rating": 4.5,
+      "sizes": ["S", "M", "L", "XL"],
+      "colors": ["Black", "White", "Blue"],
+      "description": "T-shirt with unique tape details, made from soft cotton material",
+      "category": "T-shirt",
+      "inStock": true
+    },
+    {
+      "id": 2,
+      "title": "Skinny Fit Jeans",
+      "srcUrl": "/images/pic2.png",
+      "gallery": ["/images/pic2.png"],
+      "price": 260,
+      "discount": {
+        "amount": 0,
+        "percentage": 20
+      },
+      "rating": 3.5,
+      "sizes": ["28", "30", "32", "34", "36"],
+      "colors": ["Dark Blue", "Light Blue", "Black"],
+      "description": "Skinny fit jeans with premium denim material",
+      "category": "Jeans",
+      "inStock": true
+    },
+    {
+      "id": 3,
+      "title": "Chechered Shirt",
+      "srcUrl": "/images/pic3.png",
+      "gallery": ["/images/pic3.png"],
+      "price": 180,
+      "discount": {
+        "amount": 0,
+        "percentage": 0
+      },
+      "rating": 4.5,
+      "sizes": ["S", "M", "L", "XL", "XXL"],
+      "colors": ["Red", "Green", "Brown"],
+      "description": "Checked shirt with classic design",
+      "category": "Shirt",
+      "inStock": true
+    },
+    {
+      "id": 4,
+      "title": "Sleeve Striped T-shirt",
+      "srcUrl": "/images/pic4.png",
+      "gallery": ["/images/pic4.png", "/images/pic10.png", "/images/pic11.png"],
+      "price": 160,
+      "discount": {
+        "amount": 0,
+        "percentage": 30
+      },
+      "rating": 4.5,
+      "sizes": ["S", "M", "L"],
+      "colors": ["Blue", "Red", "Yellow"],
+      "description": "Striped t-shirt with unique sleeve design",
+      "category": "T-shirt",
+      "inStock": false
+    },
+    {
+      "id": 5,
+      "title": "Polo with Contrast Trims",
+      "srcUrl": "/images/pic12.png",
+      "gallery": ["/images/pic12.png", "/images/pic10.png", "/images/pic11.png"],
+      "price": 242,
+      "discount": {
+        "amount": 0,
+        "percentage": 20
+      },
+      "rating": 4.0,
+      "sizes": ["M", "L", "XL"],
+      "colors": ["White", "Black", "Blue"],
+      "description": "Polo shirt with elegant contrast trims",
+      "category": "Polo",
+      "inStock": true
+    },
+    {
+      "id": 6,
+      "title": "Gradient Graphic T-shirt",
+      "srcUrl": "/images/pic13.png",
+      "gallery": ["/images/pic13.png", "/images/pic10.png", "/images/pic11.png"],
+      "price": 145,
+      "discount": {
+        "amount": 0,
+        "percentage": 0
+      },
+      "rating": 3.5,
+      "sizes": ["S", "M", "L", "XL"],
+      "colors": ["Blue", "Purple", "Pink"],
+      "description": "T-shirt with unique gradient pattern",
+      "category": "T-shirt",
+      "inStock": true
+    },
+    {
+      "id": 7,
+      "title": "Polo with Tipping Details",
+      "srcUrl": "/images/pic14.png",
+      "gallery": ["/images/pic14.png"],
+      "price": 180,
+      "discount": {
+        "amount": 0,
+        "percentage": 0
+      },
+      "rating": 4.5,
+      "sizes": ["S", "M", "L"],
+      "colors": ["Black", "Blue", "Red"],
+      "description": "Polo shirt with delicate tipping details",
+      "category": "Polo",
+      "inStock": true
+    },
+    {
+      "id": 8,
+      "title": "Black Striped T-shirt",
+      "srcUrl": "/images/pic15.png",
+      "gallery": ["/images/pic15.png"],
+      "price": 150,
+      "discount": {
+        "amount": 0,
+        "percentage": 30
+      },
+      "rating": 5.0,
+      "sizes": ["M", "L", "XL", "XXL"],
+      "colors": ["Black", "White", "Gray"],
+      "description": "Black striped t-shirt with minimalist design",
+      "category": "T-shirt",
+      "inStock": true
+    },
+    {
+      "id": 9,
+      "title": "Vertical Striped Shirt",
+      "srcUrl": "/images/pic5.png",
+      "gallery": ["/images/pic5.png", "/images/pic10.png", "/images/pic11.png"],
+      "price": 232,
+      "discount": {
+        "amount": 0,
+        "percentage": 20
+      },
+      "rating": 5.0,
+      "sizes": ["S", "M", "L", "XL"],
+      "colors": ["Blue", "White", "Black"],
+      "description": "Vertical striped shirt with elegant design",
+      "category": "Shirt",
+      "inStock": true
+    },
+    {
+      "id": 10,
+      "title": "Courage Graphic T-shirt",
+      "srcUrl": "/images/pic6.png",
+      "gallery": ["/images/pic6.png", "/images/pic10.png", "/images/pic11.png"],
+      "price": 145,
+      "discount": {
+        "amount": 0,
+        "percentage": 0
+      },
+      "rating": 4.0,
+      "sizes": ["S", "M", "L", "XL", "XXL"],
+      "colors": ["Black", "White", "Gray"],
+      "description": "T-shirt with unique Courage graphic design",
+      "category": "T-shirt",
+      "inStock": true
+    },
+    {
+      "id": 11,
+      "title": "Loose Fit Bermuda Shorts",
+      "srcUrl": "/images/pic7.png",
+      "gallery": ["/images/pic7.png"],
+      "price": 80,
+      "discount": {
+        "amount": 0,
+        "percentage": 0
+      },
+      "rating": 3.0,
+      "sizes": ["S", "M", "L", "XL"],
+      "colors": ["Beige", "Blue", "Black"],
+      "description": "Bermuda shorts with comfortable loose fit design",
+      "category": "Shorts",
+      "inStock": true
+    },
+    {
+      "id": 12,
+      "title": "Faded Skinny Jeans",
+      "srcUrl": "/images/pic8.png",
+      "gallery": ["/images/pic8.png"],
+      "price": 210,
+      "discount": {
+        "amount": 0,
+        "percentage": 0
+      },
+      "rating": 4.5,
+      "sizes": ["28", "30", "32", "34", "36"],
+      "colors": ["Light Blue", "Dark Blue", "Black"],
+      "description": "Skinny fit jeans with natural faded effect",
+      "category": "Jeans",
+      "inStock": true
+    }
+  ],
+  "review": [
+    {
+      "id": 1,
+      "productId": 1,
+      "userId": 1,
+      "user": "Alex K.",
+      "content": "Finding clothes that align with my personal style used to be a challenge until I discovered Shop.co. The range of options they offer is truly remarkable, catering to a variety of tastes and occasions.",
+      "rating": 5,
+      "date": "August 14, 2023",
+      "size": "M",
+      "color": "Black"
+    },
+    {
+      "id": 2,
+      "productId": 1,
+      "userId": 2,
+      "user": "Sarah M.",
+      "content": "I'm blown away by the quality and style of the clothes I received from Shop.co. From casual wear to elegant dresses, every piece I've bought has exceeded my expectations.",
+      "rating": 5,
+      "date": "August 15, 2023",
+      "size": "L",
+      "color": "White"
+    },
+    {
+      "id": 3,
+      "productId": 2,
+      "userId": 3,
+      "user": "Ethan R.",
+      "content": "This jeans is a must-have for anyone who appreciates good design. The minimalistic yet stylish pattern caught my eye, and the fit is perfect. I can see the designer's touch in every aspect of this jeans.",
+      "rating": 5,
+      "date": "August 16, 2023",
+      "size": "32",
+      "color": "Dark Blue"
+    },
+    {
+      "id": 4,
+      "productId": 3,
+      "userId": 4,
+      "user": "Olivia P.",
+      "content": "As a UI/UX enthusiast, I value simplicity and functionality. This shirt not only represents those principles but also feels great to wear. It's evident that the designer poured their creativity into making this shirt stand out.",
+      "rating": 5,
+      "date": "August 17, 2023",
+      "size": "M",
+      "color": "Red"
+    },
+    {
+      "id": 5,
+      "productId": 4,
+      "userId": 5,
+      "user": "Liam K.",
+      "content": "This t-shirt is a fusion of comfort and creativity. The fabric is soft, and the design speaks volumes about the designer's skill. It's like wearing a piece of art that reflects my passion for both design and fashion.",
+      "rating": 5,
+      "date": "August 18, 2023",
+      "size": "L",
+      "color": "Blue"
+    },
+    {
+      "id": 6,
+      "productId": 5,
+      "userId": 1,
+      "user": "Samantha D.",
+      "content": "I absolutely love this polo! The design is unique and the fabric feels so comfortable. As a fellow designer, I appreciate the attention to detail. It's become my favorite go-to shirt.",
+      "rating": 5,
+      "date": "August 19, 2023",
+      "size": "L",
+      "color": "Trắng"
+    },
+    {
+      "id": 7,
+      "productId": 6,
+      "userId": 2,
+      "user": "John D.",
+      "content": "The gradient design is absolutely stunning! The colors blend perfectly and the fit is amazing. Highly recommend this t-shirt.",
+      "rating": 4,
+      "date": "August 20, 2023",
+      "size": "M",
+      "color": "Xanh dương"
+    },
+    {
+      "id": 8,
+      "productId": 7,
+      "userId": 3,
+      "user": "Emma W.",
+      "content": "Great quality polo shirt with excellent attention to detail. The tipping details make it stand out from regular polos.",
+      "rating": 5,
+      "date": "August 21, 2023",
+      "size": "S",
+      "color": "Đen"
+    },
+    {
+      "id": 9,
+      "productId": 9,
+      "userId": 4,
+      "user": "Michael B.",
+      "content": "The vertical striped shirt is perfect for office wear. The fabric is breathable and the fit is just right.",
+      "rating": 5,
+      "date": "August 22, 2023",
+      "size": "M",
+      "color": "Xanh dương"
+    },
+    {
+      "id": 10,
+      "productId": 9,
+      "userId": 5,
+      "user": "Lisa C.",
+      "content": "Love the vertical stripes design! It's professional yet stylish. The quality is excellent for the price.",
+      "rating": 4,
+      "date": "August 23, 2023",
+      "size": "L",
+      "color": "Trắng"
+    },
+    {
+      "id": 11,
+      "productId": 10,
+      "userId": 1,
+      "user": "David K.",
+      "content": "The Courage graphic t-shirt has an amazing design. The print quality is top-notch and it's very comfortable.",
+      "rating": 4,
+      "date": "August 24, 2023",
+      "size": "XL",
+      "color": "Đen"
+    },
+    {
+      "id": 12,
+      "productId": 10,
+      "userId": 2,
+      "user": "Anna L.",
+      "content": "Great t-shirt with a meaningful message. The fabric feels soft and the graphic doesn't fade after washing.",
+      "rating": 5,
+      "date": "August 25, 2023",
+      "size": "M",
+      "color": "Trắng"
+    },
+    {
+      "id": 13,
+      "productId": 11,
+      "userId": 3,
+      "user": "Tom R.",
+      "content": "Perfect summer shorts! The loose fit is very comfortable and the material is lightweight. Great for casual wear.",
+      "rating": 3,
+      "date": "August 26, 2023",
+      "size": "L",
+      "color": "Be"
+    },
+    {
+      "id": 14,
+      "productId": 11,
+      "userId": 4,
+      "user": "Sarah J.",
+      "content": "The Bermuda shorts are exactly what I was looking for. Comfortable fit and good quality fabric.",
+      "rating": 4,
+      "date": "August 27, 2023",
+      "size": "M",
+      "color": "Xanh dương"
+    },
+    {
+      "id": 15,
+      "productId": 12,
+      "userId": 5,
+      "user": "Chris M.",
+      "content": "These faded jeans look amazing! The fit is perfect and the faded effect gives them a vintage look.",
+      "rating": 5,
+      "date": "August 28, 2023",
+      "size": "32",
+      "color": "Xanh nhạt"
+    },
+    {
+      "id": 16,
+      "productId": 12,
+      "userId": 1,
+      "user": "Rachel P.",
+      "content": "Love the faded skinny jeans! They're comfortable and the color is exactly as shown. Highly recommend!",
+      "rating": 4,
+      "date": "August 29, 2023",
+      "size": "30",
+      "color": "Xanh đậm"
+    }
+  ],
+  "cart": []
+}

@@ -127,7 +127,6 @@ export function useDeleteOrder() {
   })
 }
 
-// Special mutation for updating order status
 export function useUpdateOrderStatus() {
   const queryClient = useQueryClient()
 

@@ -104,7 +104,6 @@ export function useDeleteReview() {
   })
 }
 
-// Special mutation for creating product review
 export function useCreateProductReview() {
   const queryClient = useQueryClient()
 

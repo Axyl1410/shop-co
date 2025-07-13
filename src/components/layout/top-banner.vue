@@ -12,7 +12,7 @@ import { Button } from '../ui/button'
 			</p>
 			<Button
 				variant="ghost"
-				class="absolute top-1/2 right-0 hidden h-fit w-fit -translate-y-1/2 p-1 hover:bg-transparent sm:flex"
+				class="absolute top-1/2 right-0 hidden h-fit w-fit -translate-y-1/2 p-1 hover:bg-transparent hover:text-white sm:flex"
 				size="icon"
 				type="button"
 				aria-label="close banner"

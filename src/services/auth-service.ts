@@ -31,7 +31,7 @@ export class AuthService {
 
 	static async register(credentials: RegisterCredentials): Promise<{ user: User; token: string }> {
 		try {
-			const response = await axios.get(`${API_BASE_URL}/users`)
+			const response = await axios.get(`${API_BASE_URL}users`)
 			const users: User[] = response.data
 
 			const existingUser = users.find((u) => u.email === credentials.email)
@@ -39,17 +39,15 @@ export class AuthService {
 				throw new Error('Email đã tồn tại')
 			}
 
-			// Create new user
 			const newUser: Omit<User, 'id'> = {
 				ten: credentials.ten,
 				email: credentials.email,
 				matkhau: credentials.matkhau,
 			}
 
-			const createResponse = await axios.post(`${API_BASE_URL}/users`, newUser)
+			const createResponse = await axios.post(`${API_BASE_URL}users`, newUser)
 			const user: User = createResponse.data
 
-			// Generate token
 			const token = `token_${user.id}_${Date.now()}`
 
 			return { user, token }
@@ -67,7 +65,7 @@ export class AuthService {
 			if (tokenParts.length < 2) return null
 
 			const userId = parseInt(tokenParts[1])
-			const response = await axios.get(`${API_BASE_URL}/users/${userId}`)
+			const response = await axios.get(`${API_BASE_URL}users/${userId}`)
 			return response.data
 		} catch {
 			return null
@@ -76,7 +74,7 @@ export class AuthService {
 
 	static async updateProfile(userId: number, updates: Partial<User>): Promise<User> {
 		try {
-			const response = await axios.patch(`${API_BASE_URL}/users/${userId}`, updates)
+			const response = await axios.patch(`${API_BASE_URL}users/${userId}`, updates)
 			return response.data
 		} catch {
 			throw new Error('Không thể cập nhật thông tin')
@@ -89,14 +87,14 @@ export class AuthService {
 		newPassword: string,
 	): Promise<void> {
 		try {
-			const userResponse = await axios.get(`${API_BASE_URL}/users/${userId}`)
+			const userResponse = await axios.get(`${API_BASE_URL}users/${userId}`)
 			const user: User = userResponse.data
 
 			if (user.matkhau !== oldPassword) {
 				throw new Error('Mật khẩu cũ không đúng')
 			}
 
-			await axios.patch(`${API_BASE_URL}/users/${userId}`, {
+			await axios.patch(`${API_BASE_URL}users/${userId}`, {
 				matkhau: newPassword,
 			})
 		} catch (error) {

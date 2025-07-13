@@ -7,7 +7,7 @@ const API_BASE_URL = ServerAxiosConfig.baseURL
 export class AuthService {
 	static async login(credentials: LoginCredentials): Promise<{ user: User; token: string }> {
 		try {
-			const response = await axios.get(`${API_BASE_URL}/users`)
+			const response = await axios.get(`${API_BASE_URL}users`)
 			const users: User[] = response.data
 
 			const user = users.find(

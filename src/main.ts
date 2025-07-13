@@ -1,4 +1,5 @@
 import './assets/base.css'
+import './assets/fonts/fonts.css'
 
 import { VueQueryPlugin } from '@tanstack/vue-query'
 import { createPinia } from 'pinia'

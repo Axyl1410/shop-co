@@ -1,7 +1,5 @@
+import HomeView from '@/views/home-view.vue'
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/home-view.vue'
-
-import { requireAuth } from './guards'
 
 const router = createRouter({
 	history: createWebHistory(import.meta.env.BASE_URL),
@@ -29,12 +27,12 @@ const router = createRouter({
 			name: 'register',
 			component: () => import('@/views/register-view.vue'),
 		},
-		{
-			path: '/profile',
-			name: 'profile',
-			component: () => import('@/views/profile-view.vue'),
-			beforeEnter: requireAuth,
-		},
+		// {
+		// 	path: '/profile',
+		// 	name: 'profile',
+		// 	component: () => import('@/views/profile-view.vue'),
+		// 	beforeEnter: requireAuth,
+		// },
 		{
 			path: '/:pathMatch(.*)*',
 			name: 'not-found',

@@ -1,5 +1,5 @@
 import { ServerAxiosConfig } from '@/constant/axios-config'
-import type { LoginCredentials, RegisterCredentials, User } from '@/types/auth'
+import type { LoginCredentials, RegisterCredentials, User } from '@/types/users'
 import axios from 'axios'
 
 const API_BASE_URL = ServerAxiosConfig.baseURL
@@ -11,7 +11,7 @@ export class AuthService {
 			const users: User[] = response.data
 
 			const user = users.find(
-				(u) => u.email === credentials.email && u.matkhau === credentials.matkhau,
+				(u) => u.email === credentials.email && u.password === credentials.password,
 			)
 
 			if (!user) {
@@ -40,9 +40,17 @@ export class AuthService {
 			}
 
 			const newUser: Omit<User, 'id'> = {
-				ten: credentials.ten,
+				username: credentials.username,
 				email: credentials.email,
-				matkhau: credentials.matkhau,
+				password: credentials.password,
+				firstName: credentials.firstName,
+				lastName: credentials.lastName,
+				phone: credentials.phone,
+				avatar: credentials.avatar,
+				role: 'customer',
+				isActive: true,
+				createdAt: new Date().toISOString(),
+				updatedAt: new Date().toISOString(),
 			}
 
 			const createResponse = await axios.post(`${API_BASE_URL}users`, newUser)
@@ -69,39 +77,6 @@ export class AuthService {
 			return response.data
 		} catch {
 			return null
-		}
-	}
-
-	static async updateProfile(userId: number, updates: Partial<User>): Promise<User> {
-		try {
-			const response = await axios.patch(`${API_BASE_URL}users/${userId}`, updates)
-			return response.data
-		} catch {
-			throw new Error('Không thể cập nhật thông tin')
-		}
-	}
-
-	static async changePassword(
-		userId: number,
-		oldPassword: string,
-		newPassword: string,
-	): Promise<void> {
-		try {
-			const userResponse = await axios.get(`${API_BASE_URL}users/${userId}`)
-			const user: User = userResponse.data
-
-			if (user.matkhau !== oldPassword) {
-				throw new Error('Mật khẩu cũ không đúng')
-			}
-
-			await axios.patch(`${API_BASE_URL}users/${userId}`, {
-				matkhau: newPassword,
-			})
-		} catch (error) {
-			if (axios.isAxiosError(error)) {
-				throw new Error('Lỗi kết nối server')
-			}
-			throw error
 		}
 	}
 }

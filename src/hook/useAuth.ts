@@ -1,5 +1,5 @@
 import { useAuthStore } from '@/stores/use-auth-store'
-import type { LoginCredentials, RegisterCredentials } from '@/types/auth'
+import type { LoginCredentials, RegisterCredentials } from '@/types'
 
 export function useAuth() {
 	const authStore = useAuthStore()
@@ -16,12 +16,12 @@ export function useAuth() {
 		authStore.logout()
 	}
 
-	const updateProfile = async (updates: { ten?: string; email?: string }) => {
-		return await authStore.updateProfile(updates)
+	const refreshUser = async () => {
+		return await authStore.refreshUser()
 	}
 
-	const changePassword = async (oldPassword: string, newPassword: string) => {
-		return await authStore.changePassword(oldPassword, newPassword)
+	const initializeAuth = () => {
+		authStore.initializeAuth()
 	}
 
 	return {
@@ -31,7 +31,7 @@ export function useAuth() {
 		login,
 		register,
 		logout,
-		updateProfile,
-		changePassword,
+		initializeAuth,
+		refreshUser,
 	}
 }

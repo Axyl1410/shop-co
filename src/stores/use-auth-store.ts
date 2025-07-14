@@ -1,5 +1,5 @@
 import { AuthService } from '@/services/auth-service'
-import type { LoginCredentials, RegisterCredentials, User } from '@/types/auth'
+import type { LoginCredentials, RegisterCredentials, User } from '@/types/users'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 
@@ -86,35 +86,6 @@ export const useAuthStore = defineStore(
 			}
 		}
 
-		async function updateProfile(updates: Partial<User>) {
-			if (!user.value) throw new Error('Chưa đăng nhập')
-
-			try {
-				const updatedUser = await AuthService.updateProfile(user.value.id, updates)
-				user.value = updatedUser
-				return { success: true }
-			} catch (error) {
-				return {
-					success: false,
-					error: error instanceof Error ? error.message : 'Cập nhật thất bại',
-				}
-			}
-		}
-
-		async function changePassword(oldPassword: string, newPassword: string) {
-			if (!user.value) throw new Error('Chưa đăng nhập')
-
-			try {
-				await AuthService.changePassword(user.value.id, oldPassword, newPassword)
-				return { success: true }
-			} catch (error) {
-				return {
-					success: false,
-					error: error instanceof Error ? error.message : 'Đổi mật khẩu thất bại',
-				}
-			}
-		}
-
 		function initializeAuth() {
 			if (user.value && token.value && expiresAt.value) {
 				const now = Date.now()
@@ -136,8 +107,6 @@ export const useAuthStore = defineStore(
 			register,
 			logout,
 			refreshUser,
-			updateProfile,
-			changePassword,
 			initializeAuth,
 		}
 	},

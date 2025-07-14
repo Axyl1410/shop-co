@@ -2,418 +2,922 @@
   "users": [
     {
       "id": 1,
-      "ten": "John Smith",
-      "matkhau": "123456",
-      "email": "john@gmail.com"
+      "username": "johnsmith",
+      "email": "john@gmail.com",
+      "password": "hashed_password_123",
+      "firstName": "John",
+      "lastName": "Smith",
+      "phone": "+1-555-0123",
+      "avatar": "/avatars/john.jpg",
+      "role": "customer",
+      "isActive": true,
+      "createdAt": "2024-01-01T00:00:00Z",
+      "updatedAt": "2024-01-15T10:30:00Z"
     },
     {
       "id": 2,
-      "ten": "Sarah Johnson",
-      "matkhau": "abcdef",
-      "email": "sarah@gmail.com"
+      "username": "sarahjohnson",
+      "email": "sarah@gmail.com",
+      "password": "hashed_password_456",
+      "firstName": "Sarah",
+      "lastName": "Johnson",
+      "phone": "+1-555-0456",
+      "avatar": "/avatars/sarah.jpg",
+      "role": "customer",
+      "isActive": true,
+      "createdAt": "2024-01-02T00:00:00Z",
+      "updatedAt": "2024-01-16T14:20:00Z"
     },
     {
       "id": 3,
-      "ten": "Michael Brown",
-      "matkhau": "password123",
-      "email": "michael@gmail.com"
-    },
-    {
-      "ten": "Emily Davis",
-      "email": "emily@gmail.com",
-      "matkhau": "123456789",
-      "id": 4
-    },
-    {
-      "ten": "David Wilson",
-      "email": "david@gmail.com",
-      "matkhau": "123456789",
-      "id": 5
-    }
-  ],
-  "product": [
-    {
-      "id": 1,
-      "title": "T-shirt with Tape Details",
-      "srcUrl": "/images/pic1.png",
-      "gallery": ["/images/pic1.png", "/images/pic10.png", "/images/pic11.png"],
-      "price": 120,
-      "discount": {
-        "amount": 0,
-        "percentage": 0
-      },
-      "rating": 4.5,
-      "sizes": ["S", "M", "L", "XL"],
-      "colors": ["Black", "White", "Blue"],
-      "description": "T-shirt with unique tape details, made from soft cotton material",
-      "category": "T-shirt",
-      "inStock": true
-    },
-    {
-      "id": 2,
-      "title": "Skinny Fit Jeans",
-      "srcUrl": "/images/pic2.png",
-      "gallery": ["/images/pic2.png"],
-      "price": 260,
-      "discount": {
-        "amount": 0,
-        "percentage": 20
-      },
-      "rating": 3.5,
-      "sizes": ["28", "30", "32", "34", "36"],
-      "colors": ["Dark Blue", "Light Blue", "Black"],
-      "description": "Skinny fit jeans with premium denim material",
-      "category": "Jeans",
-      "inStock": true
-    },
-    {
-      "id": 3,
-      "title": "Chechered Shirt",
-      "srcUrl": "/images/pic3.png",
-      "gallery": ["/images/pic3.png"],
-      "price": 180,
-      "discount": {
-        "amount": 0,
-        "percentage": 0
-      },
-      "rating": 4.5,
-      "sizes": ["S", "M", "L", "XL", "XXL"],
-      "colors": ["Red", "Green", "Brown"],
-      "description": "Checked shirt with classic design",
-      "category": "Shirt",
-      "inStock": true
+      "username": "michaelbrown",
+      "email": "michael@gmail.com",
+      "password": "hashed_password_789",
+      "firstName": "Michael",
+      "lastName": "Brown",
+      "phone": "+1-555-0789",
+      "avatar": "/avatars/michael.jpg",
+      "role": "customer",
+      "isActive": true,
+      "createdAt": "2024-01-03T00:00:00Z",
+      "updatedAt": "2024-01-17T09:15:00Z"
     },
     {
       "id": 4,
-      "title": "Sleeve Striped T-shirt",
-      "srcUrl": "/images/pic4.png",
-      "gallery": ["/images/pic4.png", "/images/pic10.png", "/images/pic11.png"],
-      "price": 160,
-      "discount": {
-        "amount": 0,
-        "percentage": 30
-      },
-      "rating": 4.5,
-      "sizes": ["S", "M", "L"],
-      "colors": ["Blue", "Red", "Yellow"],
-      "description": "Striped t-shirt with unique sleeve design",
-      "category": "T-shirt",
-      "inStock": false
+      "username": "emilydavis",
+      "email": "emily@gmail.com",
+      "password": "hashed_password_101",
+      "firstName": "Emily",
+      "lastName": "Davis",
+      "phone": "+1-555-0321",
+      "avatar": "/avatars/emily.jpg",
+      "role": "customer",
+      "isActive": true,
+      "createdAt": "2024-01-04T00:00:00Z",
+      "updatedAt": "2024-01-18T16:45:00Z"
     },
     {
       "id": 5,
-      "title": "Polo with Contrast Trims",
-      "srcUrl": "/images/pic12.png",
-      "gallery": ["/images/pic12.png", "/images/pic10.png", "/images/pic11.png"],
-      "price": 242,
-      "discount": {
-        "amount": 0,
-        "percentage": 20
+      "username": "davidwilson",
+      "email": "david@gmail.com",
+      "password": "hashed_password_112",
+      "firstName": "David",
+      "lastName": "Wilson",
+      "phone": "+1-555-0654",
+      "avatar": "/avatars/david.jpg",
+      "role": "customer",
+      "isActive": true,
+      "createdAt": "2024-01-05T00:00:00Z",
+      "updatedAt": "2024-01-19T11:30:00Z"
+    }
+  ],
+  "categories": [
+    {
+      "id": 1,
+      "name": "T-shirt",
+      "slug": "t-shirt",
+      "description": "Comfortable and stylish t-shirts for everyday wear",
+      "image": "/categories/t-shirt.jpg",
+      "parentId": null,
+      "isActive": true,
+      "sortOrder": 1
+    },
+    {
+      "id": 2,
+      "name": "Jeans",
+      "slug": "jeans",
+      "description": "Premium denim jeans in various fits and styles",
+      "image": "/categories/jeans.jpg",
+      "parentId": null,
+      "isActive": true,
+      "sortOrder": 2
+    },
+    {
+      "id": 3,
+      "name": "Shirt",
+      "slug": "shirt",
+      "description": "Elegant shirts for formal and casual occasions",
+      "image": "/categories/shirt.jpg",
+      "parentId": null,
+      "isActive": true,
+      "sortOrder": 3
+    },
+    {
+      "id": 4,
+      "name": "Polo",
+      "slug": "polo",
+      "description": "Classic polo shirts with modern designs",
+      "image": "/categories/polo.jpg",
+      "parentId": null,
+      "isActive": true,
+      "sortOrder": 4
+    },
+    {
+      "id": 5,
+      "name": "Shorts",
+      "slug": "shorts",
+      "description": "Comfortable shorts for casual and sport activities",
+      "image": "/categories/shorts.jpg",
+      "parentId": null,
+      "isActive": true,
+      "sortOrder": 5
+    }
+  ],
+  "products": [
+    {
+      "id": 1,
+      "name": "T-shirt with Tape Details",
+      "slug": "t-shirt-with-tape-details",
+      "description": "T-shirt with unique tape details, made from soft cotton material. Perfect for casual wear with a modern twist.",
+      "shortDescription": "T-shirt with unique tape details",
+      "categoryId": 1,
+      "brand": "ShopCo",
+      "sku": "TSH-001",
+      "basePrice": 120,
+      "salePrice": 120,
+      "costPrice": 60,
+      "weight": 0.2,
+      "dimensions": {
+        "length": 70,
+        "width": 50,
+        "height": 2
       },
+      "images": [
+        "/images/pic1.png",
+        "/images/pic10.png",
+        "/images/pic11.png"
+      ],
+      "mainImage": "/images/pic1.png",
+      "tags": ["casual", "cotton", "tape-details"],
+      "isActive": true,
+      "isFeatured": true,
+      "isNew": true,
+      "rating": 4.5,
+      "reviewCount": 12,
+      "viewCount": 150,
+      "createdAt": "2024-01-01T00:00:00Z",
+      "updatedAt": "2024-01-15T10:30:00Z"
+    },
+    {
+      "id": 2,
+      "name": "Skinny Fit Jeans",
+      "slug": "skinny-fit-jeans",
+      "description": "Skinny fit jeans with premium denim material. Perfect fit with stretch comfort.",
+      "shortDescription": "Skinny fit jeans with premium denim",
+      "categoryId": 2,
+      "brand": "ShopCo",
+      "sku": "JEA-001",
+      "basePrice": 260,
+      "salePrice": 208,
+      "costPrice": 130,
+      "weight": 0.5,
+      "dimensions": {
+        "length": 100,
+        "width": 30,
+        "height": 3
+      },
+      "images": [
+        "/images/pic2.png"
+      ],
+      "mainImage": "/images/pic2.png",
+      "tags": ["jeans", "skinny-fit", "denim"],
+      "isActive": true,
+      "isFeatured": false,
+      "isNew": false,
+      "rating": 3.5,
+      "reviewCount": 8,
+      "viewCount": 89,
+      "createdAt": "2024-01-02T00:00:00Z",
+      "updatedAt": "2024-01-16T14:20:00Z"
+    },
+    {
+      "id": 3,
+      "name": "Checked Shirt",
+      "slug": "checked-shirt",
+      "description": "Checked shirt with classic design. Perfect for both casual and formal occasions.",
+      "shortDescription": "Checked shirt with classic design",
+      "categoryId": 3,
+      "brand": "ShopCo",
+      "sku": "SHI-001",
+      "basePrice": 180,
+      "salePrice": 180,
+      "costPrice": 90,
+      "weight": 0.3,
+      "dimensions": {
+        "length": 75,
+        "width": 55,
+        "height": 2
+      },
+      "images": [
+        "/images/pic3.png"
+      ],
+      "mainImage": "/images/pic3.png",
+      "tags": ["shirt", "checked", "classic"],
+      "isActive": true,
+      "isFeatured": true,
+      "isNew": false,
+      "rating": 4.5,
+      "reviewCount": 15,
+      "viewCount": 120,
+      "createdAt": "2024-01-03T00:00:00Z",
+      "updatedAt": "2024-01-17T09:15:00Z"
+    },
+    {
+      "id": 4,
+      "name": "Sleeve Striped T-shirt",
+      "slug": "sleeve-striped-t-shirt",
+      "description": "Striped t-shirt with unique sleeve design. Comfortable and stylish for everyday wear.",
+      "shortDescription": "Striped t-shirt with unique sleeve design",
+      "categoryId": 1,
+      "brand": "ShopCo",
+      "sku": "TSH-002",
+      "basePrice": 160,
+      "salePrice": 112,
+      "costPrice": 80,
+      "weight": 0.2,
+      "dimensions": {
+        "length": 70,
+        "width": 50,
+        "height": 2
+      },
+      "images": [
+        "/images/pic4.png",
+        "/images/pic10.png",
+        "/images/pic11.png"
+      ],
+      "mainImage": "/images/pic4.png",
+      "tags": ["t-shirt", "striped", "sleeve-design"],
+      "isActive": true,
+      "isFeatured": false,
+      "isNew": true,
+      "rating": 4.5,
+      "reviewCount": 6,
+      "viewCount": 95,
+      "createdAt": "2024-01-04T00:00:00Z",
+      "updatedAt": "2024-01-18T16:45:00Z"
+    },
+    {
+      "id": 5,
+      "name": "Polo with Contrast Trims",
+      "slug": "polo-with-contrast-trims",
+      "description": "Polo shirt with elegant contrast trims. Perfect for casual and semi-formal occasions.",
+      "shortDescription": "Polo shirt with elegant contrast trims",
+      "categoryId": 4,
+      "brand": "ShopCo",
+      "sku": "POL-001",
+      "basePrice": 242,
+      "salePrice": 194,
+      "costPrice": 121,
+      "weight": 0.25,
+      "dimensions": {
+        "length": 72,
+        "width": 52,
+        "height": 2
+      },
+      "images": [
+        "/images/pic12.png",
+        "/images/pic10.png",
+        "/images/pic11.png"
+      ],
+      "mainImage": "/images/pic12.png",
+      "tags": ["polo", "contrast-trims", "elegant"],
+      "isActive": true,
+      "isFeatured": true,
+      "isNew": false,
       "rating": 4.0,
-      "sizes": ["M", "L", "XL"],
-      "colors": ["White", "Black", "Blue"],
-      "description": "Polo shirt with elegant contrast trims",
-      "category": "Polo",
-      "inStock": true
+      "reviewCount": 10,
+      "viewCount": 110,
+      "createdAt": "2024-01-05T00:00:00Z",
+      "updatedAt": "2024-01-19T11:30:00Z"
+    }
+  ],
+  "product_variants": [
+    {
+      "id": 1,
+      "productId": 1,
+      "size": "S",
+      "color": "Black",
+      "sku": "TSH-001-S-BLK",
+      "price": 120,
+      "salePrice": 120,
+      "stockQuantity": 50,
+      "isActive": true
+    },
+    {
+      "id": 2,
+      "productId": 1,
+      "size": "M",
+      "color": "Black",
+      "sku": "TSH-001-M-BLK",
+      "price": 120,
+      "salePrice": 120,
+      "stockQuantity": 45,
+      "isActive": true
+    },
+    {
+      "id": 3,
+      "productId": 1,
+      "size": "L",
+      "color": "Black",
+      "sku": "TSH-001-L-BLK",
+      "price": 120,
+      "salePrice": 120,
+      "stockQuantity": 40,
+      "isActive": true
+    },
+    {
+      "id": 4,
+      "productId": 1,
+      "size": "XL",
+      "color": "Black",
+      "sku": "TSH-001-XL-BLK",
+      "price": 120,
+      "salePrice": 120,
+      "stockQuantity": 35,
+      "isActive": true
+    },
+    {
+      "id": 5,
+      "productId": 1,
+      "size": "S",
+      "color": "White",
+      "sku": "TSH-001-S-WHT",
+      "price": 120,
+      "salePrice": 120,
+      "stockQuantity": 48,
+      "isActive": true
     },
     {
       "id": 6,
-      "title": "Gradient Graphic T-shirt",
-      "srcUrl": "/images/pic13.png",
-      "gallery": ["/images/pic13.png", "/images/pic10.png", "/images/pic11.png"],
-      "price": 145,
-      "discount": {
-        "amount": 0,
-        "percentage": 0
-      },
-      "rating": 3.5,
-      "sizes": ["S", "M", "L", "XL"],
-      "colors": ["Blue", "Purple", "Pink"],
-      "description": "T-shirt with unique gradient pattern",
-      "category": "T-shirt",
-      "inStock": true
+      "productId": 1,
+      "size": "M",
+      "color": "White",
+      "sku": "TSH-001-M-WHT",
+      "price": 120,
+      "salePrice": 120,
+      "stockQuantity": 42,
+      "isActive": true
     },
     {
       "id": 7,
-      "title": "Polo with Tipping Details",
-      "srcUrl": "/images/pic14.png",
-      "gallery": ["/images/pic14.png"],
-      "price": 180,
-      "discount": {
-        "amount": 0,
-        "percentage": 0
-      },
-      "rating": 4.5,
-      "sizes": ["S", "M", "L"],
-      "colors": ["Black", "Blue", "Red"],
-      "description": "Polo shirt with delicate tipping details",
-      "category": "Polo",
-      "inStock": true
+      "productId": 2,
+      "size": "28",
+      "color": "Dark Blue",
+      "sku": "JEA-001-28-DBL",
+      "price": 208,
+      "salePrice": 208,
+      "stockQuantity": 25,
+      "isActive": true
     },
     {
       "id": 8,
-      "title": "Black Striped T-shirt",
-      "srcUrl": "/images/pic15.png",
-      "gallery": ["/images/pic15.png"],
-      "price": 150,
-      "discount": {
-        "amount": 0,
-        "percentage": 30
-      },
-      "rating": 5.0,
-      "sizes": ["M", "L", "XL", "XXL"],
-      "colors": ["Black", "White", "Gray"],
-      "description": "Black striped t-shirt with minimalist design",
-      "category": "T-shirt",
-      "inStock": true
+      "productId": 2,
+      "size": "30",
+      "color": "Dark Blue",
+      "sku": "JEA-001-30-DBL",
+      "price": 208,
+      "salePrice": 208,
+      "stockQuantity": 30,
+      "isActive": true
     },
     {
       "id": 9,
-      "title": "Vertical Striped Shirt",
-      "srcUrl": "/images/pic5.png",
-      "gallery": ["/images/pic5.png", "/images/pic10.png", "/images/pic11.png"],
-      "price": 232,
-      "discount": {
-        "amount": 0,
-        "percentage": 20
-      },
-      "rating": 5.0,
-      "sizes": ["S", "M", "L", "XL"],
-      "colors": ["Blue", "White", "Black"],
-      "description": "Vertical striped shirt with elegant design",
-      "category": "Shirt",
-      "inStock": true
+      "productId": 2,
+      "size": "32",
+      "color": "Dark Blue",
+      "sku": "JEA-001-32-DBL",
+      "price": 208,
+      "salePrice": 208,
+      "stockQuantity": 35,
+      "isActive": true
     },
     {
       "id": 10,
-      "title": "Courage Graphic T-shirt",
-      "srcUrl": "/images/pic6.png",
-      "gallery": ["/images/pic6.png", "/images/pic10.png", "/images/pic11.png"],
-      "price": 145,
-      "discount": {
-        "amount": 0,
-        "percentage": 0
-      },
-      "rating": 4.0,
-      "sizes": ["S", "M", "L", "XL", "XXL"],
-      "colors": ["Black", "White", "Gray"],
-      "description": "T-shirt with unique Courage graphic design",
-      "category": "T-shirt",
-      "inStock": true
+      "productId": 3,
+      "size": "M",
+      "color": "Red",
+      "sku": "SHI-001-M-RED",
+      "price": 180,
+      "salePrice": 180,
+      "stockQuantity": 20,
+      "isActive": true
     },
     {
       "id": 11,
-      "title": "Loose Fit Bermuda Shorts",
-      "srcUrl": "/images/pic7.png",
-      "gallery": ["/images/pic7.png"],
-      "price": 80,
-      "discount": {
-        "amount": 0,
-        "percentage": 0
-      },
-      "rating": 3.0,
-      "sizes": ["S", "M", "L", "XL"],
-      "colors": ["Beige", "Blue", "Black"],
-      "description": "Bermuda shorts with comfortable loose fit design",
-      "category": "Shorts",
-      "inStock": true
+      "productId": 3,
+      "size": "L",
+      "color": "Red",
+      "sku": "SHI-001-L-RED",
+      "price": 180,
+      "salePrice": 180,
+      "stockQuantity": 18,
+      "isActive": true
     },
     {
       "id": 12,
-      "title": "Faded Skinny Jeans",
-      "srcUrl": "/images/pic8.png",
-      "gallery": ["/images/pic8.png"],
-      "price": 210,
-      "discount": {
-        "amount": 0,
-        "percentage": 0
-      },
-      "rating": 4.5,
-      "sizes": ["28", "30", "32", "34", "36"],
-      "colors": ["Light Blue", "Dark Blue", "Black"],
-      "description": "Skinny fit jeans with natural faded effect",
-      "category": "Jeans",
-      "inStock": true
+      "productId": 4,
+      "size": "L",
+      "color": "Blue",
+      "sku": "TSH-002-L-BLU",
+      "price": 112,
+      "salePrice": 112,
+      "stockQuantity": 15,
+      "isActive": true
+    },
+    {
+      "id": 13,
+      "productId": 5,
+      "size": "L",
+      "color": "White",
+      "sku": "POL-001-L-WHT",
+      "price": 194,
+      "salePrice": 194,
+      "stockQuantity": 22,
+      "isActive": true
     }
   ],
-  "review": [
+  "addresses": [
+    {
+      "id": 1,
+      "userId": 1,
+      "type": "shipping",
+      "fullName": "John Smith",
+      "phone": "+1-555-0123",
+      "address": "123 Main Street",
+      "city": "New York",
+      "state": "NY",
+      "zipCode": "10001",
+      "country": "USA",
+      "isDefault": true,
+      "createdAt": "2024-01-01T00:00:00Z"
+    },
+    {
+      "id": 2,
+      "userId": 2,
+      "type": "shipping",
+      "fullName": "Sarah Johnson",
+      "phone": "+1-555-0456",
+      "address": "456 Oak Avenue",
+      "city": "Los Angeles",
+      "state": "CA",
+      "zipCode": "90210",
+      "country": "USA",
+      "isDefault": true,
+      "createdAt": "2024-01-02T00:00:00Z"
+    },
+    {
+      "id": 3,
+      "userId": 3,
+      "type": "shipping",
+      "fullName": "Michael Brown",
+      "phone": "+1-555-0789",
+      "address": "789 Pine Street",
+      "city": "Chicago",
+      "state": "IL",
+      "zipCode": "60601",
+      "country": "USA",
+      "isDefault": true,
+      "createdAt": "2024-01-03T00:00:00Z"
+    },
+    {
+      "id": 4,
+      "userId": 4,
+      "type": "shipping",
+      "fullName": "Emily Davis",
+      "phone": "+1-555-0321",
+      "address": "321 Elm Street",
+      "city": "Houston",
+      "state": "TX",
+      "zipCode": "77001",
+      "country": "USA",
+      "isDefault": true,
+      "createdAt": "2024-01-04T00:00:00Z"
+    },
+    {
+      "id": 5,
+      "userId": 5,
+      "type": "shipping",
+      "fullName": "David Wilson",
+      "phone": "+1-555-0654",
+      "address": "654 Maple Drive",
+      "city": "Phoenix",
+      "state": "AZ",
+      "zipCode": "85001",
+      "country": "USA",
+      "isDefault": true,
+      "createdAt": "2024-01-05T00:00:00Z"
+    }
+  ],
+  "cart_items": [
+    {
+      "id": 1,
+      "userId": 1,
+      "productVariantId": 2,
+      "quantity": 2,
+      "addedAt": "2024-01-15T10:00:00Z"
+    },
+    {
+      "id": 2,
+      "userId": 1,
+      "productVariantId": 10,
+      "quantity": 1,
+      "addedAt": "2024-01-15T10:05:00Z"
+    },
+    {
+      "id": 3,
+      "userId": 2,
+      "productVariantId": 7,
+      "quantity": 1,
+      "addedAt": "2024-01-16T14:00:00Z"
+    },
+    {
+      "id": 4,
+      "userId": 2,
+      "productVariantId": 13,
+      "quantity": 1,
+      "addedAt": "2024-01-16T14:10:00Z"
+    },
+    {
+      "id": 5,
+      "userId": 3,
+      "productVariantId": 12,
+      "quantity": 1,
+      "addedAt": "2024-01-17T09:00:00Z"
+    }
+  ],
+  "orders": [
+    {
+      "id": 1,
+      "orderNumber": "ORD-2024-001",
+      "userId": 1,
+      "status": "pending",
+      "subtotal": 380,
+      "tax": 38,
+      "shipping": 10,
+      "discount": 0,
+      "total": 428,
+      "currency": "USD",
+      "shippingAddressId": 1,
+      "billingAddressId": 1,
+      "paymentMethod": "credit_card",
+      "paymentStatus": "paid",
+      "notes": "Please deliver in the morning",
+      "createdAt": "2024-01-15T10:30:00Z",
+      "updatedAt": "2024-01-15T10:30:00Z"
+    },
+    {
+      "id": 2,
+      "orderNumber": "ORD-2024-002",
+      "userId": 2,
+      "status": "shipped",
+      "subtotal": 520,
+      "tax": 52,
+      "shipping": 15,
+      "discount": 20,
+      "total": 567,
+      "currency": "USD",
+      "shippingAddressId": 2,
+      "billingAddressId": 2,
+      "paymentMethod": "paypal",
+      "paymentStatus": "paid",
+      "notes": "",
+      "createdAt": "2024-01-16T14:20:00Z",
+      "updatedAt": "2024-01-16T16:00:00Z"
+    },
+    {
+      "id": 3,
+      "orderNumber": "ORD-2024-003",
+      "userId": 3,
+      "status": "delivered",
+      "subtotal": 295,
+      "tax": 29.5,
+      "shipping": 10,
+      "discount": 0,
+      "total": 334.5,
+      "currency": "USD",
+      "shippingAddressId": 3,
+      "billingAddressId": 3,
+      "paymentMethod": "credit_card",
+      "paymentStatus": "paid",
+      "notes": "",
+      "createdAt": "2024-01-17T09:15:00Z",
+      "updatedAt": "2024-01-19T14:30:00Z"
+    },
+    {
+      "id": 4,
+      "orderNumber": "ORD-2024-004",
+      "userId": 4,
+      "status": "processing",
+      "subtotal": 180,
+      "tax": 18,
+      "shipping": 10,
+      "discount": 0,
+      "total": 208,
+      "currency": "USD",
+      "shippingAddressId": 4,
+      "billingAddressId": 4,
+      "paymentMethod": "debit_card",
+      "paymentStatus": "pending",
+      "notes": "",
+      "createdAt": "2024-01-18T16:45:00Z",
+      "updatedAt": "2024-01-18T16:45:00Z"
+    },
+    {
+      "id": 5,
+      "orderNumber": "ORD-2024-005",
+      "userId": 5,
+      "status": "pending",
+      "subtotal": 425,
+      "tax": 42.5,
+      "shipping": 15,
+      "discount": 0,
+      "total": 482.5,
+      "currency": "USD",
+      "shippingAddressId": 5,
+      "billingAddressId": 5,
+      "paymentMethod": "credit_card",
+      "paymentStatus": "paid",
+      "notes": "",
+      "createdAt": "2024-01-19T11:30:00Z",
+      "updatedAt": "2024-01-19T11:30:00Z"
+    }
+  ],
+  "order_items": [
+    {
+      "id": 1,
+      "orderId": 1,
+      "productVariantId": 2,
+      "productName": "T-shirt with Tape Details",
+      "productSku": "TSH-001-M-BLK",
+      "size": "M",
+      "color": "Black",
+      "quantity": 2,
+      "unitPrice": 120,
+      "totalPrice": 240
+    },
+    {
+      "id": 2,
+      "orderId": 1,
+      "productVariantId": 10,
+      "productName": "Checked Shirt",
+      "productSku": "SHI-001-M-RED",
+      "size": "M",
+      "color": "Red",
+      "quantity": 1,
+      "unitPrice": 140,
+      "totalPrice": 140
+    },
+    {
+      "id": 3,
+      "orderId": 2,
+      "productVariantId": 7,
+      "productName": "Skinny Fit Jeans",
+      "productSku": "JEA-001-28-DBL",
+      "size": "28",
+      "color": "Dark Blue",
+      "quantity": 1,
+      "unitPrice": 208,
+      "totalPrice": 208
+    },
+    {
+      "id": 4,
+      "orderId": 2,
+      "productVariantId": 13,
+      "productName": "Polo with Contrast Trims",
+      "productSku": "POL-001-L-WHT",
+      "size": "L",
+      "color": "White",
+      "quantity": 1,
+      "unitPrice": 194,
+      "totalPrice": 194
+    },
+    {
+      "id": 5,
+      "orderId": 2,
+      "productVariantId": 8,
+      "productName": "Skinny Fit Jeans",
+      "productSku": "JEA-001-30-DBL",
+      "size": "30",
+      "color": "Dark Blue",
+      "quantity": 1,
+      "unitPrice": 118,
+      "totalPrice": 118
+    },
+    {
+      "id": 6,
+      "orderId": 3,
+      "productVariantId": 12,
+      "productName": "Sleeve Striped T-shirt",
+      "productSku": "TSH-002-L-BLU",
+      "size": "L",
+      "color": "Blue",
+      "quantity": 1,
+      "unitPrice": 112,
+      "totalPrice": 112
+    },
+    {
+      "id": 7,
+      "orderId": 3,
+      "productVariantId": 11,
+      "productName": "Checked Shirt",
+      "productSku": "SHI-001-L-RED",
+      "size": "L",
+      "color": "Red",
+      "quantity": 1,
+      "unitPrice": 232,
+      "totalPrice": 232
+    },
+    {
+      "id": 8,
+      "orderId": 4,
+      "productVariantId": 9,
+      "productName": "Skinny Fit Jeans",
+      "productSku": "JEA-001-32-DBL",
+      "size": "32",
+      "color": "Dark Blue",
+      "quantity": 1,
+      "unitPrice": 180,
+      "totalPrice": 180
+    },
+    {
+      "id": 9,
+      "orderId": 5,
+      "productVariantId": 5,
+      "productName": "T-shirt with Tape Details",
+      "productSku": "TSH-001-S-WHT",
+      "size": "S",
+      "color": "White",
+      "quantity": 2,
+      "unitPrice": 145,
+      "totalPrice": 290
+    },
+    {
+      "id": 10,
+      "orderId": 5,
+      "productVariantId": 6,
+      "productName": "T-shirt with Tape Details",
+      "productSku": "TSH-001-M-WHT",
+      "size": "M",
+      "color": "White",
+      "quantity": 1,
+      "unitPrice": 145,
+      "totalPrice": 145
+    }
+  ],
+  "payments": [
+    {
+      "id": 1,
+      "orderId": 1,
+      "paymentMethod": "credit_card",
+      "amount": 428,
+      "currency": "USD",
+      "status": "completed",
+      "transactionId": "TXN-001-2024",
+      "gateway": "stripe",
+      "createdAt": "2024-01-15T10:35:00Z"
+    },
+    {
+      "id": 2,
+      "orderId": 2,
+      "paymentMethod": "paypal",
+      "amount": 567,
+      "currency": "USD",
+      "status": "completed",
+      "transactionId": "TXN-002-2024",
+      "gateway": "paypal",
+      "createdAt": "2024-01-16T14:25:00Z"
+    },
+    {
+      "id": 3,
+      "orderId": 3,
+      "paymentMethod": "credit_card",
+      "amount": 334.5,
+      "currency": "USD",
+      "status": "completed",
+      "transactionId": "TXN-003-2024",
+      "gateway": "stripe",
+      "createdAt": "2024-01-17T09:20:00Z"
+    },
+    {
+      "id": 4,
+      "orderId": 4,
+      "paymentMethod": "debit_card",
+      "amount": 208,
+      "currency": "USD",
+      "status": "pending",
+      "transactionId": "TXN-004-2024",
+      "gateway": "stripe",
+      "createdAt": "2024-01-18T16:50:00Z"
+    },
+    {
+      "id": 5,
+      "orderId": 5,
+      "paymentMethod": "credit_card",
+      "amount": 482.5,
+      "currency": "USD",
+      "status": "completed",
+      "transactionId": "TXN-005-2024",
+      "gateway": "stripe",
+      "createdAt": "2024-01-19T11:35:00Z"
+    }
+  ],
+  "reviews": [
     {
       "id": 1,
       "productId": 1,
       "userId": 1,
-      "user": "Alex K.",
-      "content": "Finding clothes that align with my personal style used to be a challenge until I discovered Shop.co. The range of options they offer is truly remarkable, catering to a variety of tastes and occasions.",
+      "orderId": 1,
       "rating": 5,
-      "date": "August 14, 2023",
-      "size": "M",
-      "color": "Black"
+      "title": "Excellent Quality",
+      "content": "Finding clothes that align with my personal style used to be a challenge until I discovered Shop.co. The range of options they offer is truly remarkable, catering to a variety of tastes and occasions.",
+      "images": [],
+      "isVerified": true,
+      "isHelpful": 12,
+      "createdAt": "2024-01-20T10:00:00Z"
     },
     {
       "id": 2,
       "productId": 1,
       "userId": 2,
-      "user": "Sarah M.",
-      "content": "I'm blown away by the quality and style of the clothes I received from Shop.co. From casual wear to elegant dresses, every piece I've bought has exceeded my expectations.",
+      "orderId": 2,
       "rating": 5,
-      "date": "August 15, 2023",
-      "size": "L",
-      "color": "White"
+      "title": "Great Fit and Comfort",
+      "content": "I'm blown away by the quality and style of the clothes I received from Shop.co. From casual wear to elegant dresses, every piece I've bought has exceeded my expectations.",
+      "images": [],
+      "isVerified": true,
+      "isHelpful": 8,
+      "createdAt": "2024-01-21T14:00:00Z"
     },
     {
       "id": 3,
       "productId": 2,
       "userId": 3,
-      "user": "Ethan R.",
-      "content": "This jeans is a must-have for anyone who appreciates good design. The minimalistic yet stylish pattern caught my eye, and the fit is perfect. I can see the designer's touch in every aspect of this jeans.",
+      "orderId": 3,
       "rating": 5,
-      "date": "August 16, 2023",
-      "size": "32",
-      "color": "Dark Blue"
+      "title": "Perfect Fit",
+      "content": "This jeans is a must-have for anyone who appreciates good design. The minimalistic yet stylish pattern caught my eye, and the fit is perfect. I can see the designer's touch in every aspect of this jeans.",
+      "images": [],
+      "isVerified": true,
+      "isHelpful": 15,
+      "createdAt": "2024-01-22T09:00:00Z"
     },
     {
       "id": 4,
       "productId": 3,
       "userId": 4,
-      "user": "Olivia P.",
-      "content": "As a UI/UX enthusiast, I value simplicity and functionality. This shirt not only represents those principles but also feels great to wear. It's evident that the designer poured their creativity into making this shirt stand out.",
+      "orderId": 4,
       "rating": 5,
-      "date": "August 17, 2023",
-      "size": "M",
-      "color": "Red"
+      "title": "Classic Design",
+      "content": "As a UI/UX enthusiast, I value simplicity and functionality. This shirt not only represents those principles but also feels great to wear. It's evident that the designer poured their creativity into making this shirt stand out.",
+      "images": [],
+      "isVerified": true,
+      "isHelpful": 6,
+      "createdAt": "2024-01-23T16:00:00Z"
     },
     {
       "id": 5,
       "productId": 4,
       "userId": 5,
-      "user": "Liam K.",
+      "orderId": 5,
+      "rating": 5,
+      "title": "Unique Design",
       "content": "This t-shirt is a fusion of comfort and creativity. The fabric is soft, and the design speaks volumes about the designer's skill. It's like wearing a piece of art that reflects my passion for both design and fashion.",
-      "rating": 5,
-      "date": "August 18, 2023",
-      "size": "L",
-      "color": "Blue"
-    },
-    {
-      "id": 6,
-      "productId": 5,
-      "userId": 1,
-      "user": "Samantha D.",
-      "content": "I absolutely love this polo! The design is unique and the fabric feels so comfortable. As a fellow designer, I appreciate the attention to detail. It's become my favorite go-to shirt.",
-      "rating": 5,
-      "date": "August 19, 2023",
-      "size": "L",
-      "color": "Trắng"
-    },
-    {
-      "id": 7,
-      "productId": 6,
-      "userId": 2,
-      "user": "John D.",
-      "content": "The gradient design is absolutely stunning! The colors blend perfectly and the fit is amazing. Highly recommend this t-shirt.",
-      "rating": 4,
-      "date": "August 20, 2023",
-      "size": "M",
-      "color": "Xanh dương"
-    },
-    {
-      "id": 8,
-      "productId": 7,
-      "userId": 3,
-      "user": "Emma W.",
-      "content": "Great quality polo shirt with excellent attention to detail. The tipping details make it stand out from regular polos.",
-      "rating": 5,
-      "date": "August 21, 2023",
-      "size": "S",
-      "color": "Đen"
-    },
-    {
-      "id": 9,
-      "productId": 9,
-      "userId": 4,
-      "user": "Michael B.",
-      "content": "The vertical striped shirt is perfect for office wear. The fabric is breathable and the fit is just right.",
-      "rating": 5,
-      "date": "August 22, 2023",
-      "size": "M",
-      "color": "Xanh dương"
-    },
-    {
-      "id": 10,
-      "productId": 9,
-      "userId": 5,
-      "user": "Lisa C.",
-      "content": "Love the vertical stripes design! It's professional yet stylish. The quality is excellent for the price.",
-      "rating": 4,
-      "date": "August 23, 2023",
-      "size": "L",
-      "color": "Trắng"
-    },
-    {
-      "id": 11,
-      "productId": 10,
-      "userId": 1,
-      "user": "David K.",
-      "content": "The Courage graphic t-shirt has an amazing design. The print quality is top-notch and it's very comfortable.",
-      "rating": 4,
-      "date": "August 24, 2023",
-      "size": "XL",
-      "color": "Đen"
-    },
-    {
-      "id": 12,
-      "productId": 10,
-      "userId": 2,
-      "user": "Anna L.",
-      "content": "Great t-shirt with a meaningful message. The fabric feels soft and the graphic doesn't fade after washing.",
-      "rating": 5,
-      "date": "August 25, 2023",
-      "size": "M",
-      "color": "Trắng"
-    },
-    {
-      "id": 13,
-      "productId": 11,
-      "userId": 3,
-      "user": "Tom R.",
-      "content": "Perfect summer shorts! The loose fit is very comfortable and the material is lightweight. Great for casual wear.",
-      "rating": 3,
-      "date": "August 26, 2023",
-      "size": "L",
-      "color": "Be"
-    },
-    {
-      "id": 14,
-      "productId": 11,
-      "userId": 4,
-      "user": "Sarah J.",
-      "content": "The Bermuda shorts are exactly what I was looking for. Comfortable fit and good quality fabric.",
-      "rating": 4,
-      "date": "August 27, 2023",
-      "size": "M",
-      "color": "Xanh dương"
-    },
-    {
-      "id": 15,
-      "productId": 12,
-      "userId": 5,
-      "user": "Chris M.",
-      "content": "These faded jeans look amazing! The fit is perfect and the faded effect gives them a vintage look.",
-      "rating": 5,
-      "date": "August 28, 2023",
-      "size": "32",
-      "color": "Xanh nhạt"
-    },
-    {
-      "id": 16,
-      "productId": 12,
-      "userId": 1,
-      "user": "Rachel P.",
-      "content": "Love the faded skinny jeans! They're comfortable and the color is exactly as shown. Highly recommend!",
-      "rating": 4,
-      "date": "August 29, 2023",
-      "size": "30",
-      "color": "Xanh đậm"
+      "images": [],
+      "isVerified": true,
+      "isHelpful": 10,
+      "createdAt": "2024-01-24T11:00:00Z"
     }
   ],
-  "cart": []
+  "wishlist": [
+    {
+      "id": 1,
+      "userId": 1,
+      "productId": 3,
+      "addedAt": "2024-01-15T12:00:00Z"
+    },
+    {
+      "id": 2,
+      "userId": 1,
+      "productId": 5,
+      "addedAt": "2024-01-15T12:05:00Z"
+    },
+    {
+      "id": 3,
+      "userId": 2,
+      "productId": 1,
+      "addedAt": "2024-01-16T15:00:00Z"
+    },
+    {
+      "id": 4,
+      "userId": 3,
+      "productId": 2,
+      "addedAt": "2024-01-17T10:00:00Z"
+    },
+    {
+      "id": 5,
+      "userId": 4,
+      "productId": 4,
+      "addedAt": "2024-01-18T17:00:00Z"
+    }
+  ]
 }

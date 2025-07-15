@@ -1,21 +1,14 @@
 <script setup lang="ts">
 import { Toaster } from '@/components/ui/sonner'
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterView } from 'vue-router'
 import 'vue-sonner/style.css'
+import Navbar from './components/layout/navbar.vue'
+import TopBanner from './components/layout/top-banner.vue'
 </script>
 
 <template>
-  <Toaster :close-button="true" />
-  <div class="">
-    <header>
-      <div class="">
-        <nav>
-          <RouterLink to="/">Home</RouterLink>
-          <RouterLink to="/about">About</RouterLink>
-        </nav>
-      </div>
-    </header>
-
-    <RouterView />
-  </div>
+	<Toaster close-button />
+	<TopBanner />
+	<Navbar />
+	<RouterView />
 </template>

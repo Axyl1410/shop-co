@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "api": "json-server --watch data.json",
     "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
     "build-only": "vite build",
@@ -23,6 +24,7 @@
     "lucide-vue-next": "^0.525.0",
     "motion-v": "^1.5.0",
     "pinia": "^3.0.3",
+    "pinia-plugin-persistedstate": "^4.4.1",
     "primevue": "^4.3.6",
     "reka-ui": "^2.3.2",
     "tailwind-merge": "^3.3.1",

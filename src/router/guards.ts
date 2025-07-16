@@ -1,17 +1,17 @@
-import { useAuthStore } from '@/stores/use-auth-store'
-import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router'
+import { useAuthStore } from "@/stores/use-auth-store";
+import type { NavigationGuardNext, RouteLocationNormalized } from "vue-router";
+
+const authStore = useAuthStore();
 
 export function requireAuth(
 	to: RouteLocationNormalized,
 	from: RouteLocationNormalized,
 	next: NavigationGuardNext,
 ) {
-	const authStore = useAuthStore()
-
 	if (!authStore.isAuthenticated) {
-		next({ name: 'login', query: { redirect: to.fullPath } })
+		next({ name: "login", query: { redirect: to.fullPath } });
 	} else {
-		next()
+		next();
 	}
 }
 
@@ -20,11 +20,9 @@ export function requireGuest(
 	from: RouteLocationNormalized,
 	next: NavigationGuardNext,
 ) {
-	const authStore = useAuthStore()
-
 	if (authStore.isAuthenticated) {
-		next({ name: 'home' })
+		next({ name: "home" });
 	} else {
-		next()
+		next();
 	}
 }

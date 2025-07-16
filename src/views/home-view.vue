@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { Button } from '@/components/ui/button'
-import { useUsers } from '@/hook'
-import { toast } from 'vue-sonner'
+import { Button } from "@/components/ui/button";
+import { useUsers } from "@/hook";
+import { toast } from "vue-sonner";
 
-const { users, isError, error, isLoading } = useUsers()
+const { users, isError, error, isLoading } = useUsers();
 
 const handleClick = () => {
-	toast('test')
-}
+	toast("test");
+};
 </script>
 
 <template>

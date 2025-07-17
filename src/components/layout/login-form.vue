@@ -3,6 +3,41 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useAuth } from "@/hook";
+import { reactive, ref } from "vue";
+import { useRouter } from "vue-router";
+
+const error = ref<string | undefined>("");
+const isLoading = ref<boolean>(false);
+
+const router = useRouter();
+const { login } = useAuth();
+
+const form = reactive({
+	email: "",
+	password: "",
+});
+
+const handleLogin = async () => {
+	try {
+		isLoading.value = true;
+		const res = await login({
+			email: form.email,
+			password: form.password,
+		});
+
+		if (res.success) {
+			error.value = "";
+			router.push("/");
+		} else {
+			error.value = res.error;
+		}
+	} catch {
+		error.value = "Invalid email or password";
+	} finally {
+		isLoading.value = false;
+	}
+};
 </script>
 
 <template>
@@ -17,7 +52,13 @@ import { Label } from "@/components/ui/label";
 						</div>
 						<div class="grid gap-3">
 							<Label for="email">Email</Label>
-							<Input id="email" type="email" placeholder="m@example.com" required />
+							<Input
+								id="email"
+								type="email"
+								placeholder="m@example.com"
+								v-model="form.email"
+								required
+							/>
 						</div>
 						<div class="grid gap-3">
 							<div class="flex items-center">
@@ -26,9 +67,12 @@ import { Label } from "@/components/ui/label";
 									Forgot your password?
 								</a>
 							</div>
-							<Input id="password" type="password" required />
+							<Input id="password" type="password" v-model="form.password" required />
 						</div>
-						<Button type="submit" class="w-full"> Login </Button>
+						<Button type="submit" class="w-full" @click="handleLogin" :disabled="isLoading">
+							Login
+						</Button>
+						<p v-if="error" class="w-full text-center text-sm text-red-500">{{ error }}</p>
 						<div
 							class="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t"
 						>

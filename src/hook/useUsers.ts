@@ -9,7 +9,7 @@ export function useUsers() {
 	const query = useQuery<User[]>({
 		queryKey: ["users"],
 		queryFn: async (): Promise<User[]> => {
-			const response = await axios(`${ServerAxiosConfig.baseURL}users`);
+			const response = await axios(`${ServerAxiosConfig.baseURL}/users`);
 			return response.data;
 		},
 	});

@@ -7,7 +7,7 @@ const API_BASE_URL = ServerAxiosConfig.baseURL;
 export class AuthService {
 	static async login(credentials: LoginCredentials): Promise<{ user: User; token: string }> {
 		try {
-			const response = await axios.get(`${API_BASE_URL}users`);
+			const response = await axios.get(`${API_BASE_URL}/users`);
 			const users: User[] = response.data;
 
 			const user = users.find(
@@ -31,7 +31,7 @@ export class AuthService {
 
 	static async register(credentials: RegisterCredentials): Promise<{ user: User; token: string }> {
 		try {
-			const response = await axios.get(`${API_BASE_URL}users`);
+			const response = await axios.get(`${API_BASE_URL}/users`);
 			const users: User[] = response.data;
 
 			const existingUser = users.find((u) => u.email === credentials.email);
@@ -53,7 +53,7 @@ export class AuthService {
 				updatedAt: new Date().toISOString(),
 			};
 
-			const createResponse = await axios.post(`${API_BASE_URL}users`, newUser);
+			const createResponse = await axios.post(`${API_BASE_URL}/users`, newUser);
 			const user: User = createResponse.data;
 
 			const token = `token_${user.id}_${Date.now()}`;
@@ -73,7 +73,7 @@ export class AuthService {
 			if (tokenParts.length < 2) return null;
 
 			const userId = parseInt(tokenParts[1]);
-			const response = await axios.get(`${API_BASE_URL}users/${userId}`);
+			const response = await axios.get(`${API_BASE_URL}/users/${userId}`);
 			return response.data;
 		} catch {
 			return null;

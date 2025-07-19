@@ -1,5 +1,6 @@
 import { AuthService } from "@/services/auth-service";
 import type { LoginCredentials, RegisterCredentials, User } from "@/types/users";
+
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 

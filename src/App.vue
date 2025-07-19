@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { Toaster } from "@/components/ui/sonner";
 import { RouterView } from "vue-router";
+import { Toaster } from "@/components/ui/sonner";
 import "vue-sonner/style.css";
 import Footer from "./components/layout/footer.vue";
 import Navbar from "./components/layout/navbar.vue";

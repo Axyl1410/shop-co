@@ -4,7 +4,7 @@
       "id": 1,
       "username": "johnsmith",
       "email": "john@gmail.com",
-      "password": "hashed_password_123",
+      "password": "123",
       "firstName": "John",
       "lastName": "Smith",
       "phone": "+1-555-0123",
@@ -142,11 +142,7 @@
         "width": 50,
         "height": 2
       },
-      "images": [
-        "/images/pic1.png",
-        "/images/pic10.png",
-        "/images/pic11.png"
-      ],
+      "images": ["/images/pic1.png", "/images/pic10.png", "/images/pic11.png"],
       "mainImage": "/images/pic1.png",
       "tags": ["casual", "cotton", "tape-details"],
       "isActive": true,
@@ -176,9 +172,7 @@
         "width": 30,
         "height": 3
       },
-      "images": [
-        "/images/pic2.png"
-      ],
+      "images": ["/images/pic2.png"],
       "mainImage": "/images/pic2.png",
       "tags": ["jeans", "skinny-fit", "denim"],
       "isActive": true,
@@ -208,9 +202,7 @@
         "width": 55,
         "height": 2
       },
-      "images": [
-        "/images/pic3.png"
-      ],
+      "images": ["/images/pic3.png"],
       "mainImage": "/images/pic3.png",
       "tags": ["shirt", "checked", "classic"],
       "isActive": true,
@@ -240,11 +232,7 @@
         "width": 50,
         "height": 2
       },
-      "images": [
-        "/images/pic4.png",
-        "/images/pic10.png",
-        "/images/pic11.png"
-      ],
+      "images": ["/images/pic4.png", "/images/pic10.png", "/images/pic11.png"],
       "mainImage": "/images/pic4.png",
       "tags": ["t-shirt", "striped", "sleeve-design"],
       "isActive": true,
@@ -274,11 +262,7 @@
         "width": 52,
         "height": 2
       },
-      "images": [
-        "/images/pic12.png",
-        "/images/pic10.png",
-        "/images/pic11.png"
-      ],
+      "images": ["/images/pic12.png", "/images/pic10.png", "/images/pic11.png"],
       "mainImage": "/images/pic12.png",
       "tags": ["polo", "contrast-trims", "elegant"],
       "isActive": true,

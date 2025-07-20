@@ -220,18 +220,16 @@ import { Mail } from "lucide-vue-next";
 				<hr class="mb-6 h-[1px] border-t-black/10" />
 				<div class="mb-2 flex flex-col items-center justify-center sm:flex-row sm:justify-between">
 					<p class="mb-4 text-center text-sm text-black/60 sm:mr-1 sm:mb-0 sm:text-left">
-						Shop.co © Made by<!-- -->
-						<a class="font-medium text-black" href="https://github.com/mohammadoftadeh"
-							>Mohammad Oftadeh</a
-						>,
-						<!-- -->Designed by<!-- -->
+						Shop.co © Made by
+						<a class="font-medium text-black" href="https://github.com/axyl1410">Axyl</a>, Designed
+						by
 						<a class="font-medium text-black" href="https://www.figma.com/@hamzauix">Hamza Naeem</a>
 					</p>
 					<div class="flex items-center">
 						<span
 							class="mr-3 flex h-[30px] w-[46px] items-center justify-center rounded-[5px] border-[#D6DCE5] bg-white"
 						>
-							<!-- <img
+							<img
 								alt="user"
 								fetchpriority="high"
 								width="33"
@@ -240,11 +238,12 @@ import { Mail } from "lucide-vue-next";
 								data-nimg="1"
 								class="max-h-[15px]"
 								style="color: transparent"
-								src="/icons/Visa.svg" /> --> </span
+								src="@/assets/icons/Visa.svg"
+							/> </span
 						><span
 							class="mr-3 flex h-[30px] w-[46px] items-center justify-center rounded-[5px] border-[#D6DCE5] bg-white"
 						>
-							<!-- <img
+							<img
 								alt="user"
 								fetchpriority="high"
 								width="33"
@@ -253,11 +252,12 @@ import { Mail } from "lucide-vue-next";
 								data-nimg="1"
 								class="max-h-[15px]"
 								style="color: transparent"
-								src="/icons/mastercard.svg" /> --> </span
+								src="@/assets/icons/mastercard.svg"
+							/> </span
 						><span
 							class="mr-3 flex h-[30px] w-[46px] items-center justify-center rounded-[5px] border-[#D6DCE5] bg-white"
 						>
-							<!-- <img
+							<img
 								alt="user"
 								fetchpriority="high"
 								width="33"
@@ -266,11 +266,12 @@ import { Mail } from "lucide-vue-next";
 								data-nimg="1"
 								class="max-h-[15px]"
 								style="color: transparent"
-								src="/icons/paypal.svg" /> --> </span
+								src="@/assets/icons/paypal.svg"
+							/> </span
 						><span
 							class="mr-3 flex h-[30px] w-[46px] items-center justify-center rounded-[5px] border-[#D6DCE5] bg-white"
 						>
-							<!-- <img
+							<img
 								alt="user"
 								fetchpriority="high"
 								width="33"
@@ -279,11 +280,12 @@ import { Mail } from "lucide-vue-next";
 								data-nimg="1"
 								class="max-h-[15px]"
 								style="color: transparent"
-								src="/icons/applePay.svg" /> --> </span
+								src="@/assets/icons/applePay.svg"
+							/> </span
 						><span
 							class="flex h-[30px] w-[46px] items-center justify-center rounded-[5px] border-[#D6DCE5] bg-white"
 						>
-							<!-- <img
+							<img
 								alt="user"
 								fetchpriority="high"
 								width="33"
@@ -292,8 +294,8 @@ import { Mail } from "lucide-vue-next";
 								data-nimg="1"
 								class="max-h-[15px]"
 								style="color: transparent"
-								src="/icons/googlePay.svg"
-						/> -->
+								src="@/assets/icons/googlePay.svg"
+							/>
 						</span>
 					</div>
 				</div>

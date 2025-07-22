@@ -10,22 +10,24 @@ import {
 	DialogTitle,
 } from "@/components/ui/dialog";
 import { useAuthStore } from "@/stores/use-auth-store";
+import { storeToRefs } from "pinia";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 
 const authStore = useAuthStore();
 const router = useRouter();
+const { isAuthenticated } = storeToRefs(authStore);
 
 const isOpen = ref<boolean>(false);
 
-if (authStore.isAuthenticated) {
+if (isAuthenticated) {
 	isOpen.value = true;
 } else {
 	isOpen.value = false;
 }
 
 const handleOpenChange = (open: boolean) => {
-	if (authStore.isAuthenticated) {
+	if (isAuthenticated) {
 		isOpen.value = open;
 	}
 };

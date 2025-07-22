@@ -34,6 +34,11 @@ const router = createRouter({
 		// 	beforeEnter: requireAuth,
 		// },
 		{
+			path: "/shop",
+			name: "shop",
+			component: () => import("@/views/shop-view.vue"),
+		},
+		{
 			path: "/:pathMatch(.*)*",
 			name: "not-found",
 			component: () => import("@/views/not-found-view.vue"),

@@ -8,7 +8,7 @@ import { useProducts, useReviews } from "@/hook";
 import type { Product } from "@/types";
 import { computed, onMounted } from "vue";
 
-const { products } = useProducts();
+const { products, isLoading } = useProducts();
 const { reviews } = useReviews();
 
 const newArrivalsData = computed<Product[]>(() => {
@@ -31,8 +31,18 @@ onMounted(() => {
 	<HomeHeader />
 	<Brands />
 	<div class="mt-10 flex flex-col gap-10">
-		<ProductListSec title="New Arrivals" :data="newArrivalsData" view-all-link="/shop" />
-		<ProductListSec title="Top Selling" :data="topSellingData" view-all-link="/shop" />
+		<ProductListSec
+			title="New Arrivals"
+			:data="newArrivalsData"
+			view-all-link="/shop"
+			:is-loading="isLoading"
+		/>
+		<ProductListSec
+			title="Top Selling"
+			:data="topSellingData"
+			view-all-link="/shop"
+			:is-loading="isLoading"
+		/>
 		<DressStyle />
 		<Reviews :data="reviews || []" />
 	</div>

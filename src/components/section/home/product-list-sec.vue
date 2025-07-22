@@ -8,6 +8,7 @@ interface Props {
 	title: string;
 	data: Product[];
 	viewAllLink?: string;
+	isLoading?: boolean;
 }
 
 defineProps<Props>();
@@ -38,7 +39,7 @@ defineProps<Props>();
 						:key="product.id"
 						class="w-full max-w-[198px] pl-0 sm:max-w-[295px]"
 					>
-						<ProductCard :data="product" />
+						<ProductCard :data="product" :skeleton="isLoading" />
 					</CarouselItem>
 				</CarouselContent>
 			</Carousel>

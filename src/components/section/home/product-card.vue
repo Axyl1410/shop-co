@@ -16,9 +16,11 @@ import pic8 from "@/assets/images/pic8.png";
 import pic9 from "@/assets/images/pic9.png";
 import Rating from "@/components/ui/Rating.vue";
 import type { Product } from "@/types";
+import ProductCardSkeleton from "../../skeleton/product-card-skeleton.vue";
 
 interface Props {
-	data: Product;
+	data?: Product;
+	isLoading?: boolean;
 }
 
 defineProps<Props>();
@@ -45,7 +47,6 @@ const getImageSrc = (imagePath: string) => {
 	return imageMap[imagePath] || imagePath;
 };
 
-// Tính toán discount và giá
 const calculatePrice = (product: Product) => {
 	const basePrice = product.basePrice;
 	const salePrice = product.salePrice;
@@ -62,54 +63,56 @@ const calculatePrice = (product: Product) => {
 </script>
 
 <template>
-	<router-link
-		:to="`/shop/product/${data.id}/${data.name.split(' ').join('-')}`"
-		class="flex aspect-auto flex-col items-start"
-	>
-		<div
-			class="mb-2.5 aspect-square w-full overflow-hidden rounded-[13px] bg-[#F0EEED] lg:max-w-[295px] lg:rounded-[20px] xl:mb-4"
-		>
-			<img
-				:src="getImageSrc(data.mainImage)"
-				:alt="data.name"
-				class="h-full w-full rounded-md object-contain transition-all duration-500 hover:scale-110"
-			/>
-		</div>
+	<template v-if="isLoading">
+		<ProductCardSkeleton />
+	</template>
+	<template v-else-if="data">
+		<router-link :to="`/shop/product/${data.id}`" class="flex aspect-auto flex-col items-start">
+			<div
+				class="mb-2.5 aspect-square w-full overflow-hidden rounded-[13px] bg-[#F0EEED] lg:max-w-[295px] lg:rounded-[20px] xl:mb-4"
+			>
+				<img
+					:src="getImageSrc(data.mainImage)"
+					:alt="data.name"
+					class="h-full w-full rounded-md object-contain transition-all duration-500 hover:scale-110"
+				/>
+			</div>
 
-		<strong class="text-black xl:text-xl">{{ data.name }}</strong>
+			<strong class="text-black xl:text-xl">{{ data.name }}</strong>
 
-		<div class="mb-1 flex items-end xl:mb-2">
-			<Rating
-				:initial-value="data.rating"
-				:allow-fraction="true"
-				svg-class-name="inline-block"
-				empty-class-name="fill-gray-50"
-				:size="19"
-				:readonly="true"
-			/>
-			<span class="ml-[11px] pb-0.5 text-xs text-black xl:ml-[13px] xl:pb-0 xl:text-sm">
-				{{ data.rating.toFixed(1) }}
-				<span class="text-black/60">/5</span>
-			</span>
-		</div>
+			<div class="mb-1 flex items-end xl:mb-2">
+				<Rating
+					:initial-value="data.rating"
+					:allow-fraction="true"
+					svg-class-name="inline-block"
+					empty-class-name="fill-gray-50"
+					:size="19"
+					:readonly="true"
+				/>
+				<span class="ml-[11px] pb-0.5 text-xs text-black xl:ml-[13px] xl:pb-0 xl:text-sm">
+					{{ data.rating.toFixed(1) }}
+					<span class="text-black/60">/5</span>
+				</span>
+			</div>
 
-		<div class="flex items-center space-x-[5px] xl:space-x-2.5">
-			<template v-if="calculatePrice(data).hasDiscount">
-				<span class="text-xl font-bold text-black xl:text-2xl">
-					${{ calculatePrice(data).finalPrice }}
-				</span>
-				<span class="text-xl font-bold text-black/40 line-through xl:text-2xl">
-					${{ calculatePrice(data).originalPrice }}
-				</span>
-				<span
-					class="rounded-full bg-[#FF3333]/10 px-3.5 py-1.5 text-[10px] font-medium text-[#FF3333] xl:text-xs"
-				>
-					-{{ calculatePrice(data).discountPercentage }}%
-				</span>
-			</template>
-			<template v-else>
-				<span class="text-xl font-bold text-black xl:text-2xl"> ${{ data.salePrice }} </span>
-			</template>
-		</div>
-	</router-link>
+			<div class="flex items-center space-x-[5px] xl:space-x-2.5">
+				<template v-if="calculatePrice(data).hasDiscount">
+					<span class="text-xl font-bold text-black xl:text-2xl">
+						${{ calculatePrice(data).finalPrice }}
+					</span>
+					<span class="text-xl font-bold text-black/40 line-through xl:text-2xl">
+						${{ calculatePrice(data).originalPrice }}
+					</span>
+					<span
+						class="rounded-full bg-[#FF3333]/10 px-3.5 py-1.5 text-[10px] font-medium text-[#FF3333] xl:text-xs"
+					>
+						-{{ calculatePrice(data).discountPercentage }}%
+					</span>
+				</template>
+				<template v-else>
+					<span class="text-xl font-bold text-black xl:text-2xl"> ${{ data.salePrice }} </span>
+				</template>
+			</div>
+		</router-link>
+	</template>
 </template>

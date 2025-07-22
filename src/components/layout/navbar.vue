@@ -1,4 +1,11 @@
 <script setup lang="ts">
+defineOptions({ name: "AppNavbar" });
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
 	NavigationMenu,
 	NavigationMenuContent,
@@ -7,9 +14,12 @@ import {
 	NavigationMenuTrigger,
 	navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
+import { useAuthStore } from "@/stores/use-auth-store";
 import type { MenuListData } from "@/types";
 import { CircleUserRound, Menu, Search, ShoppingCart } from "lucide-vue-next";
+import { storeToRefs } from "pinia";
 import { RouterLink } from "vue-router";
+import DropdownMenuSeparator from "../ui/dropdown-menu/DropdownMenuSeparator.vue";
 
 const data: MenuListData = [
 	{
@@ -37,6 +47,9 @@ const data: MenuListData = [
 		description: "Suitable for men, women and all tastes and styles",
 	},
 ];
+
+const authStore = useAuthStore();
+const { isAuthenticated, currentUser } = storeToRefs(authStore);
 </script>
 
 <template>
@@ -51,7 +64,7 @@ const data: MenuListData = [
 				>
 			</div>
 
-			<NavigationMenu class="mr-2 hidden md:flex lg:mr-7">
+			<NavigationMenu class="mr-2 hidden text-base md:flex lg:mr-7">
 				<NavigationMenuList>
 					<NavigationMenuItem>
 						<NavigationMenuTrigger>Shop</NavigationMenuTrigger>
@@ -110,7 +123,42 @@ const data: MenuListData = [
 			<div class="flex gap-4 md:gap-6">
 				<Search class="md:hidden" />
 				<ShoppingCart />
-				<CircleUserRound />
+				<DropdownMenu>
+					<DropdownMenuTrigger class="flex items-center gap-1">
+						<CircleUserRound />
+						<span class="sr-only">Toggle menu</span>
+					</DropdownMenuTrigger>
+					<DropdownMenuContent align="end">
+						<template v-if="isAuthenticated">
+							<div class="p-2 text-sm text-black/80">
+								<DropdownMenuLabel>
+									<div v-if="currentUser && (currentUser.firstName || currentUser.lastName)">
+										Hi {{ (currentUser.firstName || "") + " " + (currentUser.lastName || "") }} !
+									</div>
+									<div v-else-if="currentUser && currentUser.username">
+										{{ currentUser.username }}
+									</div>
+									<div v-else-if="currentUser && currentUser.email">
+										{{ currentUser.email }}
+									</div></DropdownMenuLabel
+								>
+							</div>
+							<DropdownMenuSeparator />
+							<DropdownMenuItem as-child>
+								<RouterLink to="/profile">Profile</RouterLink>
+							</DropdownMenuItem>
+							<DropdownMenuItem @click="authStore.logout()">Sign out</DropdownMenuItem>
+						</template>
+						<template v-else>
+							<DropdownMenuItem as-child>
+								<RouterLink to="/login">Sign in</RouterLink>
+							</DropdownMenuItem>
+							<DropdownMenuItem as-child>
+								<RouterLink to="/register">Sign up</RouterLink>
+							</DropdownMenuItem>
+						</template>
+					</DropdownMenuContent>
+				</DropdownMenu>
 			</div>
 		</div>
 	</div>

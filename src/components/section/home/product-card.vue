@@ -14,9 +14,9 @@ import pic6 from "@/assets/images/pic6.png";
 import pic7 from "@/assets/images/pic7.png";
 import pic8 from "@/assets/images/pic8.png";
 import pic9 from "@/assets/images/pic9.png";
+import ProductCardSkeleton from "@/components/skeleton/product-card-skeleton.vue";
 import Rating from "@/components/ui/Rating.vue";
 import type { Product } from "@/types";
-import ProductCardSkeleton from "../../skeleton/product-card-skeleton.vue";
 
 interface Props {
 	data?: Product;

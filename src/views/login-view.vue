@@ -20,14 +20,14 @@ const { isAuthenticated } = storeToRefs(authStore);
 
 const isOpen = ref<boolean>(false);
 
-if (isAuthenticated) {
+if (isAuthenticated.value) {
 	isOpen.value = true;
 } else {
 	isOpen.value = false;
 }
 
 const handleOpenChange = (open: boolean) => {
-	if (isAuthenticated) {
+	if (isAuthenticated.value) {
 		isOpen.value = open;
 	}
 };

@@ -14,11 +14,22 @@ import {
 	NavigationMenuTrigger,
 	navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
+import {
+	Sheet,
+	SheetClose,
+	SheetContent,
+	SheetDescription,
+	SheetFooter,
+	SheetHeader,
+	SheetTitle,
+	SheetTrigger,
+} from "@/components/ui/sheet";
 import { useAuthStore } from "@/stores/use-auth-store";
 import type { MenuListData } from "@/types";
 import { CircleUserRound, Menu, Search, ShoppingCart } from "lucide-vue-next";
 import { storeToRefs } from "pinia";
 import { RouterLink } from "vue-router";
+import { Button } from "../ui/button";
 import DropdownMenuSeparator from "../ui/dropdown-menu/DropdownMenuSeparator.vue";
 
 const data: MenuListData = [
@@ -58,7 +69,25 @@ const { isAuthenticated, currentUser } = storeToRefs(authStore);
 			class="relative container mx-auto flex items-center justify-between px-4 py-5 md:justify-start md:py-6 xl:px-0"
 		>
 			<div class="flex items-center gap-2">
-				<Menu class="mb-1 md:hidden" />
+				<Sheet>
+					<SheetTrigger as-child>
+						<Menu class="mr-2 mb-1 md:hidden" />
+					</SheetTrigger>
+					<SheetContent side="left">
+						<SheetHeader>
+							<SheetTitle>Edit profile</SheetTitle>
+							<SheetDescription>
+								Make changes to your profile here. Click save when you're done.
+							</SheetDescription>
+						</SheetHeader>
+
+						<SheetFooter>
+							<SheetClose as-child>
+								<Button type="submit"> Save changes </Button>
+							</SheetClose>
+						</SheetFooter>
+					</SheetContent>
+				</Sheet>
 				<RouterLink to="/" class="font-integralCF mr-3 mb-2 text-2xl lg:mr-10 lg:text-[32px]"
 					>SHOP.CO</RouterLink
 				>
@@ -121,12 +150,12 @@ const { isAuthenticated, currentUser } = storeToRefs(authStore);
 				/>
 			</div>
 			<div class="flex gap-4 md:gap-6">
-				<Search class="md:hidden" />
-				<ShoppingCart />
+				<Search class="size-5 md:hidden" />
+				<ShoppingCart class="size-5 md:size-6" />
 				<DropdownMenu>
 					<DropdownMenuTrigger class="flex items-center gap-1">
-						<CircleUserRound />
-						<span class="sr-only">Toggle menu</span>
+						<CircleUserRound class="size-5 md:size-6" />
+						<span class="sr-only">Toggle account menu</span>
 					</DropdownMenuTrigger>
 					<DropdownMenuContent align="end">
 						<template v-if="isAuthenticated">

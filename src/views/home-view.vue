@@ -6,7 +6,7 @@ import ProductListSec from "@/components/section/home/product-list-sec.vue";
 import Reviews from "@/components/section/home/review.vue";
 import { useProducts, useReviews } from "@/hook";
 import type { Product } from "@/types";
-import { computed, onMounted } from "vue";
+import { computed } from "vue";
 
 const { products, isLoading } = useProducts();
 const { reviews } = useReviews();
@@ -17,13 +17,6 @@ const newArrivalsData = computed<Product[]>(() => {
 
 const topSellingData = computed<Product[]>(() => {
 	return products.value?.slice(1, 5) || [];
-});
-
-onMounted(() => {
-	window.scrollTo({
-		top: 0,
-		behavior: "smooth",
-	});
 });
 </script>
 

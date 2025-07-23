@@ -58,6 +58,7 @@ const handleLogin = async () => {
 								placeholder="m@example.com"
 								v-model="form.email"
 								required
+								:disabled="isLoading"
 							/>
 						</div>
 						<div class="grid gap-3">
@@ -67,7 +68,13 @@ const handleLogin = async () => {
 									Forgot your password?
 								</a>
 							</div>
-							<Input id="password" type="password" v-model="form.password" required />
+							<Input
+								id="password"
+								type="password"
+								v-model="form.password"
+								required
+								:disabled="isLoading"
+							/>
 						</div>
 						<Button type="submit" class="w-full" @click="handleLogin" :disabled="isLoading">
 							Login

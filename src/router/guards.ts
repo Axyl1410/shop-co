@@ -15,17 +15,3 @@ export function requireAuth(
 		next();
 	}
 }
-
-export function requireGuest(
-	to: RouteLocationNormalized,
-	from: RouteLocationNormalized,
-	next: NavigationGuardNext,
-) {
-	const authStore = useAuthStore();
-	const { isAuthenticated } = storeToRefs(authStore);
-	if (isAuthenticated.value) {
-		next({ name: "home" });
-	} else {
-		next();
-	}
-}

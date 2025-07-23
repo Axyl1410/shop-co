@@ -1,4 +1,4 @@
-import { ServerAxiosConfig } from "@/constant/axios-config";
+import { ServerAxiosConfig } from "@/constant";
 import type { LoginCredentials, RegisterCredentials, User } from "@/types/users";
 import axios from "axios";
 

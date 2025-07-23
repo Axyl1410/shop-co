@@ -1,4 +1,4 @@
-import { ServerAxiosConfig } from "@/constant/axios-config";
+import { ServerAxiosConfig } from "@/constant";
 import type { Product } from "@/types";
 import { useQuery } from "@tanstack/vue-query";
 import axios from "axios";

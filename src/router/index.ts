@@ -16,16 +16,6 @@ const router = createRouter({
 			component: () => import("@/views/about-view.vue"),
 		},
 		{
-			path: "/login",
-			name: "login",
-			component: () => import("@/views/login-view.vue"),
-		},
-		{
-			path: "/register",
-			name: "register",
-			component: () => import("@/views/register-view.vue"),
-		},
-		{
 			path: "/profile",
 			name: "profile",
 			component: () => import("@/views/profile-view.vue"),
@@ -40,6 +30,19 @@ const router = createRouter({
 			path: "/:pathMatch(.*)*",
 			name: "not-found",
 			component: () => import("@/views/not-found-view.vue"),
+		},
+		{
+			path: "/",
+			name: "auth",
+			component: () => import("@/views/layout/auth-layout.vue"),
+			children: [
+				{ path: "login", name: "login", component: () => import("@/views/login-view.vue") },
+				{
+					path: "register",
+					name: "register",
+					component: () => import("@/views/register-view.vue"),
+				},
+			],
 		},
 	],
 });

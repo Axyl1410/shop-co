@@ -1,11 +1,5 @@
 <script setup lang="ts">
-defineOptions({ name: "AppNavbar" });
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import {
 	NavigationMenu,
 	NavigationMenuContent,
@@ -14,53 +8,20 @@ import {
 	NavigationMenuTrigger,
 	navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-import {
-	Sheet,
-	SheetClose,
-	SheetContent,
-	SheetDescription,
-	SheetFooter,
-	SheetHeader,
-	SheetTitle,
-	SheetTrigger,
-} from "@/components/ui/sheet";
+import { MenuList } from "@/constant";
 import { useAuthStore } from "@/stores/use-auth-store";
-import type { MenuListData } from "@/types";
-import { CircleUserRound, Menu, Search, ShoppingCart } from "lucide-vue-next";
+import { useCartStore } from "@/stores/use-cart-store";
+import { CircleUserRound, Search } from "lucide-vue-next";
 import { storeToRefs } from "pinia";
 import { RouterLink } from "vue-router";
-import { Button } from "../ui/button";
-import DropdownMenuSeparator from "../ui/dropdown-menu/DropdownMenuSeparator.vue";
-
-const data: MenuListData = [
-	{
-		id: 1,
-		label: "Men's clothes",
-		url: "/shop#men-clothes",
-		description: "In attractive and spectacular colors and designs",
-	},
-	{
-		id: 2,
-		label: "Women's clothes",
-		url: "/shop#women-clothes",
-		description: "Ladies, your style and tastes are important to us",
-	},
-	{
-		id: 3,
-		label: "Kids clothes",
-		url: "/shop#kids-clothes",
-		description: "For all ages, with happy and beautiful colors",
-	},
-	{
-		id: 4,
-		label: "Bags and Shoes",
-		url: "/shop#bag-shoes",
-		description: "Suitable for men, women and all tastes and styles",
-	},
-];
+import AccountMenu from "./account-menu.vue";
+import SheetMenu from "./sheet-menu.vue";
+import ShoppingCartIcon from "./shopping-cart.vue";
 
 const authStore = useAuthStore();
 const { isAuthenticated, currentUser } = storeToRefs(authStore);
+
+const cartStore = useCartStore();
 </script>
 
 <template>
@@ -69,25 +30,6 @@ const { isAuthenticated, currentUser } = storeToRefs(authStore);
 			class="relative container mx-auto flex items-center justify-between px-4 py-5 md:justify-start md:py-6 xl:px-0"
 		>
 			<div class="flex items-center gap-2">
-				<Sheet>
-					<SheetTrigger as-child>
-						<Menu class="mr-2 mb-1 md:hidden" />
-					</SheetTrigger>
-					<SheetContent side="left">
-						<SheetHeader>
-							<SheetTitle>Edit profile</SheetTitle>
-							<SheetDescription>
-								Make changes to your profile here. Click save when you're done.
-							</SheetDescription>
-						</SheetHeader>
-
-						<SheetFooter>
-							<SheetClose as-child>
-								<Button type="submit"> Save changes </Button>
-							</SheetClose>
-						</SheetFooter>
-					</SheetContent>
-				</Sheet>
 				<RouterLink to="/" class="font-integralCF mr-3 mb-2 text-2xl lg:mr-10 lg:text-[32px]"
 					>SHOP.CO</RouterLink
 				>
@@ -99,7 +41,7 @@ const { isAuthenticated, currentUser } = storeToRefs(authStore);
 						<NavigationMenuTrigger>Shop</NavigationMenuTrigger>
 						<NavigationMenuContent>
 							<ul class="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-								<li v-for="component in data" :key="component.id">
+								<li v-for="component in MenuList" :key="component.id">
 									<NavigationMenuLink as-child>
 										<RouterLink
 											:to="component.url"
@@ -149,45 +91,21 @@ const { isAuthenticated, currentUser } = storeToRefs(authStore);
 					name="search"
 				/>
 			</div>
-			<div class="flex gap-4 md:gap-6">
+			<div class="mb-1 flex items-center gap-4 md:gap-6">
 				<Search class="size-5 md:hidden" />
-				<ShoppingCart class="size-5 md:size-6" />
+				<ShoppingCartIcon :total-items="cartStore.getTotalItems" />
 				<DropdownMenu>
 					<DropdownMenuTrigger class="flex items-center gap-1">
 						<CircleUserRound class="size-5 md:size-6" />
 						<span class="sr-only">Toggle account menu</span>
 					</DropdownMenuTrigger>
-					<DropdownMenuContent align="end">
-						<template v-if="isAuthenticated">
-							<div class="p-2 text-sm text-black/80">
-								<DropdownMenuLabel>
-									<div v-if="currentUser && (currentUser.firstName || currentUser.lastName)">
-										Hi {{ (currentUser.firstName || "") + " " + (currentUser.lastName || "") }} !
-									</div>
-									<div v-else-if="currentUser && currentUser.username">
-										{{ currentUser.username }}
-									</div>
-									<div v-else-if="currentUser && currentUser.email">
-										{{ currentUser.email }}
-									</div></DropdownMenuLabel
-								>
-							</div>
-							<DropdownMenuSeparator />
-							<DropdownMenuItem as-child>
-								<RouterLink to="/profile">Profile</RouterLink>
-							</DropdownMenuItem>
-							<DropdownMenuItem @click="authStore.logout()">Sign out</DropdownMenuItem>
-						</template>
-						<template v-else>
-							<DropdownMenuItem as-child>
-								<RouterLink to="/login">Sign in</RouterLink>
-							</DropdownMenuItem>
-							<DropdownMenuItem as-child>
-								<RouterLink to="/register">Sign up</RouterLink>
-							</DropdownMenuItem>
-						</template>
-					</DropdownMenuContent>
+					<AccountMenu
+						:is-authenticated="isAuthenticated"
+						:current-user="currentUser"
+						:logout="authStore.logout"
+					/>
 				</DropdownMenu>
+				<SheetMenu />
 			</div>
 		</div>
 	</div>

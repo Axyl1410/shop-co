@@ -1,3 +1,4 @@
+import { calculatePrice } from "@/lib/utils";
 import type { CartType, Product } from "@/types";
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
@@ -11,6 +12,13 @@ export const useCartStore = defineStore(
 
 		const getTotalItems = computed(() => {
 			return cart.value.reduce((total, item) => total + item.quantity, 0);
+		});
+
+		const getTotalPrice = computed(() => {
+			return cart.value.reduce(
+				(total, item) => total + item.quantity * calculatePrice(item).finalPrice,
+				0,
+			);
 		});
 
 		const addToCart = (product: Product, quantity: number) => {
@@ -41,6 +49,7 @@ export const useCartStore = defineStore(
 
 			getCart,
 			getTotalItems,
+			getTotalPrice,
 
 			addToCart,
 			removeFromCart,

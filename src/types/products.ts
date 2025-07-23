@@ -1,3 +1,9 @@
+export interface Dimensions {
+	length: number;
+	width: number;
+	height: number;
+}
+
 export interface Product {
 	id: number;
 	name: string;
@@ -11,11 +17,7 @@ export interface Product {
 	salePrice: number;
 	costPrice: number;
 	weight: number;
-	dimensions: {
-		length: number;
-		width: number;
-		height: number;
-	};
+	dimensions: Dimensions;
 	images: string[];
 	mainImage: string;
 	tags: string[];

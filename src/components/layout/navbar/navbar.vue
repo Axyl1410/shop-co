@@ -1,20 +1,13 @@
 <script setup lang="ts">
 import { DropdownMenu, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import {
-	NavigationMenu,
-	NavigationMenuContent,
-	NavigationMenuItem,
-	NavigationMenuList,
-	NavigationMenuTrigger,
-	navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu";
-import { MenuList } from "@/constant";
+
 import { useAuthStore } from "@/stores/use-auth-store";
 import { useCartStore } from "@/stores/use-cart-store";
 import { CircleUserRound, Search } from "lucide-vue-next";
 import { storeToRefs } from "pinia";
 import { RouterLink } from "vue-router";
 import AccountMenu from "./account-menu.vue";
+import Navigation from "./navigation.vue";
 import SheetMenu from "./sheet-menu.vue";
 import ShoppingCartIcon from "./shopping-cart.vue";
 
@@ -34,47 +27,7 @@ const cartStore = useCartStore();
 					>SHOP.CO</RouterLink
 				>
 			</div>
-
-			<NavigationMenu class="mr-2 hidden text-base md:flex lg:mr-7">
-				<NavigationMenuList>
-					<NavigationMenuItem>
-						<NavigationMenuTrigger>Shop</NavigationMenuTrigger>
-						<NavigationMenuContent>
-							<ul class="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-								<li v-for="component in MenuList" :key="component.id">
-									<NavigationMenuLink as-child>
-										<RouterLink
-											:to="component.url"
-											class="hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground block space-y-1 rounded-md p-3 leading-none no-underline transition-colors outline-none select-none"
-										>
-											<div class="text-sm leading-none font-medium">{{ component.label }}</div>
-											<p class="text-muted-foreground line-clamp-2 text-sm leading-snug">
-												{{ component.description }}
-											</p>
-										</RouterLink>
-									</NavigationMenuLink>
-								</li>
-							</ul>
-						</NavigationMenuContent>
-					</NavigationMenuItem>
-					<NavigationMenuItem>
-						<NavigationMenuLink href="/shop#on-sale" :class="navigationMenuTriggerStyle()">
-							On Sale
-						</NavigationMenuLink>
-					</NavigationMenuItem>
-					<NavigationMenuItem>
-						<NavigationMenuLink href="/shop#new-arrivals" :class="navigationMenuTriggerStyle()">
-							New Arrivals
-						</NavigationMenuLink>
-					</NavigationMenuItem>
-					<NavigationMenuItem>
-						<NavigationMenuLink href="/shop#brands" :class="navigationMenuTriggerStyle()">
-							Brands
-						</NavigationMenuLink>
-					</NavigationMenuItem>
-				</NavigationMenuList>
-			</NavigationMenu>
-
+			<Navigation />
 			<div
 				class="relative mr-3 hidden w-full items-center overflow-hidden rounded-full bg-[#F0F0F0] pl-4 transition-all focus-within:shadow-lg md:flex lg:mr-10"
 			>

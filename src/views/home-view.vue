@@ -1,25 +1,42 @@
 <script setup lang="ts">
-import { Button } from '@/components/ui/button'
-import { useUsers } from '@/hook'
-import { toast } from 'vue-sonner'
+import Brands from "@/components/section/home/brands.vue";
+import DressStyle from "@/components/section/home/dress-style.vue";
+import HomeHeader from "@/components/section/home/home-header.vue";
+import ProductListSec from "@/components/section/home/product-list-sec.vue";
+import Reviews from "@/components/section/home/review.vue";
+import { useProducts, useReviews } from "@/hook";
+import type { Product } from "@/types";
+import { computed } from "vue";
 
-const { users, isError, error, isLoading } = useUsers()
+const { products, isLoading } = useProducts();
+const { reviews } = useReviews();
 
-const handleClick = () => {
-	toast('test')
-}
+const newArrivalsData = computed<Product[]>(() => {
+	return products.value?.slice(0, 4) || [];
+});
+
+const topSellingData = computed<Product[]>(() => {
+	return products.value?.slice(1, 5) || [];
+});
 </script>
 
 <template>
-	<main>
-		<div v-if="isError" class="text-red-500">{{ error }}</div>
-		<div v-if="isLoading" class="text-blue-500">Loading...</div>
-		<div v-if="users" class="mt-4">
-			<div v-for="user in users" :key="user.id" class="rounded border p-2">
-				<div>{{ user.username }} ({{ user.firstName }} {{ user.lastName }})</div>
-				<div>{{ user.email }}</div>
-			</div>
-		</div>
-	</main>
-	<Button @click="handleClick">Click me</Button>
+	<HomeHeader />
+	<Brands />
+	<div class="mt-10 flex flex-col gap-10">
+		<ProductListSec
+			title="New Arrivals"
+			:data="newArrivalsData"
+			view-all-link="/shop"
+			:is-loading="isLoading"
+		/>
+		<ProductListSec
+			title="Top Selling"
+			:data="topSellingData"
+			view-all-link="/shop"
+			:is-loading="isLoading"
+		/>
+		<DressStyle />
+		<Reviews :data="reviews || []" />
+	</div>
 </template>

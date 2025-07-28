@@ -20,6 +20,12 @@ See [Vite Configuration Reference](https://vite.dev/config/).
 pnpm install
 ```
 
+### Run api json
+
+```sh
+pnpm api
+```
+
 ### Compile and Hot-Reload for Development
 
 ```sh

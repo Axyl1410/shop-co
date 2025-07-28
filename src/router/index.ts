@@ -37,6 +37,12 @@ const router = createRouter({
 			component: () => import("@/views/not-found-view.vue"),
 		},
 		{
+			path: "/cart",
+			name: "cart",
+			component: () => import("@/views/cart-view.vue"),
+			beforeEnter: requireAuth,
+		},
+		{
 			path: "/",
 			name: "auth",
 			component: () => import("@/views/layout/auth-layout.vue"),

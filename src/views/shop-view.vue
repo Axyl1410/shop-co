@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import FilterPanel from "@/components/layout/filter-panel.vue";
+import MobileFilters from "@/components/layout/filters/mobile-filters.vue";
 import ProductCard from "@/components/section/home/product-card.vue";
 import {
 	Breadcrumb,
@@ -9,7 +10,6 @@ import {
 	BreadcrumbPage,
 	BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { Button } from "@/components/ui/button";
 import {
 	Pagination,
 	PaginationContent,
@@ -82,12 +82,7 @@ const { products } = useProducts();
 						</div>
 					</div>
 					<div class="flex items-center md:hidden">
-						<!--
-						todo: make mobile filter for mobile
-						-->
-						<Button variant="secondary" class="rounded-full !px-3 !py-4">
-							<Sliders />
-						</Button>
+						<MobileFilters />
 					</div>
 				</div>
 				<div class="sm:grid-col-2 mt-8 grid grid-cols-1 gap-8 md:grid-cols-3">

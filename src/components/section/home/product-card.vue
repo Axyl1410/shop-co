@@ -14,14 +14,12 @@ import pic6 from "@/assets/images/pic6.png";
 import pic7 from "@/assets/images/pic7.png";
 import pic8 from "@/assets/images/pic8.png";
 import pic9 from "@/assets/images/pic9.png";
-import ProductCardSkeleton from "@/components/skeleton/product-card-skeleton.vue";
 import Rating from "@/components/ui/Rating.vue";
 import { calculatePrice } from "@/lib/utils";
 import type { Product } from "@/types";
 
 interface Props {
-	data?: Product;
-	isLoading?: boolean;
+	data: Product;
 }
 
 defineProps<Props>();
@@ -50,10 +48,7 @@ const getImageSrc = (imagePath: string) => {
 </script>
 
 <template>
-	<template v-if="isLoading">
-		<ProductCardSkeleton />
-	</template>
-	<template v-else-if="data">
+	<div>
 		<router-link :to="`/shop/product/${data.id}`" class="flex aspect-auto flex-col items-start">
 			<div
 				class="mb-2.5 aspect-square w-full overflow-hidden rounded-[13px] bg-[#F0EEED] lg:max-w-[295px] lg:rounded-[20px] xl:mb-4"
@@ -101,5 +96,5 @@ const getImageSrc = (imagePath: string) => {
 				</template>
 			</div>
 		</router-link>
-	</template>
+	</div>
 </template>

@@ -8,7 +8,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-	duration: 2000,
+	duration: 5000,
 });
 
 const count = ref(props.from);

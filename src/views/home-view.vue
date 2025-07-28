@@ -8,8 +8,8 @@ import { useProducts, useReviews } from "@/hook";
 import type { Product } from "@/types";
 import { computed } from "vue";
 
-const { products, isLoading } = useProducts();
-const { reviews } = useReviews();
+const { products, isLoading: productLoading } = useProducts();
+const { reviews, isLoading: reviewLoading } = useReviews();
 
 const newArrivalsData = computed<Product[]>(() => {
 	return products.value?.slice(0, 4) || [];
@@ -28,15 +28,15 @@ const topSellingData = computed<Product[]>(() => {
 			title="New Arrivals"
 			:data="newArrivalsData"
 			view-all-link="/shop"
-			:is-loading="isLoading"
+			:is-loading="productLoading"
 		/>
 		<ProductListSec
 			title="Top Selling"
 			:data="topSellingData"
 			view-all-link="/shop"
-			:is-loading="isLoading"
+			:is-loading="productLoading"
 		/>
 		<DressStyle />
-		<Reviews :data="reviews || []" />
+		<Reviews :data="reviews || []" :is-loading="reviewLoading" />
 	</div>
 </template>

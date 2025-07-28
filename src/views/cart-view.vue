@@ -8,7 +8,10 @@ const cartStore = useCartStore();
 
 const cartItems = computed<CartType[]>(() => cartStore.cart);
 const totalPrice = computed(() =>
-	cartItems.value.reduce((sum, item) => sum + (item.price ?? item.originalPrice) * item.quantity, 0)
+	cartItems.value.reduce(
+		(sum, item) => sum + (item.price ?? item.originalPrice) * item.quantity,
+		0,
+	),
 );
 
 const updateQuantity = (item: CartType, qty: number) => {
@@ -29,14 +32,17 @@ const checkout = () => {
 <template>
 	<div class="container mx-auto py-8">
 		<h1 class="mb-6 text-2xl font-bold">Your Cart</h1>
-		<div v-if="cartItems.length === 0" class="text-center py-20">
-			<p class="text-gray-500 mb-4">Your cart is empty.</p>
-			<router-link to="/shop" class="bg-black text-white px-6 py-2 rounded hover:bg-gray-800 transition-colors">
+		<div v-if="cartItems.length === 0" class="py-20 text-center">
+			<p class="mb-4 text-gray-500">Your cart is empty.</p>
+			<router-link
+				to="/shop"
+				class="rounded bg-black px-6 py-2 text-white transition-colors hover:bg-gray-800"
+			>
 				Go Shopping
 			</router-link>
 		</div>
 		<div v-else>
-			<table class="w-full mb-8 border-collapse">
+			<table class="mb-8 w-full border-collapse">
 				<thead>
 					<tr class="border-b">
 						<th class="py-2 text-left">Product</th>
@@ -50,8 +56,8 @@ const checkout = () => {
 				</thead>
 				<tbody>
 					<tr v-for="item in cartItems" :key="item.variantId" class="border-b">
-						<td class="py-2 flex items-center gap-3">
-							<img :src="item.mainImage" alt="" class="w-16 h-16 object-cover rounded" />
+						<td class="flex items-center gap-3 py-2">
+							<img :src="item.mainImage" alt="" class="h-16 w-16 rounded object-cover" />
 							<span>{{ item.name }}</span>
 						</td>
 						<td class="py-2">{{ item.selectedColor }}</td>
@@ -60,7 +66,7 @@ const checkout = () => {
 						<td class="py-2">
 							<div class="flex items-center">
 								<button
-									class="px-2 py-1 border rounded-l"
+									class="rounded-l border px-2 py-1"
 									:disabled="item.quantity <= 1"
 									@click="updateQuantity(item, item.quantity - 1)"
 								>
@@ -68,24 +74,26 @@ const checkout = () => {
 								</button>
 								<span class="px-3">{{ item.quantity }}</span>
 								<button
-									class="px-2 py-1 border rounded-r"
+									class="rounded-r border px-2 py-1"
 									@click="updateQuantity(item, item.quantity + 1)"
 								>
 									+
 								</button>
 							</div>
 						</td>
-						<td class="py-2 font-semibold">${{ (item.price ?? item.originalPrice) * item.quantity }}</td>
+						<td class="py-2 font-semibold">
+							${{ (item.price ?? item.originalPrice) * item.quantity }}
+						</td>
 						<td class="py-2">
 							<button @click="removeItem(item)" class="text-red-500 hover:underline">Remove</button>
 						</td>
 					</tr>
 				</tbody>
 			</table>
-			<div class="flex justify-between items-center">
+			<div class="flex items-center justify-between">
 				<div class="text-xl font-bold">Total: ${{ totalPrice }}</div>
 				<button
-					class="bg-black text-white px-6 py-3 rounded hover:bg-gray-800 transition-colors"
+					class="rounded bg-black px-6 py-3 text-white transition-colors hover:bg-gray-800"
 					@click="checkout"
 				>
 					Checkout

@@ -37,6 +37,10 @@ defineProps<Props>();
 			<DropdownMenuItem as-child>
 				<RouterLink to="/profile">Profile</RouterLink>
 			</DropdownMenuItem>
+			<DropdownMenuItem as-child>
+				<RouterLink to="/cart">Your cart</RouterLink>
+			</DropdownMenuItem>
+
 			<DropdownMenuSeparator />
 			<DropdownMenuItem @click="logout">Sign out</DropdownMenuItem>
 		</template>

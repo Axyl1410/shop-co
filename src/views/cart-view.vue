@@ -1,18 +1,14 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { calculatePrice } from "@/lib/utils";
 import { useCartStore } from "@/stores/use-cart-store";
 import type { CartType } from "@/types/cart";
+import { computed } from "vue";
 import { toast } from "vue-sonner";
 
 const cartStore = useCartStore();
 
 const cartItems = computed<CartType[]>(() => cartStore.cart);
-const totalPrice = computed(() =>
-	cartItems.value.reduce(
-		(sum, item) => sum + (item.price ?? item.originalPrice) * item.quantity,
-		0,
-	),
-);
+const totalPrice = computed(() => cartStore.getTotalPrice);
 
 const updateQuantity = (item: CartType, qty: number) => {
 	if (qty < 1) return;
@@ -20,7 +16,7 @@ const updateQuantity = (item: CartType, qty: number) => {
 };
 
 const removeItem = (item: CartType) => {
-	cartStore.removeFromCart(item);
+	cartStore.clearItemFromCart(item);
 	toast.success(`Removed ${item.name} from cart`);
 };
 
@@ -34,12 +30,7 @@ const checkout = () => {
 		<h1 class="cart-title">Your Cart</h1>
 		<div v-if="cartItems.length === 0" class="cart-empty">
 			<p class="cart-empty-text">Your cart is empty.</p>
-			<router-link
-				to="/shop"
-				class="cart-shop-btn"
-			>
-				Go Shopping
-			</router-link>
+			<router-link to="/shop" class="cart-shop-btn"> Go Shopping </router-link>
 		</div>
 		<div v-else>
 			<table class="cart-table">
@@ -55,14 +46,14 @@ const checkout = () => {
 					</tr>
 				</thead>
 				<tbody>
-					<tr v-for="item in cartItems" :key="item.variantId" class="cart-tr">
+					<tr v-for="item in cartItems" :key="item.id" class="cart-tr">
 						<td class="cart-product">
-							<img :src="item.mainImage" alt="" class="cart-img" />
+							<img :src="`/src/assets${item.mainImage}`" alt="" class="cart-img" />
 							<span>{{ item.name }}</span>
 						</td>
-						<td class="cart-td">{{ item.selectedColor }}</td>
-						<td class="cart-td">{{ item.selectedSize }}</td>
-						<td class="cart-td">${{ item.price ?? item.originalPrice }}</td>
+						<td class="cart-td">{{ item.selectedColor || "N/A" }}</td>
+						<td class="cart-td">{{ item.selectedSize || "N/A" }}</td>
+						<td class="cart-td">${{ item.price || calculatePrice(item).finalPrice }}</td>
 						<td class="cart-td">
 							<div class="cart-qty">
 								<button
@@ -82,7 +73,7 @@ const checkout = () => {
 							</div>
 						</td>
 						<td class="cart-total">
-							${{ (item.price ?? item.originalPrice) * item.quantity }}
+							${{ (item.price || calculatePrice(item).finalPrice) * item.quantity }}
 						</td>
 						<td class="cart-td">
 							<button @click="removeItem(item)" class="cart-remove-btn">Remove</button>
@@ -92,12 +83,7 @@ const checkout = () => {
 			</table>
 			<div class="cart-summary">
 				<div class="cart-summary-total">Total: ${{ totalPrice }}</div>
-				<button
-					class="cart-checkout-btn"
-					@click="checkout"
-				>
-					Checkout
-				</button>
+				<button class="cart-checkout-btn" @click="checkout">Checkout</button>
 			</div>
 		</div>
 	</div>

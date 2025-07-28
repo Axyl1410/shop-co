@@ -1,5 +1,15 @@
 import type { Product } from "./products";
 
-export type CartType = Product & {
-	quantity: number;
-};
+interface variant {
+	selectedColor?: string;
+	selectedSize?: string;
+	selectedColorCode?: string;
+	variantId?: number;
+	variantSku?: string;
+	price?: number;
+}
+
+export type CartType = Product &
+	variant & {
+		quantity: number;
+	};

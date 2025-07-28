@@ -14,6 +14,10 @@
 					</BreadcrumbItem>
 					<BreadcrumbSeparator />
 					<BreadcrumbItem>
+						<BreadcrumbLink href="/shop/product">Products</BreadcrumbLink>
+					</BreadcrumbItem>
+					<BreadcrumbSeparator />
+					<BreadcrumbItem>
 						<BreadcrumbPage>{{ product?.name || 'Loading...' }}</BreadcrumbPage>
 					</BreadcrumbItem>
 				</BreadcrumbList>
@@ -156,9 +160,10 @@
 							:transition="{ duration: 0.5, delay: 0.6 }"
 						>
 							<div class="mb-3 flex items-center sm:mb-3.5">
-								<StarRating :initialValue="product.rating" />
+								<StarRating :initialValue="getAverageRating" />
 								<span class="ml-[11px] pb-0.5 text-xs text-black sm:ml-[13px] sm:pb-0 sm:text-sm">
-									{{ product.rating.toFixed(1) }}<span class="text-black/60">/5</span>
+									{{ getAverageRating.toFixed(1) }}<span class="text-black/60">/5</span>
+									<span class="ml-2 text-black/60">({{ getReviewCount }} reviews)</span>
 								</span>
 							</div>
 						</Motion>
@@ -169,8 +174,12 @@
 						>
 							<div class="mb-5 flex items-center space-x-2.5 sm:space-x-3">
 								<span class="text-2xl font-bold text-black sm:text-[32px]"
-									>${{ product.salePrice }}</span
+									>${{ getVariantByColorAndSize(selectedColor, selectedSize)?.salePrice || product?.originalPrice }}</span
 								>
+								<span v-if="product?.originalPrice !== getVariantByColorAndSize(selectedColor, selectedSize)?.salePrice" 
+									class="text-lg text-gray-500 line-through">
+									${{ product?.originalPrice }}
+								</span>
 							</div>
 						</Motion>
 						<p class="mb-5 text-sm text-black/60 sm:text-base">
@@ -182,15 +191,15 @@
 							<h3 class="text-sm font-semibold text-black">Select Colors</h3>
 							<div class="flex space-x-3">
 								<button
-									v-for="color in ['#556B2F', '#2F4F2F', '#000080']"
-									:key="color"
+									v-for="color in getAvailableColors"
+									:key="color.code"
 									class="h-8 w-8 rounded-full border-2 border-gray-300 transition-all hover:border-black"
-									:class="{ 'border-black': selectedColor === color }"
-									:style="{ backgroundColor: color }"
-									@click="selectedColor = color"
+									:class="{ 'border-black': selectedColor === color.name }"
+									:style="{ backgroundColor: color.code }"
+									@click="selectedColor = color.name"
 								>
 									<svg
-										v-if="selectedColor === color"
+										v-if="selectedColor === color.name"
 										class="h-4 w-4 text-white"
 										fill="currentColor"
 										viewBox="0 0 20 20"
@@ -210,15 +219,28 @@
 							<h3 class="text-sm font-semibold text-black">Choose Size</h3>
 							<div class="flex flex-wrap gap-2">
 								<button
-									v-for="size in ['Small', 'Medium', 'Large', 'X-Large']"
+									v-for="size in getAvailableSizes"
 									:key="size"
 									class="border border-gray-300 px-4 py-2 text-sm font-medium transition-all hover:border-black"
-									:class="{ 'border-black bg-black text-white': selectedSize === size }"
+									:class="{ 
+										'border-black bg-black text-white': selectedSize === size,
+										'opacity-50 cursor-not-allowed': !isVariantAvailable(selectedColor, size)
+									}"
+									:disabled="!isVariantAvailable(selectedColor, size)"
 									@click="selectedSize = size"
 								>
 									{{ size }}
+									<span v-if="!isVariantAvailable(selectedColor, size)" class="text-xs">(Out of stock)</span>
 								</button>
 							</div>
+						</div>
+
+						<!-- Stock Information -->
+						<div v-if="getStockQuantity(selectedColor, selectedSize) > 0" class="text-sm text-green-600">
+							In Stock: {{ getStockQuantity(selectedColor, selectedSize) }} available
+						</div>
+						<div v-else class="text-sm text-red-600">
+							Out of Stock
 						</div>
 
 						<!-- Quantity Selector -->
@@ -226,20 +248,26 @@
 							<div class="flex items-center rounded border border-gray-300">
 								<button
 									class="px-3 py-2 text-gray-600 hover:text-black"
+									:disabled="quantity <= 1"
 									@click="quantity > 1 && quantity--"
 								>
 									-
 								</button>
 								<span class="px-4 py-2 text-sm font-medium">{{ quantity }}</span>
-								<button class="px-3 py-2 text-gray-600 hover:text-black" @click="quantity++">
+								<button 
+									class="px-3 py-2 text-gray-600 hover:text-black" 
+									:disabled="quantity >= getStockQuantity(selectedColor, selectedSize)"
+									@click="quantity < getStockQuantity(selectedColor, selectedSize) && quantity++"
+								>
 									+
 								</button>
 							</div>
 							<button
-								class="flex-1 bg-black px-6 py-3 font-medium text-white transition-colors hover:bg-gray-800 cursor-pointer"
+								class="flex-1 bg-black px-6 py-3 font-medium text-white transition-colors hover:bg-gray-800 disabled:bg-gray-400 disabled:cursor-not-allowed"
+								:disabled="!isVariantAvailable(selectedColor, selectedSize)"
 								@click="addToCart"
 							>
-								Add to Cart
+								{{ isVariantAvailable(selectedColor, selectedSize) ? 'Add to Cart' : 'Out of Stock' }}
 							</button>
 						</div>
 					</Motion>
@@ -428,6 +456,7 @@
 import { computed, ref, onMounted, onUnmounted, watch } from "vue";
 import { useRoute } from "vue-router";
 import { Motion } from "motion-v";
+import { toast } from "vue-sonner";
 
 import {
 	Breadcrumb,
@@ -439,7 +468,7 @@ import {
 } from "@/components/ui/breadcrumb";
 
 import StarRating from "@/components/ui/Rating.vue";
-import { useProducts } from "@/hook/use-products";
+import { useProductDetail } from "@/hook/use-product-detail";
 import { useCartStore } from "@/stores/use-cart-store";
 
 // Import images for mapping
@@ -464,33 +493,22 @@ import ProductListSec from "@/components/section/home/product-list-sec.vue";
 const route = useRoute();
 const productId = computed(() => route.params.id as string);
 
-// Lấy danh sách sản phẩm từ API
-const { products, isLoading } = useProducts();
+// Sử dụng hook mới để lấy thông tin chi tiết sản phẩm
+const {
+	product,
+	isLoading,
+	relatedProducts,
+	getAvailableColors,
+	getAvailableSizes,
+	getVariantByColorAndSize,
+	getStockQuantity,
+	isVariantAvailable,
+	getAverageRating,
+	getReviewCount,
+} = useProductDetail(productId.value);
 
 // Cart store
 const cartStore = useCartStore();
-
-
-// Tìm sản phẩm theo id từ danh sách
-const product = computed(() => {
-	if (!products.value) return null;
-	return products.value.find((p) => String(p.id) === productId.value);
-});
-
-
-
-// Các sản phẩm liên quan (tùy ý, có thể lấy từ products hoặc giữ nguyên)
-
-const relatedProducts = computed(
-	() =>
-		products.value
-			?.filter(
-				(p) =>
-					String(p.categoryId) === String(product.value?.categoryId) &&
-					String(p.id) !== String(productId.value),
-			)
-			.slice(0, 4) || [],
-);
 
 // Image mapping function
 const imageMap: Record<string, string> = {
@@ -520,20 +538,30 @@ const getImageSrc = (imagePath: string) => {
 };
 
 // Product selection state
-const selectedColor = ref("#556B2F");
-const selectedSize = ref("Large");
+const selectedColor = ref("");
+const selectedSize = ref("");
 const quantity = ref(1);
 const activeTab = ref("Product Details");
 const selectedImageIndex = ref(0);
 const isLightboxOpen = ref(false);
+
+// Set default color and size when product loads
+watch(product, (newProduct) => {
+	if (newProduct && getAvailableColors.value.length > 0) {
+		selectedColor.value = getAvailableColors.value[0].name;
+	}
+	if (newProduct && getAvailableSizes.value.length > 0) {
+		selectedSize.value = getAvailableSizes.value[0];
+	}
+}, { immediate: true });
 
 // Watch for route changes to reset states when navigating to different products
 watch(
 	() => route.params.id,
 	() => {
 		// Reset states when navigating to a different product
-		selectedColor.value = "#556B2F";
-		selectedSize.value = "Large";
+		selectedColor.value = "";
+		selectedSize.value = "";
 		quantity.value = 1;
 		activeTab.value = "Product Details";
 		selectedImageIndex.value = 0;
@@ -550,21 +578,40 @@ const componentKey = computed(() => `product-${productId.value}`);
 // Add to cart function
 const addToCart = () => {
 	if (product.value) {
-		// Add product to cart with selected options
-		const productWithOptions = {
+		const selectedVariant = getVariantByColorAndSize(selectedColor.value, selectedSize.value);
+		
+		if (!selectedVariant) {
+			toast.error("Please select a valid color and size");
+			return;
+		}
+		
+		if (!isVariantAvailable(selectedColor.value, selectedSize.value)) {
+			toast.error("This variant is out of stock");
+			return;
+		}
+		
+		// Add product to cart with selected variant
+		const productWithVariant = {
 			...product.value,
 			selectedColor: selectedColor.value,
 			selectedSize: selectedSize.value,
+			selectedColorCode: selectedVariant.colorCode,
+			variantId: selectedVariant.id,
+			variantSku: selectedVariant.sku,
+			price: selectedVariant.salePrice,
 		};
 		
-		cartStore.addToCart(productWithOptions, quantity.value);
+		cartStore.addToCart(productWithVariant, quantity.value);
 		
-		// Show success message (you can add toast notification here)
+		// Show success message
+		toast.success(`Added ${quantity.value} ${product.value.name} to cart`);
+		
 		console.log("Added to cart:", {
 			product: product.value.name,
 			color: selectedColor.value,
 			size: selectedSize.value,
 			quantity: quantity.value,
+			variant: selectedVariant,
 		});
 	}
 };

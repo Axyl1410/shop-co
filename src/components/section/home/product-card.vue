@@ -55,7 +55,7 @@ defineProps<Props>();
 					</span>
 				</template>
 				<template v-else>
-					<span class="text-xl font-bold text-black xl:text-2xl"> ${{ data.salePrice }} </span>
+					<span class="text-xl font-bold text-black xl:text-2xl"> ${{ calculatePrice(data).finalPrice }} </span>
 				</template>
 			</div>
 		</router-link>

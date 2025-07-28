@@ -16,6 +16,11 @@ const router = createRouter({
 			component: () => import("@/views/about-view.vue"),
 		},
 		{
+			path: "/shop/product/:id",
+			name: "product-detail",
+			component: () => import("@/views/product-detail.vue"),
+		},
+		{
 			path: "/profile",
 			name: "profile",
 			component: () => import("@/views/profile-view.vue"),
@@ -30,6 +35,12 @@ const router = createRouter({
 			path: "/:pathMatch(.*)*",
 			name: "not-found",
 			component: () => import("@/views/not-found-view.vue"),
+		},
+		{
+			path: "/cart",
+			name: "cart",
+			component: () => import("@/views/cart-view.vue"),
+			beforeEnter: requireAuth,
 		},
 		{
 			path: "/",

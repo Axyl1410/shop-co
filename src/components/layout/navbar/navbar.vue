@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { DropdownMenu, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-
 import { useAuthStore } from "@/stores/use-auth-store";
 import { useCartStore } from "@/stores/use-cart-store";
 import { CircleUserRound, Search } from "lucide-vue-next";
@@ -46,7 +45,14 @@ const cartStore = useCartStore();
 			</div>
 			<div class="mb-1 flex items-center gap-4 md:gap-6">
 				<Search class="size-5 md:hidden" />
-				<ShoppingCartIcon :total-items="cartStore.getTotalItems" />
+				<ShoppingCartIcon
+					:total-items="cartStore.getTotalItems"
+					:data="cartStore.getCart"
+					:clear-item-from-cart="cartStore.clearItemFromCart"
+					:add-to-cart="cartStore.addToCart"
+					:remove-from-cart="cartStore.removeFromCart"
+					:get-total-price="cartStore.getTotalPrice"
+				/>
 				<DropdownMenu>
 					<DropdownMenuTrigger class="flex items-center gap-1">
 						<CircleUserRound class="size-5 md:size-6" />

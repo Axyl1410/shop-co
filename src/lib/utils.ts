@@ -16,15 +16,14 @@ export const formatDate = (dateString: string) => {
 };
 
 export const calculatePrice = (product: Product) => {
-	const basePrice = product.basePrice;
-	const salePrice = product.salePrice;
-	const discount = basePrice - salePrice;
-	const discountPercentage = discount > 0 ? Math.round((discount / basePrice) * 100) : 0;
+	const originalPrice = product.originalPrice;
+	const discountPercentage = product.discountPercentage;
+	const finalPrice = originalPrice * (1 - discountPercentage / 100);
 
 	return {
-		finalPrice: salePrice,
-		originalPrice: basePrice,
+		finalPrice: Math.round(finalPrice),
+		originalPrice: originalPrice,
 		discountPercentage,
-		hasDiscount: discount > 0,
+		hasDiscount: discountPercentage > 0,
 	};
 };

@@ -40,6 +40,13 @@ export const useCartStore = defineStore(
 			}
 		};
 
+		const clearItemFromCart = (product: Product) => {
+			const existingProduct = cart.value.find((item) => item.id === product.id);
+			if (existingProduct) {
+				cart.value = cart.value.filter((item) => item.id !== product.id);
+			}
+		};
+
 		const clearCart = () => {
 			cart.value = [];
 		};
@@ -53,6 +60,7 @@ export const useCartStore = defineStore(
 
 			addToCart,
 			removeFromCart,
+			clearItemFromCart,
 			clearCart,
 		};
 	},

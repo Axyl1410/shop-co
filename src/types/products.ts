@@ -13,9 +13,8 @@ export interface Product {
 	categoryId: number;
 	brand: string;
 	sku: string;
-	basePrice: number;
-	salePrice: number;
-	costPrice: number;
+	originalPrice: number;
+	discountPercentage: number;
 	weight: number;
 	dimensions: Dimensions;
 	images: string[];
@@ -29,4 +28,15 @@ export interface Product {
 	viewCount: number;
 	createdAt: string;
 	updatedAt: string;
+}
+
+export interface ProductVariant {
+	id: number;
+	productId: number;
+	size: string;
+	color: string;
+	colorCode: string;
+	sku: string;
+	salePrice: number;
+	stockQuantity: number;
 }

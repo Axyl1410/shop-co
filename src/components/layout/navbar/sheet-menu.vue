@@ -1,15 +1,6 @@
 <script setup lang="ts">
-import { Button } from "@/components/ui/button";
-import {
-	Sheet,
-	SheetClose,
-	SheetContent,
-	SheetDescription,
-	SheetFooter,
-	SheetHeader,
-	SheetTitle,
-	SheetTrigger,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { MenuList } from "@/constant";
 import { Menu } from "lucide-vue-next";
 </script>
 
@@ -20,17 +11,45 @@ import { Menu } from "lucide-vue-next";
 		</SheetTrigger>
 		<SheetContent>
 			<SheetHeader>
-				<SheetTitle>Edit profile</SheetTitle>
-				<SheetDescription>
-					Make changes to your profile here. Click save when you're done.
-				</SheetDescription>
+				<SheetTitle>Menu</SheetTitle>
 			</SheetHeader>
 
-			<SheetFooter>
-				<SheetClose as-child>
-					<Button type="submit"> Save changes </Button>
-				</SheetClose>
-			</SheetFooter>
+			<div class="flex flex-col gap-4 px-4">
+				<div class="space-y-2">
+					<div class="space-y-2">
+						<RouterLink
+							v-for="item in MenuList"
+							:key="item.id"
+							:to="item.url"
+							class="hover:text-primary block py-2 text-sm transition-colors"
+						>
+							<div class="font-medium">{{ item.label }}</div>
+							<p class="text-muted-foreground text-xs">{{ item.description }}</p>
+						</RouterLink>
+					</div>
+				</div>
+
+				<div class="space-y-2">
+					<RouterLink
+						to="/shop#on-sale"
+						class="hover:text-primary block py-2 text-sm transition-colors"
+					>
+						On Sale
+					</RouterLink>
+					<RouterLink
+						to="/shop#new-arrivals"
+						class="hover:text-primary block py-2 text-sm transition-colors"
+					>
+						New Arrivals
+					</RouterLink>
+					<RouterLink
+						to="/shop#brands"
+						class="hover:text-primary block py-2 text-sm transition-colors"
+					>
+						Brands
+					</RouterLink>
+				</div>
+			</div>
 		</SheetContent>
 	</Sheet>
 </template>

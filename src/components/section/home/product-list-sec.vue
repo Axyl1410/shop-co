@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import ProductCard from "@/components/section/home/product-card.vue";
+import ProductCardSkeleton from "@/components/skeleton/product-card-skeleton.vue";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import type { Product } from "@/types";
 import { Motion } from "motion-v";
@@ -34,13 +35,23 @@ defineProps<Props>();
 		>
 			<Carousel :opts="{ align: 'start' }" class="mb-6 w-full md:mb-9">
 				<CarouselContent class="mx-4 space-x-4 sm:space-x-5 xl:mx-0">
-					<CarouselItem
-						v-for="product in data"
-						:key="product.id"
-						class="w-full max-w-[198px] pl-0 sm:max-w-[295px]"
-					>
-						<ProductCard :data="product" :skeleton="isLoading" />
-					</CarouselItem>
+					<template v-if="data.length && !isLoading">
+						<CarouselItem
+							v-for="product in data"
+							:key="product.id"
+							class="w-full max-w-[198px] pl-0 sm:max-w-[295px]"
+						>
+							<ProductCard :data="product" /> </CarouselItem
+					></template>
+					<template v-else>
+						<CarouselItem
+							v-for="item in 4"
+							:key="item"
+							class="w-full max-w-[198px] pl-0 sm:max-w-[295px]"
+						>
+							<ProductCardSkeleton />
+						</CarouselItem>
+					</template>
 				</CarouselContent>
 			</Carousel>
 

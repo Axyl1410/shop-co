@@ -1,65 +1,23 @@
 <script setup lang="ts">
-import pic1 from "@/assets/images/pic1.png";
-import pic10 from "@/assets/images/pic10.png";
-import pic11 from "@/assets/images/pic11.png";
-import pic12 from "@/assets/images/pic12.png";
-import pic13 from "@/assets/images/pic13.png";
-import pic14 from "@/assets/images/pic14.png";
-import pic15 from "@/assets/images/pic15.png";
-import pic2 from "@/assets/images/pic2.png";
-import pic3 from "@/assets/images/pic3.png";
-import pic4 from "@/assets/images/pic4.png";
-import pic5 from "@/assets/images/pic5.png";
-import pic6 from "@/assets/images/pic6.png";
-import pic7 from "@/assets/images/pic7.png";
-import pic8 from "@/assets/images/pic8.png";
-import pic9 from "@/assets/images/pic9.png";
-import ProductCardSkeleton from "@/components/skeleton/product-card-skeleton.vue";
 import Rating from "@/components/ui/Rating.vue";
 import { calculatePrice } from "@/lib/utils";
 import type { Product } from "@/types";
 
 interface Props {
-	data?: Product;
-	isLoading?: boolean;
+	data: Product;
 }
 
 defineProps<Props>();
-
-const imageMap: Record<string, string> = {
-	"/images/pic1.png": pic1,
-	"/images/pic2.png": pic2,
-	"/images/pic3.png": pic3,
-	"/images/pic4.png": pic4,
-	"/images/pic5.png": pic5,
-	"/images/pic6.png": pic6,
-	"/images/pic7.png": pic7,
-	"/images/pic8.png": pic8,
-	"/images/pic9.png": pic9,
-	"/images/pic10.png": pic10,
-	"/images/pic11.png": pic11,
-	"/images/pic12.png": pic12,
-	"/images/pic13.png": pic13,
-	"/images/pic14.png": pic14,
-	"/images/pic15.png": pic15,
-};
-
-const getImageSrc = (imagePath: string) => {
-	return imageMap[imagePath] || imagePath;
-};
 </script>
 
 <template>
-	<template v-if="isLoading">
-		<ProductCardSkeleton />
-	</template>
-	<template v-else-if="data">
-		<router-link :to="`/product/${data.id}`" class="flex aspect-auto flex-col items-start">
+	<div>
+		<router-link :to="`/shop/product/${data.id}`" class="flex aspect-auto flex-col items-start">
 			<div
 				class="mb-2.5 aspect-square w-full overflow-hidden rounded-[13px] bg-[#F0EEED] lg:max-w-[295px] lg:rounded-[20px] xl:mb-4"
 			>
 				<img
-					:src="getImageSrc(data.mainImage)"
+					:src="`/src/assets${data.images[0]}`"
 					:alt="data.name"
 					class="h-full w-full rounded-md object-contain transition-all duration-500 hover:scale-110"
 				/>
@@ -101,5 +59,5 @@ const getImageSrc = (imagePath: string) => {
 				</template>
 			</div>
 		</router-link>
-	</template>
+	</div>
 </template>

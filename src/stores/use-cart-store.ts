@@ -16,9 +16,7 @@ export const useCartStore = defineStore(
 
 		const getTotalPrice = computed(() => {
 			return cart.value.reduce((total, item) => {
-				const price = item.price
-					? calculatePrice(item).finalPrice + item.price
-					: calculatePrice(item).finalPrice;
+				const price = item.price || calculatePrice(item).finalPrice;
 				return total + item.quantity * price;
 			}, 0);
 		});

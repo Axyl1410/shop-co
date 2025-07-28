@@ -1,3 +1,5 @@
+import type { Category } from "./category";
+
 export interface Dimensions {
 	length: number;
 	width: number;
@@ -11,6 +13,10 @@ export interface Product {
 	description: string;
 	shortDescription: string;
 	categoryId: number;
+	categoryName: Category["name"];
+	size: string[];
+	color: string[];
+	stock: number;
 	brand: string;
 	sku: string;
 	basePrice: number;

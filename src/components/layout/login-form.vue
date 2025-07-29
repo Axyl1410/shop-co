@@ -28,7 +28,6 @@ const handleLogin = async () => {
 
 		if (res.success) {
 			error.value = "";
-			localStorage.setItem("currentUserId", res.user.id);
 			router.push("/");
 		} else {
 			error.value = res.error;

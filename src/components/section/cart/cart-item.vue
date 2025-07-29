@@ -48,7 +48,7 @@ const totalPrice = computed(() => {
 					<span>-</span>
 					{{ item.selectedSize || "N/A" }}
 				</p>
-				<p class="text-muted-foreground text-xs">${{ itemPrice }}</p>
+				<p class="text-muted-foreground text-xs">${{ item.price }}</p>
 			</div>
 
 			<div class="mt-2 flex items-center gap-2">

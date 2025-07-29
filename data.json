@@ -300,7 +300,7 @@
       "color": "Black",
       "colorCode": "#000000",
       "sku": "TSH-001-XL-BLK",
-      "salePrice": 120,
+      "salePrice": 130,
       "stockQuantity": 35
     },
     {
@@ -310,7 +310,7 @@
       "color": "Black",
       "colorCode": "#000000",
       "sku": "TSH-001-XXL-BLK",
-      "salePrice": 120,
+      "salePrice": 135,
       "stockQuantity": 30
     },
     {
@@ -321,7 +321,7 @@
       "colorCode": "#FFFFFF",
       "sku": "TSH-001-S-WHT",
       "salePrice": 120,
-      "stockQuantity": 48
+      "stockQuantity": 0
     },
     {
       "id": 7,
@@ -330,7 +330,7 @@
       "color": "White",
       "colorCode": "#FFFFFF",
       "sku": "TSH-001-M-WHT",
-      "salePrice": 120,
+      "salePrice": 130,
       "stockQuantity": 42
     },
     {
@@ -340,7 +340,7 @@
       "color": "White",
       "colorCode": "#FFFFFF",
       "sku": "TSH-001-L-WHT",
-      "salePrice": 120,
+      "salePrice": 140,
       "stockQuantity": 38
     },
     {
@@ -350,7 +350,7 @@
       "color": "White",
       "colorCode": "#FFFFFF",
       "sku": "TSH-001-XL-WHT",
-      "salePrice": 120,
+      "salePrice": 150,
       "stockQuantity": 35
     },
     {

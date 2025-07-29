@@ -10,10 +10,6 @@
 					</BreadcrumbItem>
 					<BreadcrumbSeparator />
 					<BreadcrumbItem>
-						<BreadcrumbLink href="/shop">Shop</BreadcrumbLink>
-					</BreadcrumbItem>
-					<BreadcrumbSeparator />
-					<BreadcrumbItem>
 						<BreadcrumbLink href="/shop/product">Products</BreadcrumbLink>
 					</BreadcrumbItem>
 					<BreadcrumbSeparator />
@@ -249,7 +245,7 @@
 								>
 									<svg
 										v-if="selectedColor === color.name"
-										class="h-4 w-4 text-white"
+										class="h-4 w-4 text-white mix-blend-difference"
 										fill="currentColor"
 										viewBox="0 0 20 20"
 									>
@@ -620,6 +616,7 @@ import StarRating from "@/components/ui/Rating.vue";
 import { useProductDetail } from "@/hook/use-product-detail";
 import { useCartStore } from "@/stores/use-cart-store";
 import { formatDate } from "@/lib/utils";
+import type { CartType } from "@/types/cart";
 
 // Import images for mapping
 import pic1 from "@/assets/images/pic1.png";
@@ -642,7 +639,7 @@ import ProductListSec from "@/components/section/home/product-list-sec.vue";
 const route = useRoute();
 const productId = computed(() => route.params.id as string);
 
-// Sử dụng hook mới để lấy thông tin chi tiết sản phẩm
+//  lấy thông tin chi tiết sản phẩm
 const {
 	product,
 	isLoading,
@@ -696,7 +693,7 @@ const activeTab = ref("Product Details");
 const selectedImageIndex = ref(0);
 const isLightboxOpen = ref(false);
 
-// Set default color and size when product loads
+// dat gia tri mac dinh cho color va size
 watch(product, (newProduct) => {
 	console.log("Product changed:", newProduct);
 	if (newProduct && getAvailableColors.value.length > 0) {
@@ -709,7 +706,7 @@ watch(product, (newProduct) => {
 	}
 }, { immediate: true });
 
-// Debug: Watch for variants changes
+// check xem co variant nao khong
 watch(product, (newProduct) => {
 	console.log("Product changed:", newProduct);
 	console.log("Available colors:", getAvailableColors.value);
@@ -752,7 +749,7 @@ const addToCart = () => {
 		}
 		
 		// Add product to cart with selected variant
-		const productWithVariant = {
+		const productWithVariant: CartType = {
 			...product.value,
 			selectedColor: selectedColor.value,
 			selectedSize: selectedSize.value,
@@ -760,6 +757,7 @@ const addToCart = () => {
 			variantId: selectedVariant.id,
 			variantSku: selectedVariant.sku,
 			price: selectedVariant.salePrice,
+			quantity: quantity.value,
 		};
 		
 		cartStore.addToCart(productWithVariant, quantity.value);

@@ -1,5 +1,5 @@
 import { calculatePrice } from "@/lib/utils";
-import type { CartType, Product } from "@/types";
+import type { CartType } from "@/types";
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 
@@ -21,8 +21,8 @@ export const useCartStore = defineStore(
 			}, 0);
 		});
 
-		const addToCart = (product: Product | CartType, quantity: number) => {
-			const productKey = (product as CartType).variantId || product.id;
+		const addToCart = (product: CartType, quantity: number) => {
+			const productKey = product.variantId || product.id;
 			const existingProduct = cart.value.find((item) => (item.variantId || item.id) === productKey);
 
 			if (existingProduct) {
@@ -32,8 +32,8 @@ export const useCartStore = defineStore(
 			}
 		};
 
-		const updateQuantity = (product: Product | CartType, quantity: number) => {
-			const productKey = (product as CartType).variantId || product.id;
+		const updateQuantity = (product: CartType, quantity: number) => {
+			const productKey = product.variantId || product.id;
 			const existingProduct = cart.value.find((item) => (item.variantId || item.id) === productKey);
 
 			if (existingProduct) {
@@ -45,8 +45,8 @@ export const useCartStore = defineStore(
 			}
 		};
 
-		const removeFromCart = (product: Product | CartType, quantity: number) => {
-			const productKey = (product as CartType).variantId || product.id;
+		const removeFromCart = (product: CartType, quantity: number) => {
+			const productKey = product.variantId || product.id;
 			const existingProduct = cart.value.find((item) => (item.variantId || item.id) === productKey);
 
 			if (existingProduct) {
@@ -57,8 +57,8 @@ export const useCartStore = defineStore(
 			}
 		};
 
-		const clearItemFromCart = (product: Product | CartType) => {
-			const productKey = (product as CartType).variantId || product.id;
+		const clearItemFromCart = (product: CartType) => {
+			const productKey = product.variantId || product.id;
 			const existingProduct = cart.value.find((item) => (item.variantId || item.id) === productKey);
 
 			if (existingProduct) {

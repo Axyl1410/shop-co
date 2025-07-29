@@ -50,9 +50,9 @@ const { products } = useProducts();
 			<div
 				class="hidden max-w-[295px] min-w-[295px] space-y-5 rounded-[20px] border border-black/10 px-5 py-5 md:block md:space-y-6 md:px-6"
 			>
-				<div className="flex items-center max-w-[295px] justify-between">
-					<span className="font-bold text-black text-xl">Filters</span>
-					<Sliders className="text-2xl text-black/40" />
+				<div class="flex max-w-[295px] items-center justify-between">
+					<span class="text-xl font-bold text-black">Filters</span>
+					<Sliders class="text-2xl text-black/40" />
 				</div>
 				<FilterPanel />
 			</div>
@@ -60,7 +60,7 @@ const { products } = useProducts();
 				<div class="flex items-center justify-between">
 					<div class="flex w-full flex-col justify-between sm:flex-row sm:items-center">
 						<h1 class="text-2xl font-bold md:text-[32px]">Casual</h1>
-						<div class="flex flex-col md:flex-row">
+						<div class="flex flex-col lg:flex-row">
 							<p class="mr-3 text-sm text-black/60 md:text-base">Showing 1-10 of 100 Products</p>
 							<div className="flex items-center">
 								<p>Sort by:</p>
@@ -85,7 +85,7 @@ const { products } = useProducts();
 						<MobileFilters />
 					</div>
 				</div>
-				<div class="sm:grid-col-2 mt-8 grid grid-cols-1 gap-8 md:grid-cols-3">
+				<div class="sm:grid-col-2 mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
 					<ProductCard v-for="item in products" :data="item" :key="item.id" />
 				</div>
 				<hr className="border-t-black/10 my-8" />

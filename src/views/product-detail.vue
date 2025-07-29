@@ -14,7 +14,7 @@
 					</BreadcrumbItem>
 					<BreadcrumbSeparator />
 					<BreadcrumbItem>
-						<BreadcrumbPage>{{ product?.name || 'Loading...' }}</BreadcrumbPage>
+						<BreadcrumbPage>{{ product?.name || "Loading..." }}</BreadcrumbPage>
 					</BreadcrumbItem>
 				</BreadcrumbList>
 			</Breadcrumb>
@@ -148,11 +148,17 @@
 								<h1 class="text-2xl font-bold uppercase md:text-[40px] md:leading-[40px]">
 									{{ product.name }}
 								</h1>
-								<div class="flex flex-wrap gap-2 mt-2">
-									<span v-if="product.isNew" class="bg-green-100 text-green-600 px-2 py-1 text-xs font-medium rounded">
+								<div class="mt-2 flex flex-wrap gap-2">
+									<span
+										v-if="product.isNew"
+										class="rounded bg-green-100 px-2 py-1 text-xs font-medium text-green-600"
+									>
 										NEW
 									</span>
-									<span v-if="product.isFeatured" class="bg-blue-100 text-blue-600 px-2 py-1 text-xs font-medium rounded">
+									<span
+										v-if="product.isFeatured"
+										class="rounded bg-blue-100 px-2 py-1 text-xs font-medium text-blue-600"
+									>
 										FEATURED
 									</span>
 								</div>
@@ -171,7 +177,7 @@
 								</span>
 							</div>
 						</Motion>
-						
+
 						<!-- Product Meta Info -->
 						<Motion
 							:initial="{ opacity: 0, y: 20 }"
@@ -180,15 +186,15 @@
 						>
 							<div class="mb-4 space-y-2 text-sm text-gray-600">
 								<div v-if="product.brand" class="flex items-center">
-									<span class="font-medium mr-2">Brand:</span>
+									<span class="mr-2 font-medium">Brand:</span>
 									<span>{{ product.brand }}</span>
 								</div>
 								<div v-if="product.sku" class="flex items-center">
-									<span class="font-medium mr-2">SKU:</span>
+									<span class="mr-2 font-medium">SKU:</span>
 									<span>{{ product.sku }}</span>
 								</div>
 								<div v-if="product.viewCount" class="flex items-center">
-									<span class="font-medium mr-2">Views:</span>
+									<span class="mr-2 font-medium">Views:</span>
 									<span>{{ product.viewCount }}</span>
 								</div>
 							</div>
@@ -200,14 +206,24 @@
 						>
 							<div class="mb-5 flex items-center space-x-2.5 sm:space-x-3">
 								<span class="text-2xl font-bold text-black sm:text-[32px]"
-									>${{ getVariantByColorAndSize(selectedColor, selectedSize)?.salePrice || product.originalPrice }}</span
+									>${{
+										getVariantByColorAndSize(selectedColor, selectedSize)?.salePrice ||
+										product.originalPrice
+									}}</span
 								>
-								<span v-if="product.originalPrice !== getVariantByColorAndSize(selectedColor, selectedSize)?.salePrice" 
-									class="text-lg text-gray-500 line-through">
+								<span
+									v-if="
+										product.originalPrice !==
+										getVariantByColorAndSize(selectedColor, selectedSize)?.salePrice
+									"
+									class="text-lg text-gray-500 line-through"
+								>
 									${{ product.originalPrice }}
 								</span>
-								<span v-if="product.discountPercentage > 0" 
-									class="bg-red-100 text-red-600 px-2 py-1 text-sm font-medium rounded">
+								<span
+									v-if="product.discountPercentage > 0"
+									class="rounded bg-red-100 px-2 py-1 text-sm font-medium text-red-600"
+								>
 									-{{ product.discountPercentage }}%
 								</span>
 							</div>
@@ -217,7 +233,7 @@
 							<p class="text-sm text-black/60 sm:text-base">
 								{{ product.description || "No description." }}
 							</p>
-							
+
 							<!-- Product Tags -->
 							<div v-if="product.tags && product.tags.length > 0" class="flex flex-wrap gap-2">
 								<span class="text-sm font-medium text-gray-700">Tags:</span>
@@ -270,15 +286,17 @@
 									v-for="size in getAvailableSizes"
 									:key="size"
 									class="border border-gray-300 px-4 py-2 text-sm font-medium transition-all hover:border-black"
-									:class="{ 
+									:class="{
 										'border-black bg-black text-white': selectedSize === size,
-										'opacity-50 cursor-not-allowed': !isVariantAvailable(selectedColor, size)
+										'cursor-not-allowed opacity-50': !isVariantAvailable(selectedColor, size),
 									}"
 									:disabled="!isVariantAvailable(selectedColor, size)"
 									@click="selectedSize = size"
 								>
 									{{ size }}
-									<span v-if="!isVariantAvailable(selectedColor, size)" class="text-xs">(Out of stock)</span>
+									<span v-if="!isVariantAvailable(selectedColor, size)" class="text-xs"
+										>(Out of stock)</span
+									>
 								</button>
 							</div>
 							<div v-else class="text-sm text-gray-500">
@@ -287,12 +305,13 @@
 						</div>
 
 						<!-- Stock Information -->
-						<div v-if="getStockQuantity(selectedColor, selectedSize) > 0" class="text-sm text-green-600">
+						<div
+							v-if="getStockQuantity(selectedColor, selectedSize) > 0"
+							class="text-sm text-green-600"
+						>
 							In Stock: {{ getStockQuantity(selectedColor, selectedSize) }} available
 						</div>
-						<div v-else class="text-sm text-red-600">
-							Out of Stock
-						</div>
+						<div v-else class="text-sm text-red-600">Out of Stock</div>
 
 						<!-- Quantity Selector -->
 						<div class="flex items-center space-x-4">
@@ -305,8 +324,8 @@
 									-
 								</button>
 								<span class="px-4 py-2 text-sm font-medium">{{ quantity }}</span>
-								<button 
-									class="px-3 py-2 text-gray-600 hover:text-black" 
+								<button
+									class="px-3 py-2 text-gray-600 hover:text-black"
 									:disabled="quantity >= getStockQuantity(selectedColor, selectedSize)"
 									@click="quantity < getStockQuantity(selectedColor, selectedSize) && quantity++"
 								>
@@ -314,31 +333,35 @@
 								</button>
 							</div>
 							<button
-								class="flex-1 bg-black px-6 py-3 font-medium text-white transition-colors hover:bg-gray-800 disabled:bg-gray-400 disabled:cursor-not-allowed"
+								class="flex-1 bg-black px-6 py-3 font-medium text-white transition-colors hover:bg-gray-800 disabled:cursor-not-allowed disabled:bg-gray-400"
 								:disabled="!isVariantAvailable(selectedColor, selectedSize)"
 								@click="addToCart"
 							>
-								{{ isVariantAvailable(selectedColor, selectedSize) ? 'Add to Cart' : 'Out of Stock' }}
+								{{
+									isVariantAvailable(selectedColor, selectedSize) ? "Add to Cart" : "Out of Stock"
+								}}
 							</button>
 						</div>
 					</Motion>
 				</div>
-				
+
 				<!-- Loading State -->
 				<div v-if="isLoading" class="flex items-center justify-center py-20">
 					<div class="text-center">
-						<div class="mb-4 h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-black mx-auto"></div>
+						<div
+							class="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-black"
+						></div>
 						<p class="text-gray-500">Loading product...</p>
 					</div>
 				</div>
-				
+
 				<!-- Error State -->
 				<div v-if="!isLoading && !product" class="flex items-center justify-center py-20">
 					<div class="text-center">
-						<p class="text-gray-500 mb-4">Product not found</p>
-						<button 
-							@click="$router.push('/shop')" 
-							class="bg-black text-white px-6 py-2 rounded hover:bg-gray-800 transition-colors"
+						<p class="mb-4 text-gray-500">Product not found</p>
+						<button
+							@click="$router.push('/shop')"
+							class="rounded bg-black px-6 py-2 text-white transition-colors hover:bg-gray-800"
 						>
 							Back to Shop
 						</button>
@@ -378,24 +401,30 @@
 							<div class="space-y-3">
 								<div class="flex justify-between border-b border-gray-100 py-2">
 									<span class="text-sm text-gray-600">Brand</span>
-									<span class="text-sm font-medium">{{ product.brand || 'N/A' }}</span>
+									<span class="text-sm font-medium">{{ product.brand || "N/A" }}</span>
 								</div>
 								<div class="flex justify-between border-b border-gray-100 py-2">
 									<span class="text-sm text-gray-600">SKU</span>
-									<span class="text-sm font-medium">{{ product.sku || 'N/A' }}</span>
+									<span class="text-sm font-medium">{{ product.sku || "N/A" }}</span>
 								</div>
 								<div class="flex justify-between border-b border-gray-100 py-2">
 									<span class="text-sm text-gray-600">Category</span>
-									<span class="text-sm font-medium">{{ category?.name || 'N/A' }}</span>
+									<span class="text-sm font-medium">{{ category?.name || "N/A" }}</span>
 								</div>
 								<div class="flex justify-between border-b border-gray-100 py-2">
 									<span class="text-sm text-gray-600">Weight</span>
-									<span class="text-sm font-medium">{{ product.weight ? `${product.weight}kg` : 'N/A' }}</span>
+									<span class="text-sm font-medium">{{
+										product.weight ? `${product.weight}kg` : "N/A"
+									}}</span>
 								</div>
-								<div v-if="product.dimensions" class="flex justify-between border-b border-gray-100 py-2">
+								<div
+									v-if="product.dimensions"
+									class="flex justify-between border-b border-gray-100 py-2"
+								>
 									<span class="text-sm text-gray-600">Dimensions</span>
 									<span class="text-sm font-medium">
-										{{ product.dimensions.length }}cm × {{ product.dimensions.width }}cm × {{ product.dimensions.height }}cm
+										{{ product.dimensions.length }}cm × {{ product.dimensions.width }}cm ×
+										{{ product.dimensions.height }}cm
 									</span>
 								</div>
 								<div class="flex justify-between border-b border-gray-100 py-2">
@@ -426,13 +455,15 @@
 							<div class="flex items-center space-x-4">
 								<div class="text-center">
 									<div class="text-3xl font-bold text-black">{{ getAverageRating.toFixed(1) }}</div>
-									<div class="flex justify-center mt-1">
+									<div class="mt-1 flex justify-center">
 										<StarRating :initialValue="getAverageRating" />
 									</div>
-									<div class="text-sm text-gray-600 mt-1">{{ getReviewCount }} reviews</div>
+									<div class="mt-1 text-sm text-gray-600">{{ getReviewCount }} reviews</div>
 								</div>
 								<div class="flex-1">
-									<div class="text-sm text-gray-600">Based on {{ getReviewCount }} customer reviews</div>
+									<div class="text-sm text-gray-600">
+										Based on {{ getReviewCount }} customer reviews
+									</div>
 								</div>
 							</div>
 
@@ -441,20 +472,28 @@
 								<div
 									v-for="review in reviews"
 									:key="review.id"
-									class="border border-gray-200 rounded-lg p-4"
+									class="rounded-lg border border-gray-200 p-4"
 								>
-									<div class="flex items-start justify-between mb-2">
+									<div class="mb-2 flex items-start justify-between">
 										<div class="flex items-center space-x-2">
 											<StarRating :initialValue="review.rating" />
 											<span class="text-sm font-medium">{{ review.title }}</span>
 										</div>
 										<div class="text-xs text-gray-500">{{ formatDate(review.createdAt) }}</div>
 									</div>
-									<p class="text-sm text-gray-700 mb-2">{{ review.content }}</p>
+									<p class="mb-2 text-sm text-gray-700">{{ review.content }}</p>
 									<div class="flex items-center justify-between text-xs text-gray-500">
 										<span v-if="review.isVerified" class="flex items-center">
-											<svg class="w-4 h-4 text-green-500 mr-1" fill="currentColor" viewBox="0 0 20 20">
-												<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+											<svg
+												class="mr-1 h-4 w-4 text-green-500"
+												fill="currentColor"
+												viewBox="0 0 20 20"
+											>
+												<path
+													fill-rule="evenodd"
+													d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+													clip-rule="evenodd"
+												/>
 											</svg>
 											Verified Purchase
 										</span>
@@ -470,25 +509,39 @@
 						<div v-else-if="activeTab === 'FAQs'" class="space-y-6">
 							<h3 class="text-lg font-semibold text-black">Frequently Asked Questions</h3>
 							<div class="space-y-4">
-								<div class="border border-gray-200 rounded-lg p-4">
-									<h4 class="font-medium text-black mb-2">What is the return policy?</h4>
-									<p class="text-sm text-gray-600">We offer a 30-day return policy for all unused items in their original packaging. Return shipping is free for orders over $50.</p>
+								<div class="rounded-lg border border-gray-200 p-4">
+									<h4 class="mb-2 font-medium text-black">What is the return policy?</h4>
+									<p class="text-sm text-gray-600">
+										We offer a 30-day return policy for all unused items in their original
+										packaging. Return shipping is free for orders over $50.
+									</p>
 								</div>
-								<div class="border border-gray-200 rounded-lg p-4">
-									<h4 class="font-medium text-black mb-2">How long does shipping take?</h4>
-									<p class="text-sm text-gray-600">Standard shipping takes 3-5 business days. Express shipping (1-2 business days) is available for an additional fee.</p>
+								<div class="rounded-lg border border-gray-200 p-4">
+									<h4 class="mb-2 font-medium text-black">How long does shipping take?</h4>
+									<p class="text-sm text-gray-600">
+										Standard shipping takes 3-5 business days. Express shipping (1-2 business days)
+										is available for an additional fee.
+									</p>
 								</div>
-								<div class="border border-gray-200 rounded-lg p-4">
-									<h4 class="font-medium text-black mb-2">Do you offer international shipping?</h4>
-									<p class="text-sm text-gray-600">Yes, we ship to most countries worldwide. Shipping times and costs vary by location.</p>
+								<div class="rounded-lg border border-gray-200 p-4">
+									<h4 class="mb-2 font-medium text-black">Do you offer international shipping?</h4>
+									<p class="text-sm text-gray-600">
+										Yes, we ship to most countries worldwide. Shipping times and costs vary by
+										location.
+									</p>
 								</div>
-								<div class="border border-gray-200 rounded-lg p-4">
-									<h4 class="font-medium text-black mb-2">How do I care for this product?</h4>
-									<p class="text-sm text-gray-600">Machine wash cold, tumble dry low. Do not bleach. Iron on low heat if needed.</p>
+								<div class="rounded-lg border border-gray-200 p-4">
+									<h4 class="mb-2 font-medium text-black">How do I care for this product?</h4>
+									<p class="text-sm text-gray-600">
+										Machine wash cold, tumble dry low. Do not bleach. Iron on low heat if needed.
+									</p>
 								</div>
-								<div class="border border-gray-200 rounded-lg p-4">
-									<h4 class="font-medium text-black mb-2">What if the item doesn't fit?</h4>
-									<p class="text-sm text-gray-600">We offer free exchanges for different sizes. Please contact our customer service team for assistance.</p>
+								<div class="rounded-lg border border-gray-200 p-4">
+									<h4 class="mb-2 font-medium text-black">What if the item doesn't fit?</h4>
+									<p class="text-sm text-gray-600">
+										We offer free exchanges for different sizes. Please contact our customer service
+										team for assistance.
+									</p>
 								</div>
 							</div>
 						</div>
@@ -694,24 +747,32 @@ const selectedImageIndex = ref(0);
 const isLightboxOpen = ref(false);
 
 // dat gia tri mac dinh cho color va size
-watch(product, (newProduct) => {
-	console.log("Product changed:", newProduct);
-	if (newProduct && getAvailableColors.value.length > 0) {
-		console.log("Available colors:", getAvailableColors.value);
-		selectedColor.value = getAvailableColors.value[0].name;
-	}
-	if (newProduct && getAvailableSizes.value.length > 0) {
-		console.log("Available sizes:", getAvailableSizes.value);
-		selectedSize.value = getAvailableSizes.value[0];
-	}
-}, { immediate: true });
+watch(
+	product,
+	(newProduct) => {
+		console.log("Product changed:", newProduct);
+		if (newProduct && getAvailableColors.value.length > 0) {
+			console.log("Available colors:", getAvailableColors.value);
+			selectedColor.value = getAvailableColors.value[0].name;
+		}
+		if (newProduct && getAvailableSizes.value.length > 0) {
+			console.log("Available sizes:", getAvailableSizes.value);
+			selectedSize.value = getAvailableSizes.value[0];
+		}
+	},
+	{ immediate: true },
+);
 
 // check xem co variant nao khong
-watch(product, (newProduct) => {
-	console.log("Product changed:", newProduct);
-	console.log("Available colors:", getAvailableColors.value);
-	console.log("Available sizes:", getAvailableSizes.value);
-}, { immediate: true });
+watch(
+	product,
+	(newProduct) => {
+		console.log("Product changed:", newProduct);
+		console.log("Available colors:", getAvailableColors.value);
+		console.log("Available sizes:", getAvailableSizes.value);
+	},
+	{ immediate: true },
+);
 
 // Watch for route changes to reset states when navigating to different products
 watch(
@@ -727,7 +788,7 @@ watch(
 		// Scroll to top when navigating to different product
 		window.scrollTo({ top: 0, behavior: "smooth" });
 	},
-	{ immediate: true }
+	{ immediate: true },
 );
 
 // Force component re-render when product changes
@@ -737,17 +798,17 @@ const componentKey = computed(() => `product-${productId.value}`);
 const addToCart = () => {
 	if (product.value) {
 		const selectedVariant = getVariantByColorAndSize(selectedColor.value, selectedSize.value);
-		
+
 		if (!selectedVariant) {
 			toast.error("Please select a valid color and size");
 			return;
 		}
-		
+
 		if (!isVariantAvailable(selectedColor.value, selectedSize.value)) {
 			toast.error("This variant is out of stock");
 			return;
 		}
-		
+
 		// Add product to cart with selected variant
 		const productWithVariant: CartType = {
 			...product.value,
@@ -759,12 +820,12 @@ const addToCart = () => {
 			price: selectedVariant.salePrice,
 			quantity: quantity.value,
 		};
-		
+
 		cartStore.addToCart(productWithVariant, quantity.value);
-		
+
 		// Show success message
 		toast.success(`Added ${quantity.value} ${product.value.name} to cart`);
-		
+
 		console.log("Added to cart:", {
 			product: product.value.name,
 			color: selectedColor.value,

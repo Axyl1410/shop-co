@@ -1,11 +1,11 @@
 @font-face {
-	font-family: 'IntegralCF';
-	src: url('./integralcf-bold.eot');
+	font-family: "IntegralCF";
+	src: url("./integralcf-bold.eot");
 	src:
-		url('./integralcf-bold.eot?#iefix') format('embedded-opentype'),
-		url('./integralcf-bold.woff2') format('woff2'),
-		url('./integralcf-bold.woff') format('woff'),
-		url('./integralcf-bold.ttf') format('truetype');
+		url("./integralcf-bold.eot?#iefix") format("embedded-opentype"),
+		url("./integralcf-bold.woff2") format("woff2"),
+		url("./integralcf-bold.woff") format("woff"),
+		url("./integralcf-bold.ttf") format("truetype");
 	font-weight: 700;
 	font-style: normal;
 	font-display: swap;
@@ -13,45 +13,45 @@
 
 /* Satoshi Font */
 @font-face {
-	font-family: 'Satoshi';
-	src: url('./Satoshi-Regular.eot');
+	font-family: "Satoshi";
+	src: url("./Satoshi-Regular.eot");
 	src:
-		url('./Satoshi-Regular.eot?#iefix') format('embedded-opentype'),
-		url('./Satoshi-Regular.woff2') format('woff2'),
-		url('./Satoshi-Regular.woff') format('woff'),
-		url('./Satoshi-Regular.ttf') format('truetype');
+		url("./Satoshi-Regular.eot?#iefix") format("embedded-opentype"),
+		url("./Satoshi-Regular.woff2") format("woff2"),
+		url("./Satoshi-Regular.woff") format("woff"),
+		url("./Satoshi-Regular.ttf") format("truetype");
 	font-weight: 400;
 	font-style: normal;
 	font-display: swap;
 }
 
 @font-face {
-	font-family: 'Satoshi';
-	src: url('./Satoshi-Medium.eot');
+	font-family: "Satoshi";
+	src: url("./Satoshi-Medium.eot");
 	src:
-		url('./Satoshi-Medium.eot?#iefix') format('embedded-opentype'),
-		url('./Satoshi-Medium.woff2') format('woff2'),
-		url('./Satoshi-Medium.woff') format('woff'),
-		url('./Satoshi-Medium.ttf') format('truetype');
+		url("./Satoshi-Medium.eot?#iefix") format("embedded-opentype"),
+		url("./Satoshi-Medium.woff2") format("woff2"),
+		url("./Satoshi-Medium.woff") format("woff"),
+		url("./Satoshi-Medium.ttf") format("truetype");
 	font-weight: 500;
 	font-style: normal;
 	font-display: swap;
 }
 
 @font-face {
-	font-family: 'Satoshi';
-	src: url('./Satoshi-Bold.eot');
+	font-family: "Satoshi";
+	src: url("./Satoshi-Bold.eot");
 	src:
-		url('./Satoshi-Bold.eot?#iefix') format('embedded-opentype'),
-		url('./Satoshi-Bold.woff2') format('woff2'),
-		url('./Satoshi-Bold.woff') format('woff'),
-		url('./Satoshi-Bold.ttf') format('truetype');
+		url("./Satoshi-Bold.eot?#iefix") format("embedded-opentype"),
+		url("./Satoshi-Bold.woff2") format("woff2"),
+		url("./Satoshi-Bold.woff") format("woff"),
+		url("./Satoshi-Bold.ttf") format("truetype");
 	font-weight: 700;
 	font-style: normal;
 	font-display: swap;
 }
 
 :root {
-	--font-integralCF: 'IntegralCF', sans-serif;
-	--font-satoshi: 'Satoshi', sans-serif;
+	--font-integralCF: "IntegralCF", sans-serif;
+	--font-satoshi: "Satoshi", sans-serif;
 }

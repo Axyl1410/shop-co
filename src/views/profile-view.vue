@@ -26,9 +26,7 @@ const vipLevel = computed(() => {
 		<div class="account-box">
 			<div class="account-header">
 				<div>
-					<div v-if="user" class="user-name">
-						{{ user.firstName }} {{ user.lastName }}
-					</div>
+					<div v-if="user" class="user-name">{{ user.firstName }} {{ user.lastName }}</div>
 					<div v-else class="loading-text">Đang tải thông tin...</div>
 					<div class="user-info">
 						<div class="info-item">
@@ -45,9 +43,7 @@ const vipLevel = computed(() => {
 						</div>
 					</div>
 				</div>
-				<button class="history-btn">
-					Order History <span>➔</span>
-				</button>
+				<button class="history-btn">Order History <span>➔</span></button>
 			</div>
 			<div class="account-actions">
 				<button class="action-btn">

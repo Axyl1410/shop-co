@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { Button } from "@/components/ui/button";
-import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
+import { Drawer, DrawerContent, DrawerHeader, DrawerTrigger } from "@/components/ui/drawer";
 import { Sliders } from "lucide-vue-next";
 import FilterPanel from "../filter-panel.vue";
-import DrawerHeader from "@/components/ui/drawer/DrawerHeader.vue";
 </script>
 
 <template>
@@ -15,9 +14,9 @@ import DrawerHeader from "@/components/ui/drawer/DrawerHeader.vue";
 		</DrawerTrigger>
 		<DrawerContent>
 			<DrawerHeader>
-				<div className="flex items-center max-w-[295px] justify-between">
-					<span className="font-bold text-black text-xl">Filters</span>
-					<Sliders className="text-2xl text-black/40" />
+				<div class="flex w-full items-center justify-between">
+					<span class="text-xl font-bold text-black">Filters</span>
+					<Sliders class="text-2xl text-black/40" />
 				</div>
 			</DrawerHeader>
 			<div class="mb-8 flex flex-col gap-4 overflow-y-auto px-4">

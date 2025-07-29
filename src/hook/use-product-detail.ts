@@ -20,18 +20,19 @@ export function useProductDetail(productId: string | number) {
 		queryFn: async (): Promise<ProductDetailData> => {
 			try {
 				console.log("Fetching product detail for ID:", productId);
-				
+
 				// Add fallback baseURL if not defined
 				const baseURL = ServerAxiosConfig.baseURL || "http://localhost:3000";
 				console.log("Using baseURL:", baseURL);
-				
+
 				// Fetch all data from the JSON server
-				const [productsResponse, variantsResponse, categoriesResponse, reviewsResponse] = await Promise.all([
-					axios(`${baseURL}/products`),
-					axios(`${baseURL}/product_variants`),
-					axios(`${baseURL}/categories`),
-					axios(`${baseURL}/reviews`),
-				]);
+				const [productsResponse, variantsResponse, categoriesResponse, reviewsResponse] =
+					await Promise.all([
+						axios(`${baseURL}/products`),
+						axios(`${baseURL}/product_variants`),
+						axios(`${baseURL}/categories`),
+						axios(`${baseURL}/reviews`),
+					]);
 
 				const products: Product[] = productsResponse.data;
 				const variants: ProductVariant[] = variantsResponse.data;
@@ -42,7 +43,7 @@ export function useProductDetail(productId: string | number) {
 					productsCount: products.length,
 					variantsCount: variants.length,
 					categoriesCount: categories.length,
-					reviewsCount: reviews.length
+					reviewsCount: reviews.length,
 				});
 
 				// Find the specific product
@@ -93,7 +94,7 @@ export function useProductDetail(productId: string | number) {
 	// Helper functions - optimized and simplified
 	const getAvailableColors = computed(() => {
 		if (!variants.value.length) return [];
-		
+
 		// Get unique colors from variants that have stock > 0
 		const availableColors = new Map();
 		variants.value.forEach((variant: ProductVariant) => {
@@ -101,17 +102,17 @@ export function useProductDetail(productId: string | number) {
 				availableColors.set(variant.colorCode, {
 					name: variant.color,
 					code: variant.colorCode,
-					available: true
+					available: true,
 				});
 			}
 		});
-		
+
 		return Array.from(availableColors.values());
 	});
 
 	const getAvailableSizes = computed(() => {
 		if (!variants.value.length) return [];
-		
+
 		// Get unique sizes from variants that have stock > 0
 		const availableSizes = new Set<string>();
 		variants.value.forEach((variant: ProductVariant) => {
@@ -119,13 +120,13 @@ export function useProductDetail(productId: string | number) {
 				availableSizes.add(variant.size);
 			}
 		});
-		
+
 		return Array.from(availableSizes).sort();
 	});
 
 	const getVariantByColorAndSize = (colorName: string, size: string) => {
 		return variants.value.find(
-			(variant: ProductVariant) => variant.color === colorName && variant.size === size
+			(variant: ProductVariant) => variant.color === colorName && variant.size === size,
 		);
 	};
 
@@ -141,7 +142,10 @@ export function useProductDetail(productId: string | number) {
 
 	const getAverageRating = computed(() => {
 		if (reviews.value.length === 0) return 0;
-		const totalRating = reviews.value.reduce((sum: number, review: Review) => sum + review.rating, 0);
+		const totalRating = reviews.value.reduce(
+			(sum: number, review: Review) => sum + review.rating,
+			0,
+		);
 		return totalRating / reviews.value.length;
 	});
 
@@ -179,4 +183,4 @@ export function useProductDetail(productId: string | number) {
 		// Refetch function
 		refetch: query.refetch,
 	};
-} 
+}

@@ -56,6 +56,9 @@ importers:
       tw-animate-css:
         specifier: ^1.3.5
         version: 1.3.5
+      vaul-vue:
+        specifier: ^0.4.1
+        version: 0.4.1(reka-ui@2.3.2(typescript@5.8.3)(vue@3.5.17(typescript@5.8.3)))(vue@3.5.17(typescript@5.8.3))
       vue:
         specifier: ^3.5.17
         version: 3.5.17(typescript@5.8.3)
@@ -2146,6 +2149,12 @@ packages:
   util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
 
+  vaul-vue@0.4.1:
+    resolution: {integrity: sha512-A6jOWOZX5yvyo1qMn7IveoWN91mJI5L3BUKsIwkg6qrTGgHs1Sb1JF/vyLJgnbN1rH4OOOxFbtqL9A46bOyGUQ==}
+    peerDependencies:
+      reka-ui: ^2.0.0
+      vue: ^3.3.0
+
   vite-hot-client@2.1.0:
     resolution: {integrity: sha512-7SpgZmU7R+dDnSmvXE1mfDtnHLHQSisdySVR7lO8ceAXvM0otZeuQQ6C8LrS5d/aYyP/QZ0hI0L+dIPrm4YlFQ==}
     peerDependencies:
@@ -4214,6 +4223,14 @@ snapshots:
       punycode: 2.3.1
 
   util-deprecate@1.0.2: {}
+
+  vaul-vue@0.4.1(reka-ui@2.3.2(typescript@5.8.3)(vue@3.5.17(typescript@5.8.3)))(vue@3.5.17(typescript@5.8.3)):
+    dependencies:
+      '@vueuse/core': 10.11.1(vue@3.5.17(typescript@5.8.3))
+      reka-ui: 2.3.2(typescript@5.8.3)(vue@3.5.17(typescript@5.8.3))
+      vue: 3.5.17(typescript@5.8.3)
+    transitivePeerDependencies:
+      - '@vue/composition-api'
 
   vite-hot-client@2.1.0(vite@7.0.2(@types/node@22.16.0)(jiti@2.4.2)(lightningcss@1.30.1)):
     dependencies:

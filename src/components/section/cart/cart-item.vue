@@ -2,6 +2,7 @@
 import { calculatePrice } from "@/lib/utils";
 import type { CartType, Product } from "@/types";
 import { Minus, Plus, X } from "lucide-vue-next";
+import { computed } from "vue";
 
 interface Props {
 	item: CartType;
@@ -10,7 +11,15 @@ interface Props {
 	removeFromCart: (product: Product, quantity: number) => void;
 }
 
-defineProps<Props>();
+const prop = defineProps<Props>();
+
+const itemPrice = computed(() => {
+	return prop.item.price || calculatePrice(prop.item).finalPrice;
+});
+
+const totalPrice = computed(() => {
+	return itemPrice.value * prop.item.quantity;
+});
 </script>
 
 <template>
@@ -32,9 +41,15 @@ defineProps<Props>();
 
 		<div class="min-w-0 flex-1">
 			<h3 class="truncate text-sm font-semibold">{{ item.name }}</h3>
-			<p class="text-muted-foreground text-xs">
-				{{ calculatePrice(item).finalPrice }}
-			</p>
+
+			<div class="mt-1 flex items-center gap-2">
+				<p class="text-muted-foreground text-xs" v-if="item.selectedColor || item.selectedSize">
+					{{ item.selectedColor || "N/A" }}
+					<span>-</span>
+					{{ item.selectedSize || "N/A" }}
+				</p>
+				<p class="text-muted-foreground text-xs">${{ item.price }}</p>
+			</div>
 
 			<div class="mt-2 flex items-center gap-2">
 				<button
@@ -61,10 +76,8 @@ defineProps<Props>();
 		</div>
 
 		<div class="text-right">
-			<p class="text-sm font-semibold">{{ calculatePrice(item).finalPrice }} $</p>
-			<p class="text-muted-foreground text-xs">
-				{{ item.quantity }} x {{ calculatePrice(item).finalPrice }}
-			</p>
+			<p class="text-sm font-semibold">${{ totalPrice }}</p>
+			<p class="text-muted-foreground text-xs">{{ item.quantity }} x ${{ itemPrice }}</p>
 		</div>
 	</div>
 </template>

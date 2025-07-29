@@ -19,12 +19,18 @@ export function useProductDetail(productId: string | number) {
 		queryKey: ["product-detail", productId],
 		queryFn: async (): Promise<ProductDetailData> => {
 			try {
+				console.log("Fetching product detail for ID:", productId);
+				
+				// Add fallback baseURL if not defined
+				const baseURL = ServerAxiosConfig.baseURL || "http://localhost:3000";
+				console.log("Using baseURL:", baseURL);
+				
 				// Fetch all data from the JSON server
 				const [productsResponse, variantsResponse, categoriesResponse, reviewsResponse] = await Promise.all([
-					axios(`${ServerAxiosConfig.baseURL}/products`),
-					axios(`${ServerAxiosConfig.baseURL}/product_variants`),
-					axios(`${ServerAxiosConfig.baseURL}/categories`),
-					axios(`${ServerAxiosConfig.baseURL}/reviews`),
+					axios(`${baseURL}/products`),
+					axios(`${baseURL}/product_variants`),
+					axios(`${baseURL}/categories`),
+					axios(`${baseURL}/reviews`),
 				]);
 
 				const products: Product[] = productsResponse.data;
@@ -32,20 +38,30 @@ export function useProductDetail(productId: string | number) {
 				const categories: Category[] = categoriesResponse.data;
 				const reviews: Review[] = reviewsResponse.data;
 
+				console.log("Fetched data:", {
+					productsCount: products.length,
+					variantsCount: variants.length,
+					categoriesCount: categories.length,
+					reviewsCount: reviews.length
+				});
+
 				// Find the specific product
 				const product = products.find((p) => String(p.id) === String(productId));
 				if (!product) {
 					throw new Error("Product not found");
 				}
 
+				console.log("Found product:", product);
+
 				// Get product variants
-				const productVariants = variants.filter((v) => v.productId === product.id);
+				const productVariants = variants.filter((v) => String(v.productId) === String(product.id));
+				console.log("Product variants:", productVariants);
 
 				// Get category information
 				const category = categories.find((c) => c.id === product.categoryId);
 
 				// Get product reviews
-				const productReviews = reviews.filter((r) => r.productId === product.id);
+				const productReviews = reviews.filter((r) => String(r.productId) === String(product.id));
 
 				// Get related products (same category, excluding current product)
 				const relatedProducts = products

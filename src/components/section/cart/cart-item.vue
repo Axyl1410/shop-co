@@ -13,13 +13,6 @@ interface Props {
 
 const prop = defineProps<Props>();
 
-const variantInfo = computed(() => {
-	const info = [];
-	if (prop.item.selectedColor) info.push(prop.item.selectedColor);
-	if (prop.item.selectedSize) info.push(prop.item.selectedSize);
-	return info.join(" - ");
-});
-
 const itemPrice = computed(() => {
 	return prop.item.price || calculatePrice(prop.item).finalPrice;
 });
@@ -50,12 +43,11 @@ const totalPrice = computed(() => {
 			<h3 class="truncate text-sm font-semibold">{{ item.name }}</h3>
 
 			<div class="mt-1 flex items-center gap-2">
-				<p class="text-muted-foreground text-xs" v-if="variantInfo">
-					{{ item.selectedColor }}
+				<p class="text-muted-foreground text-xs" v-if="item.selectedColor || item.selectedSize">
+					{{ item.selectedColor || "N/A" }}
 					<span>-</span>
-					{{ item.selectedSize }}
+					{{ item.selectedSize || "N/A" }}
 				</p>
-				<span>-</span>
 				<p class="text-muted-foreground text-xs">${{ itemPrice }}</p>
 			</div>
 

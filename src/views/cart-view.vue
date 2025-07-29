@@ -1,15 +1,14 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { calculatePrice } from "@/lib/utils";
 import { useCartStore } from "@/stores/use-cart-store";
 import type { CartType } from "@/types/cart";
+import { computed } from "vue";
 import { toast } from "vue-sonner";
 
 const cartStore = useCartStore();
 
 const cartItems = computed<CartType[]>(() => cartStore.cart);
-const totalPrice = computed(() =>
-	cartItems.value.reduce((sum, item) => sum + (item.price ?? item.originalPrice) * item.quantity, 0)
-);
+const totalPrice = computed(() => cartStore.getTotalPrice);
 
 const updateQuantity = (item: CartType, qty: number) => {
 	if (qty < 1) return;
@@ -17,7 +16,7 @@ const updateQuantity = (item: CartType, qty: number) => {
 };
 
 const removeItem = (item: CartType) => {
-	cartStore.removeFromCart(item);
+	cartStore.clearItemFromCart(item);
 	toast.success(`Removed ${item.name} from cart`);
 };
 
@@ -27,70 +26,184 @@ const checkout = () => {
 </script>
 
 <template>
-	<div class="container mx-auto py-8">
-		<h1 class="mb-6 text-2xl font-bold">Your Cart</h1>
-		<div v-if="cartItems.length === 0" class="text-center py-20">
-			<p class="text-gray-500 mb-4">Your cart is empty.</p>
-			<router-link to="/shop" class="bg-black text-white px-6 py-2 rounded hover:bg-gray-800 transition-colors">
-				Go Shopping
-			</router-link>
+	<div class="cart-container">
+		<h1 class="cart-title">Your Cart</h1>
+		<div v-if="cartItems.length === 0" class="cart-empty">
+			<p class="cart-empty-text">Your cart is empty.</p>
+			<router-link to="/shop" class="cart-shop-btn"> Go Shopping </router-link>
 		</div>
 		<div v-else>
-			<table class="w-full mb-8 border-collapse">
+			<table class="cart-table">
 				<thead>
-					<tr class="border-b">
-						<th class="py-2 text-left">Product</th>
-						<th class="py-2">Color</th>
-						<th class="py-2">Size</th>
-						<th class="py-2">Price</th>
-						<th class="py-2">Quantity</th>
-						<th class="py-2">Total</th>
-						<th class="py-2"></th>
+					<tr>
+						<th class="cart-th">Product</th>
+						<th class="cart-th">Color</th>
+						<th class="cart-th">Size</th>
+						<th class="cart-th">Price</th>
+						<th class="cart-th">Quantity</th>
+						<th class="cart-th">Total</th>
+						<th class="cart-th"></th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr v-for="item in cartItems" :key="item.variantId" class="border-b">
-						<td class="py-2 flex items-center gap-3">
-							<img :src="item.mainImage" alt="" class="w-16 h-16 object-cover rounded" />
+					<tr v-for="item in cartItems" :key="item.id" class="cart-tr">
+						<td class="cart-product">
+							<img :src="`/src/assets${item.mainImage}`" alt="" class="cart-img" />
 							<span>{{ item.name }}</span>
 						</td>
-						<td class="py-2">{{ item.selectedColor }}</td>
-						<td class="py-2">{{ item.selectedSize }}</td>
-						<td class="py-2">${{ item.price ?? item.originalPrice }}</td>
-						<td class="py-2">
-							<div class="flex items-center">
+						<td class="cart-td">{{ item.selectedColor || "N/A" }}</td>
+						<td class="cart-td">{{ item.selectedSize || "N/A" }}</td>
+						<td class="cart-td">${{ item.price || calculatePrice(item).finalPrice }}</td>
+						<td class="cart-td">
+							<div class="cart-qty">
 								<button
-									class="px-2 py-1 border rounded-l"
+									class="cart-qty-btn cart-qty-btn-left"
 									:disabled="item.quantity <= 1"
 									@click="updateQuantity(item, item.quantity - 1)"
 								>
 									-
 								</button>
-								<span class="px-3">{{ item.quantity }}</span>
+								<span class="cart-qty-num">{{ item.quantity }}</span>
 								<button
-									class="px-2 py-1 border rounded-r"
+									class="cart-qty-btn cart-qty-btn-right"
 									@click="updateQuantity(item, item.quantity + 1)"
 								>
 									+
 								</button>
 							</div>
 						</td>
-						<td class="py-2 font-semibold">${{ (item.price ?? item.originalPrice) * item.quantity }}</td>
-						<td class="py-2">
-							<button @click="removeItem(item)" class="text-red-500 hover:underline">Remove</button>
+						<td class="cart-total">
+							${{ (item.price || calculatePrice(item).finalPrice) * item.quantity }}
+						</td>
+						<td class="cart-td">
+							<button @click="removeItem(item)" class="cart-remove-btn">Remove</button>
 						</td>
 					</tr>
 				</tbody>
 			</table>
-			<div class="flex justify-between items-center">
-				<div class="text-xl font-bold">Total: ${{ totalPrice }}</div>
-				<button
-					class="bg-black text-white px-6 py-3 rounded hover:bg-gray-800 transition-colors"
-					@click="checkout"
-				>
-					Checkout
-				</button>
+			<div class="cart-summary">
+				<div class="cart-summary-total">Total: ${{ totalPrice }}</div>
+				<button class="cart-checkout-btn" @click="checkout">Checkout</button>
 			</div>
 		</div>
 	</div>
 </template>
+
+<style scoped>
+.cart-container {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 2rem 0;
+}
+.cart-title {
+	margin-bottom: 1.5rem;
+	font-size: 2rem;
+	font-weight: bold;
+}
+.cart-empty {
+	padding: 5rem 0;
+	text-align: center;
+}
+.cart-empty-text {
+	margin-bottom: 1rem;
+	color: #6b7280;
+}
+.cart-shop-btn {
+	display: inline-block;
+	border-radius: 0.375rem;
+	background: #000;
+	padding: 0.5rem 1.5rem;
+	color: #fff;
+	transition: background 0.2s;
+	text-decoration: none;
+}
+.cart-shop-btn:hover {
+	background: #1f2937;
+}
+.cart-table {
+	width: 100%;
+	border-collapse: collapse;
+	margin-bottom: 2rem;
+}
+.cart-th {
+	padding: 0.5rem 0;
+	text-align: left;
+	border-bottom: 1px solid #e5e7eb;
+}
+.cart-tr {
+	border-bottom: 1px solid #e5e7eb;
+}
+.cart-product {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	padding: 0.5rem 0;
+}
+.cart-img {
+	height: 4rem;
+	width: 4rem;
+	border-radius: 0.5rem;
+	object-fit: cover;
+}
+.cart-td {
+	padding: 0.5rem 0;
+}
+.cart-qty {
+	display: flex;
+	align-items: center;
+}
+.cart-qty-btn {
+	border: 1px solid #d1d5db;
+	padding: 0.25rem 0.5rem;
+	background: #fff;
+	cursor: pointer;
+}
+.cart-qty-btn:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+.cart-qty-btn-left {
+	border-radius: 0.375rem 0 0 0.375rem;
+}
+.cart-qty-btn-right {
+	border-radius: 0 0.375rem 0.375rem 0;
+}
+.cart-qty-num {
+	padding: 0 0.75rem;
+}
+.cart-total {
+	padding: 0.5rem 0;
+	font-weight: 600;
+}
+.cart-remove-btn {
+	color: #ef4444;
+	background: none;
+	border: none;
+	cursor: pointer;
+	text-decoration: underline;
+}
+.cart-remove-btn:hover {
+	text-decoration: none;
+}
+.cart-summary {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+.cart-summary-total {
+	font-size: 1.25rem;
+	font-weight: bold;
+}
+.cart-checkout-btn {
+	border-radius: 0.375rem;
+	background: #000;
+	padding: 0.75rem 1.5rem;
+	color: #fff;
+	transition: background 0.2s;
+	border: none;
+	cursor: pointer;
+}
+.cart-checkout-btn:hover {
+	background: #1f2937;
+}
+</style>

@@ -9,7 +9,7 @@ import { Menu } from "lucide-vue-next";
 		<SheetTrigger as-child>
 			<Menu class="size-5 md:hidden" />
 		</SheetTrigger>
-		<SheetContent>
+		<SheetContent class="w-full sm:max-w-md">
 			<SheetHeader>
 				<SheetTitle>Menu</SheetTitle>
 			</SheetHeader>

@@ -148,11 +148,19 @@
 							:animate="{ opacity: 1, y: 0 }"
 							:transition="{ duration: 0.5, delay: 0.5 }"
 						>
-							<h1
-								class="mb-3 text-2xl font-bold uppercase md:mb-3.5 md:text-[40px] md:leading-[40px]"
-							>
-								{{ product.name }}
-							</h1>
+							<div class="mb-3 md:mb-3.5">
+								<h1 class="text-2xl font-bold uppercase md:text-[40px] md:leading-[40px]">
+									{{ product.name }}
+								</h1>
+								<div class="flex flex-wrap gap-2 mt-2">
+									<span v-if="product.isNew" class="bg-green-100 text-green-600 px-2 py-1 text-xs font-medium rounded">
+										NEW
+									</span>
+									<span v-if="product.isFeatured" class="bg-blue-100 text-blue-600 px-2 py-1 text-xs font-medium rounded">
+										FEATURED
+									</span>
+								</div>
+							</div>
 						</Motion>
 						<Motion
 							:initial="{ opacity: 0, y: 20 }"
@@ -167,6 +175,28 @@
 								</span>
 							</div>
 						</Motion>
+						
+						<!-- Product Meta Info -->
+						<Motion
+							:initial="{ opacity: 0, y: 20 }"
+							:animate="{ opacity: 1, y: 0 }"
+							:transition="{ duration: 0.5, delay: 0.65 }"
+						>
+							<div class="mb-4 space-y-2 text-sm text-gray-600">
+								<div v-if="product.brand" class="flex items-center">
+									<span class="font-medium mr-2">Brand:</span>
+									<span>{{ product.brand }}</span>
+								</div>
+								<div v-if="product.sku" class="flex items-center">
+									<span class="font-medium mr-2">SKU:</span>
+									<span>{{ product.sku }}</span>
+								</div>
+								<div v-if="product.viewCount" class="flex items-center">
+									<span class="font-medium mr-2">Views:</span>
+									<span>{{ product.viewCount }}</span>
+								</div>
+							</div>
+						</Motion>
 						<Motion
 							:initial="{ opacity: 0, y: 20 }"
 							:animate="{ opacity: 1, y: 0 }"
@@ -174,22 +204,41 @@
 						>
 							<div class="mb-5 flex items-center space-x-2.5 sm:space-x-3">
 								<span class="text-2xl font-bold text-black sm:text-[32px]"
-									>${{ getVariantByColorAndSize(selectedColor, selectedSize)?.salePrice || product?.originalPrice }}</span
+									>${{ getVariantByColorAndSize(selectedColor, selectedSize)?.salePrice || product.originalPrice }}</span
 								>
-								<span v-if="product?.originalPrice !== getVariantByColorAndSize(selectedColor, selectedSize)?.salePrice" 
+								<span v-if="product.originalPrice !== getVariantByColorAndSize(selectedColor, selectedSize)?.salePrice" 
 									class="text-lg text-gray-500 line-through">
-									${{ product?.originalPrice }}
+									${{ product.originalPrice }}
+								</span>
+								<span v-if="product.discountPercentage > 0" 
+									class="bg-red-100 text-red-600 px-2 py-1 text-sm font-medium rounded">
+									-{{ product.discountPercentage }}%
 								</span>
 							</div>
 						</Motion>
-						<p class="mb-5 text-sm text-black/60 sm:text-base">
-							{{ product.description || "No description." }}
-						</p>
+						<!-- Product Description -->
+						<div class="mb-6 space-y-4">
+							<p class="text-sm text-black/60 sm:text-base">
+								{{ product.description || "No description." }}
+							</p>
+							
+							<!-- Product Tags -->
+							<div v-if="product.tags && product.tags.length > 0" class="flex flex-wrap gap-2">
+								<span class="text-sm font-medium text-gray-700">Tags:</span>
+								<span
+									v-for="tag in product.tags"
+									:key="tag"
+									class="rounded-full bg-gray-100 px-3 py-1 text-xs text-gray-600"
+								>
+									{{ tag }}
+								</span>
+							</div>
+						</div>
 
 						<!-- Color Selection -->
 						<div class="space-y-3">
 							<h3 class="text-sm font-semibold text-black">Select Colors</h3>
-							<div class="flex space-x-3">
+							<div v-if="getAvailableColors.length > 0" class="flex space-x-3">
 								<button
 									v-for="color in getAvailableColors"
 									:key="color.code"
@@ -212,12 +261,15 @@
 									</svg>
 								</button>
 							</div>
+							<div v-else class="text-sm text-gray-500">
+								No colors available (Debug: {{ getAvailableColors.length }} colors found)
+							</div>
 						</div>
 
 						<!-- Size Selection -->
 						<div class="space-y-3">
 							<h3 class="text-sm font-semibold text-black">Choose Size</h3>
-							<div class="flex flex-wrap gap-2">
+							<div v-if="getAvailableSizes.length > 0" class="flex flex-wrap gap-2">
 								<button
 									v-for="size in getAvailableSizes"
 									:key="size"
@@ -232,6 +284,9 @@
 									{{ size }}
 									<span v-if="!isVariantAvailable(selectedColor, size)" class="text-xs">(Out of stock)</span>
 								</button>
+							</div>
+							<div v-else class="text-sm text-gray-500">
+								No sizes available (Debug: {{ getAvailableSizes.length }} sizes found)
 							</div>
 						</div>
 
@@ -326,6 +381,28 @@
 							<h3 class="text-lg font-semibold text-black">Product specifications</h3>
 							<div class="space-y-3">
 								<div class="flex justify-between border-b border-gray-100 py-2">
+									<span class="text-sm text-gray-600">Brand</span>
+									<span class="text-sm font-medium">{{ product.brand || 'N/A' }}</span>
+								</div>
+								<div class="flex justify-between border-b border-gray-100 py-2">
+									<span class="text-sm text-gray-600">SKU</span>
+									<span class="text-sm font-medium">{{ product.sku || 'N/A' }}</span>
+								</div>
+								<div class="flex justify-between border-b border-gray-100 py-2">
+									<span class="text-sm text-gray-600">Category</span>
+									<span class="text-sm font-medium">{{ category?.name || 'N/A' }}</span>
+								</div>
+								<div class="flex justify-between border-b border-gray-100 py-2">
+									<span class="text-sm text-gray-600">Weight</span>
+									<span class="text-sm font-medium">{{ product.weight ? `${product.weight}kg` : 'N/A' }}</span>
+								</div>
+								<div v-if="product.dimensions" class="flex justify-between border-b border-gray-100 py-2">
+									<span class="text-sm text-gray-600">Dimensions</span>
+									<span class="text-sm font-medium">
+										{{ product.dimensions.length }}cm × {{ product.dimensions.width }}cm × {{ product.dimensions.height }}cm
+									</span>
+								</div>
+								<div class="flex justify-between border-b border-gray-100 py-2">
 									<span class="text-sm text-gray-600">Material composition</span>
 									<span class="text-sm font-medium">100% Cotton</span>
 								</div>
@@ -337,15 +414,87 @@
 									<span class="text-sm text-gray-600">Fit</span>
 									<span class="text-sm font-medium">Regular fit</span>
 								</div>
+								<div class="flex justify-between border-b border-gray-100 py-2">
+									<span class="text-sm text-gray-600">Created</span>
+									<span class="text-sm font-medium">{{ formatDate(product.createdAt) }}</span>
+								</div>
+								<div class="flex justify-between border-b border-gray-100 py-2">
+									<span class="text-sm text-gray-600">Last Updated</span>
+									<span class="text-sm font-medium">{{ formatDate(product.updatedAt) }}</span>
+								</div>
 							</div>
 						</div>
 
-						<div v-else-if="activeTab === 'Rating & Reviews'" class="py-8 text-center">
-							<p class="text-gray-500">Reviews coming soon...</p>
+						<div v-else-if="activeTab === 'Rating & Reviews'" class="space-y-6">
+							<!-- Review Summary -->
+							<div class="flex items-center space-x-4">
+								<div class="text-center">
+									<div class="text-3xl font-bold text-black">{{ getAverageRating.toFixed(1) }}</div>
+									<div class="flex justify-center mt-1">
+										<StarRating :initialValue="getAverageRating" />
+									</div>
+									<div class="text-sm text-gray-600 mt-1">{{ getReviewCount }} reviews</div>
+								</div>
+								<div class="flex-1">
+									<div class="text-sm text-gray-600">Based on {{ getReviewCount }} customer reviews</div>
+								</div>
+							</div>
+
+							<!-- Reviews List -->
+							<div v-if="reviews.length > 0" class="space-y-4">
+								<div
+									v-for="review in reviews"
+									:key="review.id"
+									class="border border-gray-200 rounded-lg p-4"
+								>
+									<div class="flex items-start justify-between mb-2">
+										<div class="flex items-center space-x-2">
+											<StarRating :initialValue="review.rating" />
+											<span class="text-sm font-medium">{{ review.title }}</span>
+										</div>
+										<div class="text-xs text-gray-500">{{ formatDate(review.createdAt) }}</div>
+									</div>
+									<p class="text-sm text-gray-700 mb-2">{{ review.content }}</p>
+									<div class="flex items-center justify-between text-xs text-gray-500">
+										<span v-if="review.isVerified" class="flex items-center">
+											<svg class="w-4 h-4 text-green-500 mr-1" fill="currentColor" viewBox="0 0 20 20">
+												<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+											</svg>
+											Verified Purchase
+										</span>
+										<span>{{ review.isHelpful }} people found this helpful</span>
+									</div>
+								</div>
+							</div>
+							<div v-else class="py-8 text-center">
+								<p class="text-gray-500">No reviews yet. Be the first to review this product!</p>
+							</div>
 						</div>
 
-						<div v-else-if="activeTab === 'FAQs'" class="py-8 text-center">
-							<p class="text-gray-500">FAQs coming soon...</p>
+						<div v-else-if="activeTab === 'FAQs'" class="space-y-6">
+							<h3 class="text-lg font-semibold text-black">Frequently Asked Questions</h3>
+							<div class="space-y-4">
+								<div class="border border-gray-200 rounded-lg p-4">
+									<h4 class="font-medium text-black mb-2">What is the return policy?</h4>
+									<p class="text-sm text-gray-600">We offer a 30-day return policy for all unused items in their original packaging. Return shipping is free for orders over $50.</p>
+								</div>
+								<div class="border border-gray-200 rounded-lg p-4">
+									<h4 class="font-medium text-black mb-2">How long does shipping take?</h4>
+									<p class="text-sm text-gray-600">Standard shipping takes 3-5 business days. Express shipping (1-2 business days) is available for an additional fee.</p>
+								</div>
+								<div class="border border-gray-200 rounded-lg p-4">
+									<h4 class="font-medium text-black mb-2">Do you offer international shipping?</h4>
+									<p class="text-sm text-gray-600">Yes, we ship to most countries worldwide. Shipping times and costs vary by location.</p>
+								</div>
+								<div class="border border-gray-200 rounded-lg p-4">
+									<h4 class="font-medium text-black mb-2">How do I care for this product?</h4>
+									<p class="text-sm text-gray-600">Machine wash cold, tumble dry low. Do not bleach. Iron on low heat if needed.</p>
+								</div>
+								<div class="border border-gray-200 rounded-lg p-4">
+									<h4 class="font-medium text-black mb-2">What if the item doesn't fit?</h4>
+									<p class="text-sm text-gray-600">We offer free exchanges for different sizes. Please contact our customer service team for assistance.</p>
+								</div>
+							</div>
 						</div>
 					</div>
 				</section>
@@ -470,6 +619,7 @@ import {
 import StarRating from "@/components/ui/Rating.vue";
 import { useProductDetail } from "@/hook/use-product-detail";
 import { useCartStore } from "@/stores/use-cart-store";
+import { formatDate } from "@/lib/utils";
 
 // Import images for mapping
 import pic1 from "@/assets/images/pic1.png";
@@ -489,7 +639,6 @@ import pic14 from "@/assets/images/pic14.png";
 import pic15 from "@/assets/images/pic15.png";
 import ProductListSec from "@/components/section/home/product-list-sec.vue";
 
-
 const route = useRoute();
 const productId = computed(() => route.params.id as string);
 
@@ -498,6 +647,8 @@ const {
 	product,
 	isLoading,
 	relatedProducts,
+	category,
+	reviews,
 	getAvailableColors,
 	getAvailableSizes,
 	getVariantByColorAndSize,
@@ -547,12 +698,22 @@ const isLightboxOpen = ref(false);
 
 // Set default color and size when product loads
 watch(product, (newProduct) => {
+	console.log("Product changed:", newProduct);
 	if (newProduct && getAvailableColors.value.length > 0) {
+		console.log("Available colors:", getAvailableColors.value);
 		selectedColor.value = getAvailableColors.value[0].name;
 	}
 	if (newProduct && getAvailableSizes.value.length > 0) {
+		console.log("Available sizes:", getAvailableSizes.value);
 		selectedSize.value = getAvailableSizes.value[0];
 	}
+}, { immediate: true });
+
+// Debug: Watch for variants changes
+watch(product, (newProduct) => {
+	console.log("Product changed:", newProduct);
+	console.log("Available colors:", getAvailableColors.value);
+	console.log("Available sizes:", getAvailableSizes.value);
 }, { immediate: true });
 
 // Watch for route changes to reset states when navigating to different products
@@ -636,7 +797,6 @@ const nextImage = () => {
 };
 
 // Lightbox functions
-
 const openLightbox = () => {
 	isLightboxOpen.value = true;
 };
@@ -648,7 +808,6 @@ const closeLightbox = () => {
 // Keyboard navigation for lightbox
 const handleKeydown = (event: KeyboardEvent) => {
 	if (!isLightboxOpen.value) return;
-
 	switch (event.key) {
 		case "Escape":
 			closeLightbox();

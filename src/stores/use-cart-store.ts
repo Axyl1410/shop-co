@@ -15,14 +15,16 @@ export const useCartStore = defineStore(
 		});
 
 		const getTotalPrice = computed(() => {
-			return cart.value.reduce(
-				(total, item) => total + item.quantity * calculatePrice(item).finalPrice,
-				0,
-			);
+			return cart.value.reduce((total, item) => {
+				const price = item.price || calculatePrice(item).finalPrice;
+				return total + item.quantity * price;
+			}, 0);
 		});
 
-		const addToCart = (product: Product, quantity: number) => {
-			const existingProduct = cart.value.find((item) => item.id === product.id);
+		const addToCart = (product: Product | CartType, quantity: number) => {
+			const productKey = (product as CartType).variantId || product.id;
+			const existingProduct = cart.value.find((item) => (item.variantId || item.id) === productKey);
+
 			if (existingProduct) {
 				existingProduct.quantity += quantity;
 			} else {
@@ -30,20 +32,37 @@ export const useCartStore = defineStore(
 			}
 		};
 
-		const removeFromCart = (product: Product, quantity: number) => {
-			const existingProduct = cart.value.find((item) => item.id === product.id);
+		const updateQuantity = (product: Product | CartType, quantity: number) => {
+			const productKey = (product as CartType).variantId || product.id;
+			const existingProduct = cart.value.find((item) => (item.variantId || item.id) === productKey);
+
 			if (existingProduct) {
-				existingProduct.quantity -= quantity;
-				if (existingProduct.quantity <= 0) {
-					cart.value = cart.value.filter((item) => item.id !== product.id);
+				if (quantity <= 0) {
+					cart.value = cart.value.filter((item) => (item.variantId || item.id) !== productKey);
+				} else {
+					existingProduct.quantity = quantity;
 				}
 			}
 		};
 
-		const clearItemFromCart = (product: Product) => {
-			const existingProduct = cart.value.find((item) => item.id === product.id);
+		const removeFromCart = (product: Product | CartType, quantity: number) => {
+			const productKey = (product as CartType).variantId || product.id;
+			const existingProduct = cart.value.find((item) => (item.variantId || item.id) === productKey);
+
 			if (existingProduct) {
-				cart.value = cart.value.filter((item) => item.id !== product.id);
+				existingProduct.quantity -= quantity;
+				if (existingProduct.quantity <= 0) {
+					cart.value = cart.value.filter((item) => (item.variantId || item.id) !== productKey);
+				}
+			}
+		};
+
+		const clearItemFromCart = (product: Product | CartType) => {
+			const productKey = (product as CartType).variantId || product.id;
+			const existingProduct = cart.value.find((item) => (item.variantId || item.id) === productKey);
+
+			if (existingProduct) {
+				cart.value = cart.value.filter((item) => (item.variantId || item.id) !== productKey);
 			}
 		};
 
@@ -59,6 +78,7 @@ export const useCartStore = defineStore(
 			getTotalPrice,
 
 			addToCart,
+			updateQuantity,
 			removeFromCart,
 			clearItemFromCart,
 			clearCart,

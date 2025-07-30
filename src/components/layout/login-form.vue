@@ -98,7 +98,7 @@ const onSubmit = handleSubmit(async (values) => {
 											:disabled="isLoading"
 										/>
 									</FormControl>
-									<FormMessage />
+									<FormMessage class="animate-in fade-in-0 duration-300" />
 								</FormItem>
 							</FormField>
 							<FormField
@@ -116,7 +116,7 @@ const onSubmit = handleSubmit(async (values) => {
 									<FormControl>
 										<Input type="password" v-bind="componentField" :disabled="isLoading" />
 									</FormControl>
-									<FormMessage />
+									<FormMessage class="animate-in fade-in-0 slide-in-from-top duration-300" />
 								</FormItem>
 							</FormField>
 							<Button type="submit" class="w-full" :disabled="isLoading">

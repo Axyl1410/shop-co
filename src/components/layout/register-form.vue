@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/hook";
@@ -66,14 +66,13 @@ const handleRegister = async () => {
 <template>
 	<div class="flex flex-col gap-6">
 		<Card>
+			<CardHeader class="text-center">
+				<CardTitle class="text-xl"> Create an account </CardTitle>
+				<CardDescription> Enter your details to register </CardDescription>
+			</CardHeader>
 			<CardContent>
-				<form class="p-6 md:p-8">
+				<form>
 					<div class="flex flex-col gap-6">
-						<div class="flex flex-col items-center text-center">
-							<h1 class="text-2xl font-bold">Create an account</h1>
-							<p class="text-muted-foreground text-balance">Enter your details to register</p>
-						</div>
-
 						<div class="grid gap-4">
 							<div class="grid gap-3">
 								<Label for="username">Username</Label>

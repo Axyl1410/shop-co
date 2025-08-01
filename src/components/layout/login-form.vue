@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Button } from "@/components/ui/button";
+import LoginSuccessDialog from "@/components/ui/login-success-dialog.vue";
 import { useAuth } from "@/hook";
 import { toTypedSchema } from "@vee-validate/zod";
 import { useForm } from "vee-validate";
@@ -12,6 +13,7 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/
 import { Input } from "../ui/input";
 
 const isLoading = ref<boolean>(false);
+const showSuccessDialog = ref<boolean>(false);
 
 const router = useRouter();
 const route = useRoute();
@@ -38,12 +40,7 @@ const onSubmit = handleSubmit(async (values) => {
 
 		if (res.success) {
 			toast.success("Login successful");
-			const redirectUrl = route.query.redirect as string;
-			if (redirectUrl) {
-				router.push(redirectUrl);
-			} else {
-				router.push("/");
-			}
+			showSuccessDialog.value = true;
 		} else {
 			toast.error(res.error ?? "Invalid email or password");
 		}
@@ -53,6 +50,10 @@ const onSubmit = handleSubmit(async (values) => {
 		isLoading.value = false;
 	}
 });
+
+const handleNavigate = (path: string) => {
+	router.push(path);
+};
 </script>
 
 <template>
@@ -144,4 +145,10 @@ const onSubmit = handleSubmit(async (values) => {
 			<a href="#">Privacy Policy</a>.
 		</div>
 	</div>
+
+	<LoginSuccessDialog
+		v-model:open="showSuccessDialog"
+		:redirect-url="route.query.redirect as string"
+		@navigate="handleNavigate"
+	/>
 </template>

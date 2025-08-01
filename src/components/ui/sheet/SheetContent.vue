@@ -3,27 +3,27 @@ import type { HTMLAttributes } from "vue";
 import { reactiveOmit } from "@vueuse/core";
 import { X } from "lucide-vue-next";
 import {
-	DialogClose,
-	DialogContent,
-	type DialogContentEmits,
-	type DialogContentProps,
-	DialogPortal,
-	useForwardPropsEmits,
+    DialogClose,
+    DialogContent,
+    type DialogContentEmits,
+    type DialogContentProps,
+    DialogPortal,
+    useForwardPropsEmits,
 } from "reka-ui";
 import { cn } from "@/lib/utils";
 import SheetOverlay from "./SheetOverlay.vue";
 
 interface SheetContentProps extends DialogContentProps {
-	class?: HTMLAttributes["class"];
-	side?: "top" | "right" | "bottom" | "left";
+    class?: HTMLAttributes["class"];
+    side?: "top" | "right" | "bottom" | "left";
 }
 
 defineOptions({
-	inheritAttrs: false,
+    inheritAttrs: false,
 });
 
 const props = withDefaults(defineProps<SheetContentProps>(), {
-	side: "right",
+    side: "right",
 });
 const emits = defineEmits<DialogContentEmits>();
 

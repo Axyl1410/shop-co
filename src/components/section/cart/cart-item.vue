@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { calculatePrice } from "@/lib/utils";
-import type { CartType, Product } from "@/types";
+import type { CartType } from "@/types";
 import { Minus, Plus, X } from "lucide-vue-next";
 import { computed } from "vue";
 
 interface Props {
 	item: CartType;
-	clearItemFromCart: (product: Product) => void;
-	addToCart: (product: Product, quantity: number) => void;
-	removeFromCart: (product: Product, quantity: number) => void;
+	clearItemFromCart: (product: CartType) => void;
+	addToCart: (product: CartType, quantity: number) => void;
+	removeFromCart: (product: CartType, quantity: number) => void;
 }
 
 const prop = defineProps<Props>();

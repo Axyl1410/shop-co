@@ -6,7 +6,7 @@ import { DropdownMenuSubTrigger, type DropdownMenuSubTriggerProps, useForwardPro
 import { cn } from "@/lib/utils";
 
 const props = defineProps<
-	DropdownMenuSubTriggerProps & { class?: HTMLAttributes["class"]; inset?: boolean }
+    DropdownMenuSubTriggerProps & { class?: HTMLAttributes["class"]; inset?: boolean }
 >();
 
 const delegatedProps = reactiveOmit(props, "class", "inset");

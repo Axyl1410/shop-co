@@ -5,7 +5,6 @@ import { requireAdmin, requireAuth } from "./guards";
 const router = createRouter({
 	history: createWebHistory(import.meta.env.BASE_URL),
 	routes: [
-		// Main Layout Routes (for regular users)
 		{
 			path: "/",
 			component: () => import("@/views/layout/index-layout.vue"),
@@ -45,7 +44,6 @@ const router = createRouter({
 			],
 		},
 
-		// Auth Layout Routes
 		{
 			path: "/",
 			name: "auth",
@@ -64,14 +62,13 @@ const router = createRouter({
 			],
 		},
 
-		// Admin Layout Routes
 		{
 			path: "/admin",
 			component: () => import("@/views/layout/admin-layout.vue"),
 			beforeEnter: requireAdmin,
 			children: [
 				{
-					path: "dashboard",
+					path: "",
 					name: "admin-dashboard",
 					component: () => import("@/views/admin/dashboard-view.vue"),
 				},
@@ -98,7 +95,6 @@ const router = createRouter({
 			],
 		},
 
-		// 404 Route
 		{
 			path: "/:pathMatch(.*)*",
 			name: "not-found",

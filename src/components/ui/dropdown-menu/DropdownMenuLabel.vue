@@ -5,7 +5,7 @@ import { DropdownMenuLabel, type DropdownMenuLabelProps, useForwardProps } from 
 import { cn } from "@/lib/utils";
 
 const props = defineProps<
-	DropdownMenuLabelProps & { class?: HTMLAttributes["class"]; inset?: boolean }
+    DropdownMenuLabelProps & { class?: HTMLAttributes["class"]; inset?: boolean }
 >();
 
 const delegatedProps = reactiveOmit(props, "class", "inset");

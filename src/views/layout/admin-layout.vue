@@ -1,4 +1,15 @@
 <script setup lang="ts">
+import AppSidebar from "@/components/AppSidebar.vue";
+import {
+	Breadcrumb,
+	BreadcrumbItem,
+	BreadcrumbLink,
+	BreadcrumbList,
+	BreadcrumbPage,
+	BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import { Separator } from "@/components/ui/separator";
+import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/sonner";
 import { useAuthStore } from "@/stores/use-auth-store";
 import { storeToRefs } from "pinia";
@@ -28,92 +39,35 @@ watch(
 </script>
 
 <template>
-	<div vaul-drawer-wrapper id="admin-app" class="min-h-screen bg-gray-50">
+	<div vaul-drawer-wrapper id="admin-app" class="min-h-screen bg-white">
 		<Toaster close-button />
 
-		<!-- Admin Header -->
-		<header class="border-b bg-white shadow-sm">
-			<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-				<div class="flex h-16 items-center justify-between">
-					<div class="flex items-center">
-						<h1 class="text-xl font-semibold text-gray-900">Admin Dashboard</h1>
+		<SidebarProvider>
+			<AppSidebar />
+			<SidebarInset>
+				<header
+					class="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-2 border-b bg-white transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12"
+				>
+					<div class="flex items-center gap-2 px-4">
+						<SidebarTrigger class="-ml-1" />
+						<Separator orientation="vertical" class="mr-2 h-4" />
+						<Breadcrumb>
+							<BreadcrumbList>
+								<BreadcrumbItem class="hidden md:block">
+									<BreadcrumbLink href="#"> Building Your Application </BreadcrumbLink>
+								</BreadcrumbItem>
+								<BreadcrumbSeparator class="hidden md:block" />
+								<BreadcrumbItem>
+									<BreadcrumbPage>Data Fetching</BreadcrumbPage>
+								</BreadcrumbItem>
+							</BreadcrumbList>
+						</Breadcrumb>
 					</div>
-					<div class="flex items-center space-x-4">
-						<span class="text-sm text-gray-500">Welcome, {{ user?.firstName || "Admin" }}</span>
-						<button @click="authStore.logout()" class="text-sm text-red-600 hover:text-red-800">
-							Logout
-						</button>
-					</div>
+				</header>
+				<div class="container mx-auto px-4">
+					<RouterView />
 				</div>
-			</div>
-		</header>
-
-		<!-- Admin Navigation -->
-		<nav class="border-b bg-white shadow-sm">
-			<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-				<div class="flex space-x-8">
-					<RouterLink
-						to="/admin/dashboard"
-						class="border-b-2 px-3 py-4 text-sm font-medium transition-colors"
-						:class="
-							route.path === '/admin/dashboard'
-								? 'border-blue-500 text-blue-600'
-								: 'border-transparent text-gray-500 hover:text-gray-700'
-						"
-					>
-						Dashboard
-					</RouterLink>
-					<RouterLink
-						to="/admin/products"
-						class="border-b-2 px-3 py-4 text-sm font-medium transition-colors"
-						:class="
-							route.path.startsWith('/admin/products')
-								? 'border-blue-500 text-blue-600'
-								: 'border-transparent text-gray-500 hover:text-gray-700'
-						"
-					>
-						Products
-					</RouterLink>
-					<RouterLink
-						to="/admin/orders"
-						class="border-b-2 px-3 py-4 text-sm font-medium transition-colors"
-						:class="
-							route.path.startsWith('/admin/orders')
-								? 'border-blue-500 text-blue-600'
-								: 'border-transparent text-gray-500 hover:text-gray-700'
-						"
-					>
-						Orders
-					</RouterLink>
-					<RouterLink
-						to="/admin/users"
-						class="border-b-2 px-3 py-4 text-sm font-medium transition-colors"
-						:class="
-							route.path.startsWith('/admin/users')
-								? 'border-blue-500 text-blue-600'
-								: 'border-transparent text-gray-500 hover:text-gray-700'
-						"
-					>
-						Users
-					</RouterLink>
-					<RouterLink
-						to="/admin/settings"
-						class="border-b-2 px-3 py-4 text-sm font-medium transition-colors"
-						:class="
-							route.path.startsWith('/admin/settings')
-								? 'border-blue-500 text-blue-600'
-								: 'border-transparent text-gray-500 hover:text-gray-700'
-						"
-					>
-						Settings
-					</RouterLink>
-				</div>
-			</div>
-		</nav>
-
-		<!-- Admin Content -->
-		<main class="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8">
-			<RouterView />
-		</main>
+			</SidebarInset>
+		</SidebarProvider>
 	</div>
 </template>

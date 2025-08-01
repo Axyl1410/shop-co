@@ -4,7 +4,7 @@ import { useAuth } from "@/hook";
 import { toTypedSchema } from "@vee-validate/zod";
 import { useForm } from "vee-validate";
 import { ref } from "vue";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { toast } from "vue-sonner";
 import * as z from "zod";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
@@ -14,12 +14,13 @@ import { Input } from "../ui/input";
 const isLoading = ref<boolean>(false);
 
 const router = useRouter();
+const route = useRoute();
 const { login } = useAuth();
 
 const formSchema = toTypedSchema(
 	z.object({
 		email: z.email(),
-		password: z.string().min(8),
+		password: z.string().min(3),
 	}),
 );
 
@@ -37,7 +38,12 @@ const onSubmit = handleSubmit(async (values) => {
 
 		if (res.success) {
 			toast.success("Login successful");
-			router.push("/");
+			const redirectUrl = route.query.redirect as string;
+			if (redirectUrl) {
+				router.push(redirectUrl);
+			} else {
+				router.push("/");
+			}
 		} else {
 			toast.error(res.error ?? "Invalid email or password");
 		}

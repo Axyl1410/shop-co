@@ -83,6 +83,20 @@
       "isActive": true,
       "createdAt": "2025-07-29T04:12:20.716Z",
       "updatedAt": "2025-07-29T04:12:20.716Z"
+    },
+    {
+      "id": "admin",
+      "username": "admin",
+      "email": "admin@gmail.com",
+      "password": "123",
+      "firstName": "admin",
+      "lastName": "admin",
+      "phone": "12345671",
+      "avatar": "/avatars/default.jpg",
+      "role": "admin",
+      "isActive": true,
+      "createdAt": "2025-07-29T04:12:20.716Z",
+      "updatedAt": "2025-07-29T04:12:20.716Z"
     }
   ],
   "categories": [

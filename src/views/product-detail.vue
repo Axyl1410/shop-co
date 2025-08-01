@@ -1,7 +1,7 @@
 <template>
 	<div :key="componentKey" class="min-h-screen bg-white">
 		<!-- Main Content -->
-		<main class="max-w-frame mx-auto px-4 xl:px-0">
+		<main class="container mx-auto px-4 xl:px-0">
 			<hr class="mb-5 h-[1px] border-t-black/10 sm:mb-6" />
 			<Breadcrumb>
 				<BreadcrumbList>
@@ -18,7 +18,7 @@
 					</BreadcrumbItem>
 				</BreadcrumbList>
 			</Breadcrumb>
-			<section class="mb-11">
+			<section class="mt-8 mb-11">
 				<div class="grid grid-cols-1 gap-5 md:grid-cols-2">
 					<!-- Product Image Gallery -->
 					<Motion
@@ -251,13 +251,21 @@
 						<div class="space-y-3">
 							<h3 class="text-sm font-semibold text-black">Select Colors</h3>
 							<div v-if="getAvailableColors.length > 0" class="flex space-x-3">
-								<button
+								<Button
 									v-for="color in getAvailableColors"
 									:key="color.code"
-									class="h-8 w-8 rounded-full border-2 border-gray-300 transition-all hover:border-black"
-									:class="{ 'border-black': selectedColor === color.name }"
+									:class="
+										cn(
+											'!h-8 !w-8 rounded-full border-2 border-gray-300 !p-2 transition-all hover:border-black',
+											{
+												'border-black': selectedColor === color.name,
+												'cursor-not-allowed opacity-50': !color.hasStock,
+											},
+										)
+									"
 									:style="{ backgroundColor: color.code }"
-									@click="selectedColor = color.name"
+									:disabled="!color.hasStock"
+									@click="color.hasStock && (selectedColor = color.name)"
 								>
 									<svg
 										v-if="selectedColor === color.name"
@@ -271,7 +279,7 @@
 											clip-rule="evenodd"
 										/>
 									</svg>
-								</button>
+								</Button>
 							</div>
 							<div v-else class="text-sm text-gray-500">
 								No colors available (Debug: {{ getAvailableColors.length }} colors found)
@@ -283,20 +291,23 @@
 							<h3 class="text-sm font-semibold text-black">Choose Size</h3>
 							<div v-if="getAvailableSizes.length > 0" class="flex flex-wrap gap-2">
 								<button
-									v-for="size in getAvailableSizes"
-									:key="size"
-									class="border border-gray-300 px-4 py-2 text-sm font-medium transition-all hover:border-black"
-									:class="{
-										'border-black bg-black text-white': selectedSize === size,
-										'cursor-not-allowed opacity-50': !isVariantAvailable(selectedColor, size),
-									}"
-									:disabled="!isVariantAvailable(selectedColor, size)"
-									@click="selectedSize = size"
+									v-for="sizeInfo in getAvailableSizes"
+									:key="sizeInfo.size"
+									:class="
+										cn(
+											'border border-gray-300 !px-4 !py-2 text-sm font-medium transition-all hover:border-black',
+											{
+												'border-black bg-black text-white': selectedSize === sizeInfo.size,
+												'cursor-not-allowed opacity-50': !sizeInfo.hasStock,
+											},
+										)
+									"
+									variant="outline"
+									:disabled="!sizeInfo.hasStock"
+									@click="sizeInfo.hasStock && (selectedSize = sizeInfo.size)"
 								>
-									{{ size }}
-									<span v-if="!isVariantAvailable(selectedColor, size)" class="text-xs"
-										>(Out of stock)</span
-									>
+									{{ sizeInfo.size }}
+									<span v-if="!sizeInfo.hasStock" class="text-xs">(Out of stock)</span>
 								</button>
 							</div>
 							<div v-else class="text-sm text-gray-500">
@@ -311,7 +322,12 @@
 						>
 							In Stock: {{ getStockQuantity(selectedColor, selectedSize) }} available
 						</div>
-						<div v-else class="text-sm text-red-600">Out of Stock</div>
+						<div v-else-if="selectedColor && selectedSize" class="text-sm text-red-600">
+							Out of Stock for {{ selectedColor }} - {{ selectedSize }}
+						</div>
+						<div v-else class="text-sm text-gray-500">
+							Please select color and size to see stock information
+						</div>
 
 						<!-- Quantity Selector -->
 						<div class="flex items-center space-x-4">
@@ -651,9 +667,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, onMounted, onUnmounted, watch } from "vue";
-import { useRoute } from "vue-router";
 import { Motion } from "motion-v";
+import { computed, onMounted, onUnmounted, ref, watch } from "vue";
+import { useRoute } from "vue-router";
 import { toast } from "vue-sonner";
 
 import {
@@ -667,12 +683,18 @@ import {
 
 import StarRating from "@/components/ui/Rating.vue";
 import { useProductDetail } from "@/hook/use-product-detail";
+import { cn, formatDate } from "@/lib/utils";
 import { useCartStore } from "@/stores/use-cart-store";
-import { formatDate } from "@/lib/utils";
 import type { CartType } from "@/types/cart";
 
 // Import images for mapping
 import pic1 from "@/assets/images/pic1.png";
+import pic10 from "@/assets/images/pic10.png";
+import pic11 from "@/assets/images/pic11.png";
+import pic12 from "@/assets/images/pic12.png";
+import pic13 from "@/assets/images/pic13.png";
+import pic14 from "@/assets/images/pic14.png";
+import pic15 from "@/assets/images/pic15.png";
 import pic2 from "@/assets/images/pic2.png";
 import pic3 from "@/assets/images/pic3.png";
 import pic4 from "@/assets/images/pic4.png";
@@ -681,13 +703,8 @@ import pic6 from "@/assets/images/pic6.png";
 import pic7 from "@/assets/images/pic7.png";
 import pic8 from "@/assets/images/pic8.png";
 import pic9 from "@/assets/images/pic9.png";
-import pic10 from "@/assets/images/pic10.png";
-import pic11 from "@/assets/images/pic11.png";
-import pic12 from "@/assets/images/pic12.png";
-import pic13 from "@/assets/images/pic13.png";
-import pic14 from "@/assets/images/pic14.png";
-import pic15 from "@/assets/images/pic15.png";
 import ProductListSec from "@/components/section/home/product-list-sec.vue";
+import { Button } from "@/components/ui/button";
 
 const route = useRoute();
 const productId = computed(() => route.params.id as string);
@@ -753,11 +770,15 @@ watch(
 		console.log("Product changed:", newProduct);
 		if (newProduct && getAvailableColors.value.length > 0) {
 			console.log("Available colors:", getAvailableColors.value);
-			selectedColor.value = getAvailableColors.value[0].name;
+			// Chọn màu đầu tiên có stock
+			const availableColor = getAvailableColors.value.find((color) => color.hasStock);
+			selectedColor.value = availableColor ? availableColor.name : getAvailableColors.value[0].name;
 		}
 		if (newProduct && getAvailableSizes.value.length > 0) {
 			console.log("Available sizes:", getAvailableSizes.value);
-			selectedSize.value = getAvailableSizes.value[0];
+			// Chọn size đầu tiên có stock
+			const availableSize = getAvailableSizes.value.find((size) => size.hasStock);
+			selectedSize.value = availableSize ? availableSize.size : getAvailableSizes.value[0].size;
 		}
 	},
 	{ immediate: true },
@@ -806,6 +827,13 @@ const addToCart = () => {
 
 		if (!isVariantAvailable(selectedColor.value, selectedSize.value)) {
 			toast.error("This variant is out of stock");
+			return;
+		}
+
+		// Check if quantity exceeds available stock
+		const availableStock = getStockQuantity(selectedColor.value, selectedSize.value);
+		if (quantity.value > availableStock) {
+			toast.error(`Only ${availableStock} items available in stock`);
 			return;
 		}
 

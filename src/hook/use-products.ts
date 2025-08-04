@@ -25,4 +25,3 @@ export function useProducts() {
 		products: query.data,
 	};
 }
-

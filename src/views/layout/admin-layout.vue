@@ -11,31 +11,8 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/sonner";
-import { useAuthStore } from "@/stores/use-auth-store";
-import { storeToRefs } from "pinia";
-import { computed, watch } from "vue";
-import { RouterView, useRoute } from "vue-router";
+import { RouterView } from "vue-router";
 import "vue-sonner/style.css";
-
-const authStore = useAuthStore();
-const route = useRoute();
-const { user } = storeToRefs(authStore);
-
-// Check if user is admin
-const isAdmin = computed(() => user.value?.role === "admin");
-
-watch(
-	() => route.params.id,
-	() => {
-		window.scrollTo({
-			top: 0,
-			behavior: "smooth",
-		});
-
-		authStore.initializeAuth();
-	},
-	{ immediate: true },
-);
 </script>
 
 <template>

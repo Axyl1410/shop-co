@@ -7,6 +7,43 @@ const router = createRouter({
 	routes: [
 		{
 			path: "/",
+			component: () => import("@/views/layout/index-layout.vue"),
+			children: [
+				{
+					path: "",
+					name: "home",
+					component: HomeView,
+				},
+				{
+					path: "about",
+					name: "about",
+					component: () => import("@/views/about-view.vue"),
+				},
+				{
+					path: "product/:id",
+					name: "product-detail",
+					component: () => import("@/views/product-detail.vue"),
+				},
+				{
+					path: "profile",
+					name: "profile",
+					component: () => import("@/views/profile-view.vue"),
+					beforeEnter: requireAuth,
+				},
+				{
+					path: "shop",
+					name: "shop",
+					component: () => import("@/views/shop-view.vue"),
+				},
+				{
+					path: "cart",
+					name: "cart",
+					component: () => import("@/views/cart-view.vue"),
+					beforeEnter: requireAuth,
+				},
+			],
+		},
+		{
 			name: "home",
 			component: HomeView,
 		},
@@ -42,10 +79,9 @@ const router = createRouter({
 			component: () => import("@/views/cart-view.vue"),
 			beforeEnter: requireAuth,
 		},
-
 		{
 			path: "/",
-			name: "auth",
+			name: "",
 			component: () => import("@/views/layout/auth-layout.vue"),
 			children: [
 				{
@@ -93,7 +129,6 @@ const router = createRouter({
 				},
 			],
 		},
-
 		{
 			path: "/:pathMatch(.*)*",
 			name: "not-found",

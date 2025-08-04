@@ -156,9 +156,7 @@ export function useProductDetail(productId: string | number) {
 
 	return {
 		// Query state
-		isLoading: query.isLoading,
-		isError: query.isError,
-		error: query.error,
+		...query,
 
 		// Data
 		product,

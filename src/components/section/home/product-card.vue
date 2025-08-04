@@ -12,7 +12,7 @@ defineProps<Props>();
 
 <template>
 	<div>
-		<router-link :to="`/shop/product/${data.id}`" class="flex aspect-auto flex-col items-start">
+		<router-link :to="`/product/${data.id}`" class="flex aspect-auto flex-col items-start">
 			<div
 				class="mb-2.5 aspect-square w-full overflow-hidden rounded-[13px] bg-[#F0EEED] lg:max-w-[295px] lg:rounded-[20px] xl:mb-4"
 			>

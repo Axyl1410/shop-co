@@ -10,7 +10,7 @@
 					</BreadcrumbItem>
 					<BreadcrumbSeparator />
 					<BreadcrumbItem>
-						<BreadcrumbLink href="/shop/product">Products</BreadcrumbLink>
+						<BreadcrumbLink href="/shop#men-clothes">Products</BreadcrumbLink>
 					</BreadcrumbItem>
 					<BreadcrumbSeparator />
 					<BreadcrumbItem>

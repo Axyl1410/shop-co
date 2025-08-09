@@ -3,7 +3,6 @@ import {
 	NavigationMenu,
 	NavigationMenuContent,
 	NavigationMenuItem,
-	NavigationMenuLink,
 	NavigationMenuList,
 	NavigationMenuTrigger,
 	navigationMenuTriggerStyle,
@@ -19,35 +18,29 @@ import { MenuList } from "@/constant";
 				<NavigationMenuContent>
 					<ul class="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
 						<li v-for="component in MenuList" :key="component.id">
-							<NavigationMenuLink as-child>
-								<RouterLink
-									:to="component.url"
-									class="hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground block space-y-1 rounded-md p-3 leading-none no-underline transition-colors outline-none select-none"
-								>
-									<div class="text-sm leading-none font-medium">{{ component.label }}</div>
-									<p class="text-muted-foreground line-clamp-2 text-sm leading-snug">
-										{{ component.description }}
-									</p>
-								</RouterLink>
-							</NavigationMenuLink>
+							<RouterLink
+								:to="component.url"
+								class="hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground block space-y-1 rounded-md p-3 leading-none no-underline transition-colors outline-none select-none"
+							>
+								<div class="text-sm leading-none font-medium">{{ component.label }}</div>
+								<p class="text-muted-foreground line-clamp-2 text-sm leading-snug">
+									{{ component.description }}
+								</p>
+							</RouterLink>
 						</li>
 					</ul>
 				</NavigationMenuContent>
 			</NavigationMenuItem>
 			<NavigationMenuItem>
-				<NavigationMenuLink href="/shop#on-sale" :class="navigationMenuTriggerStyle()">
-					On Sale
-				</NavigationMenuLink>
+				<RouterLink to="/shop#on-sale" :class="navigationMenuTriggerStyle()"> On Sale </RouterLink>
 			</NavigationMenuItem>
 			<NavigationMenuItem>
-				<NavigationMenuLink href="/shop#new-arrivals" :class="navigationMenuTriggerStyle()">
+				<RouterLink to="/shop#new-arrivals" :class="navigationMenuTriggerStyle()">
 					New Arrivals
-				</NavigationMenuLink>
+				</RouterLink>
 			</NavigationMenuItem>
 			<NavigationMenuItem>
-				<NavigationMenuLink href="/shop#brands" :class="navigationMenuTriggerStyle()">
-					Brands
-				</NavigationMenuLink>
+				<RouterLink to="/shop#brands" :class="navigationMenuTriggerStyle()"> Brands </RouterLink>
 			</NavigationMenuItem>
 		</NavigationMenuList>
 	</NavigationMenu>

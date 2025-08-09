@@ -41,41 +41,41 @@ const router = createRouter({
 					component: () => import("@/views/cart-view.vue"),
 					beforeEnter: requireAuth,
 				},
+				{
+					path: "/about",
+					name: "about",
+					component: () => import("@/views/about-view.vue"),
+				},
+				{
+					path: "/product/:id",
+					name: "product-detail",
+					component: () => import("@/views/product-detail.vue"),
+				},
+				{
+					path: "/profile",
+					name: "profile",
+					component: () => import("@/views/profile-view.vue"),
+					beforeEnter: requireAuth,
+				},
+				{
+					path: "/shop",
+					name: "shop",
+					component: () => import("@/views/shop-view.vue"),
+				},
+				{
+					path: "/:pathMatch(.*)*",
+					name: "not-found",
+					component: () => import("@/views/not-found-view.vue"),
+				},
+				{
+					path: "/cart",
+					name: "cart",
+					component: () => import("@/views/cart-view.vue"),
+					beforeEnter: requireAuth,
+				},
 			],
 		},
 
-		{
-			path: "/about",
-			name: "about",
-			component: () => import("@/views/about-view.vue"),
-		},
-		{
-			path: "/product/:id",
-			name: "product-detail",
-			component: () => import("@/views/product-detail.vue"),
-		},
-		{
-			path: "/profile",
-			name: "profile",
-			component: () => import("@/views/profile-view.vue"),
-			beforeEnter: requireAuth,
-		},
-		{
-			path: "/shop",
-			name: "shop",
-			component: () => import("@/views/shop-view.vue"),
-		},
-		{
-			path: "/:pathMatch(.*)*",
-			name: "not-found",
-			component: () => import("@/views/not-found-view.vue"),
-		},
-		{
-			path: "/cart",
-			name: "cart",
-			component: () => import("@/views/cart-view.vue"),
-			beforeEnter: requireAuth,
-		},
 		{
 			path: "/",
 			name: "",

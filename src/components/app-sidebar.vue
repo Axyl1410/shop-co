@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import NavMain from "@/components/NavMain.vue";
-import NavProjects from "@/components/NavProjects.vue";
-import NavUser from "@/components/NavUser.vue";
-import TeamSwitcher from "@/components/TeamSwitcher.vue";
+import NavMain from "@/components/nav-main.vue";
+import NavProjects from "@/components/nav-projects.vue";
+import NavUser from "@/components/nav-user.vue";
+import TeamSwitcher from "@/components/team-switcher.vue";
 import type { SidebarProps } from "@/components/ui/sidebar";
 import {
 	Sidebar,

@@ -91,7 +91,7 @@ const handleRedirect = () => {
 
 				<Button
 					v-if="isAdmin"
-					@click="handleNavigate('/admin/dashboard')"
+					@click="handleNavigate('/admin/')"
 					class="w-full justify-start"
 					variant="outline"
 				>

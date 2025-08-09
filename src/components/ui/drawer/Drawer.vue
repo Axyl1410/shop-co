@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import type { DrawerRootEmits, DrawerRootProps } from "vaul-vue";
 import { useForwardPropsEmits } from "reka-ui";
+import type { DrawerRootEmits, DrawerRootProps } from "vaul-vue";
 import { DrawerRoot } from "vaul-vue";
 
 const props = withDefaults(defineProps<DrawerRootProps>(), {
@@ -10,10 +10,11 @@ const props = withDefaults(defineProps<DrawerRootProps>(), {
 const emits = defineEmits<DrawerRootEmits>();
 
 const forwarded = useForwardPropsEmits(props, emits);
+const forwardedObject = forwarded as unknown as Record<string, unknown>;
 </script>
 
 <template>
-	<DrawerRoot data-slot="drawer" v-bind="forwarded">
+	<DrawerRoot data-slot="drawer" v-bind="forwardedObject">
 		<slot />
 	</DrawerRoot>
 </template>

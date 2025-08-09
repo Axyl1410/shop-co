@@ -7,7 +7,7 @@ const authStore = useAuthStore();
 const route = useRoute();
 
 watch(
-	() => route.params.id,
+	() => route.fullPath,
 	() => {
 		window.scrollTo({
 			top: 0,

@@ -14,7 +14,7 @@ import "vue-sonner/style.css";
 		<Navbar />
 		<router-view v-slot="{ Component }">
 			<transition name="fade" mode="out-in">
-				<div :key="$route.fullPath">
+				<div :key="$route.path">
 					<component :is="Component" />
 				</div>
 			</transition>

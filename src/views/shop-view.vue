@@ -18,6 +18,7 @@ import {
 	PaginationNext,
 	PaginationPrevious,
 } from "@/components/ui/pagination";
+import SearchInput from "@/components/ui/search-input.vue";
 import {
 	Select,
 	SelectContent,
@@ -28,6 +29,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { useProducts } from "@/hook";
 import { useCategories } from "@/hook/use-categories";
+import { useProductSearch } from "@/hook/use-product-search";
 import { calculatePrice } from "@/lib/utils";
 import type { Category } from "@/types/category";
 import { Sliders } from "lucide-vue-next";
@@ -39,11 +41,17 @@ const { categories } = useCategories();
 const route = useRoute();
 const router = useRouter();
 
+// Search functionality
+const { searchQuery, searchedProducts, clearSearch, setSearchQuery } = useProductSearch(products);
+
 const sortParam = computed(() => (route.query.sort as string) || "most-popular");
 const sort = ref(sortParam.value);
 watch(sort, (val) => {
 	router.replace({ query: { ...route.query, sort: val } });
 });
+
+// URL parameters
+const searchParam = computed(() => (route.query.search as string) || "");
 const categoryParam = computed(() => route.query.category as string | undefined);
 const minPriceParam = computed(() => {
 	const v = Number(route.query.minPrice);
@@ -52,6 +60,27 @@ const minPriceParam = computed(() => {
 const maxPriceParam = computed(() => {
 	const v = Number(route.query.maxPrice);
 	return Number.isFinite(v) && v >= 0 ? v : undefined;
+});
+
+// Initialize search from URL
+searchQuery.value = searchParam.value;
+
+// Watch for search query changes and update URL
+watch(searchQuery, (newValue) => {
+	const query = { ...route.query };
+	if (newValue.trim()) {
+		query.search = newValue;
+	} else {
+		delete query.search;
+	}
+	router.replace({ query });
+});
+
+// Watch for URL search param changes
+watch(searchParam, (newValue) => {
+	if (newValue !== searchQuery.value) {
+		searchQuery.value = newValue;
+	}
 });
 
 const categorySlugToId = computed(() => {
@@ -64,7 +93,8 @@ const categorySlugToId = computed(() => {
 });
 
 const filteredProducts = computed(() => {
-	const list = products?.value ? [...products.value] : [];
+	// Start with searched products instead of all products
+	const list = searchedProducts.value ? [...searchedProducts.value] : [];
 
 	// category filter
 	let filtered = list;
@@ -77,7 +107,7 @@ const filteredProducts = computed(() => {
 		}
 	}
 
-	// calculate price
+	// price filter
 	filtered = filtered.filter((p) => {
 		const price = calculatePrice(p).finalPrice;
 		if (minPriceParam.value != null && price < minPriceParam.value) return false;
@@ -118,6 +148,23 @@ const totalProductsCount = computed(() => (products.value ? products.value.lengt
 				</BreadcrumbItem>
 			</BreadcrumbList>
 		</Breadcrumb>
+		<!-- Search Section -->
+		<div class="mb-6">
+			<div class="mx-auto max-w-2xl">
+				<SearchInput
+					v-model="searchQuery"
+					placeholder="Tìm kiếm sản phẩm theo tên, thương hiệu, mô tả..."
+					@clear="clearSearch"
+				/>
+			</div>
+			<div v-if="searchQuery.trim()" class="mt-2 text-center text-sm text-gray-600">
+				Đang tìm kiếm: <span class="font-medium">"{{ searchQuery }}"</span>
+				<button @click="clearSearch" class="ml-2 text-blue-600 hover:text-blue-800">
+					Xóa tìm kiếm
+				</button>
+			</div>
+		</div>
+
 		<div class="flex gap-8">
 			<div
 				class="hidden max-w-[295px] min-w-[295px] space-y-5 rounded-[20px] border border-black/10 px-5 py-5 md:block md:space-y-6 md:px-6"
@@ -132,11 +179,21 @@ const totalProductsCount = computed(() => (products.value ? products.value.lengt
 				<div class="flex items-center justify-between">
 					<div class="flex w-full flex-col justify-between sm:flex-row sm:items-center">
 						<h1 class="text-2xl font-bold md:text-[32px]">
-							{{ route.query.category || "Casual" }}
+							<span v-if="searchQuery.trim()">
+								Kết quả tìm kiếm
+							</span>
+							<span v-else>
+								{{ route.query.category || "Casual" }}
+							</span>
 						</h1>
 						<div class="flex flex-col lg:flex-row">
 							<p class="mr-3 text-sm text-black/60 md:text-base">
-								Showing {{ filteredProducts.length }} of {{ totalProductsCount }} Products
+								<span v-if="searchQuery.trim()">
+									Tìm thấy {{ filteredProducts.length }} sản phẩm
+								</span>
+								<span v-else>
+									Showing {{ filteredProducts.length }} of {{ totalProductsCount }} Products
+								</span>
 							</p>
 							<div className="flex items-center">
 								<p>Sort by:</p>
@@ -161,8 +218,43 @@ const totalProductsCount = computed(() => (products.value ? products.value.lengt
 						<MobileFilters />
 					</div>
 				</div>
-				<div class="sm:grid-col-2 mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+				<div v-if="filteredProducts.length > 0" class="sm:grid-col-2 mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
 					<ProductCard v-for="item in filteredProducts" :data="item" :key="item.id" />
+				</div>
+				
+				<!-- No results message -->
+				<div v-else class="mt-8 text-center">
+					<div class="mx-auto max-w-md">
+						<div class="rounded-lg bg-gray-50 p-8">
+							<svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+							</svg>
+							<h3 class="mt-4 text-lg font-medium text-gray-900">
+								<span v-if="searchQuery.trim()">
+									Không tìm thấy sản phẩm nào
+								</span>
+								<span v-else>
+									Không có sản phẩm nào
+								</span>
+							</h3>
+							<p class="mt-2 text-sm text-gray-500">
+								<span v-if="searchQuery.trim()">
+									Thử tìm kiếm với từ khóa khác hoặc kiểm tra lại chính tả.
+								</span>
+								<span v-else>
+									Thử thay đổi bộ lọc hoặc quay lại sau.
+								</span>
+							</p>
+							<div v-if="searchQuery.trim()" class="mt-4">
+								<button 
+									@click="clearSearch"
+									class="rounded-md bg-black px-4 py-2 text-sm font-medium text-white hover:bg-gray-800"
+								>
+									Xóa tìm kiếm
+								</button>
+							</div>
+						</div>
+					</div>
 				</div>
 				<hr className="border-t-black/10 my-8" />
 				<Pagination v-slot="{ page }" :items-per-page="10" :total="30" :default-page="2">

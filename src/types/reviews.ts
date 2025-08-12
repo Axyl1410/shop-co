@@ -10,4 +10,6 @@ export interface Review {
 	isVerified: boolean;
 	isHelpful: number;
 	createdAt: string;
+	reply?: string; // Optional reply from admin or support
+	replyDate?: string; // Date when the reply was made
 }

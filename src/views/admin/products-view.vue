@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { toTypedSchema } from "@vee-validate/zod";
 import { useForm } from "vee-validate";
-import { computed, ref, watch } from "vue";
+import { computed, ref } from "vue";
 import * as z from "zod";
 import { Button } from "../../components/ui/button";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "../../components/ui/form";
@@ -17,7 +17,17 @@ import { useCategories } from "../../hook/use-categories";
 import { useProducts } from "../../hook/use-products";
 import type { Product } from "../../types";
 
-const { products, deleteProduct, activateProduct, isDeleting, isActivating } = useProducts();
+const {
+	products,
+	createProduct,
+	updateProduct,
+	deleteProduct,
+	activateProduct,
+	isDeleting,
+	isActivating,
+	isCreating,
+	isUpdating,
+} = useProducts();
 
 const { categories } = useCategories();
 
@@ -38,7 +48,7 @@ const formSchema = toTypedSchema(
 		rating: z.number().min(0).max(5, "Rating must be between 0-5"),
 		description: z.string().min(1, "Description is required"),
 		shortDescription: z.string().min(1, "Short description is required"),
-		mainImage: z.string().url("Must be a valid URL"),
+		mainImage: z.string().min(1, "Main image is required"),
 		dimensions: z.object({
 			length: z.number().min(0, "Length must be positive"),
 			width: z.number().min(0, "Width must be positive"),
@@ -48,44 +58,34 @@ const formSchema = toTypedSchema(
 );
 
 // Form validation
-const { handleSubmit, setFieldValue } = useForm({
+const { handleSubmit, setFieldValue, values, resetForm } = useForm({
 	validationSchema: formSchema,
+	initialValues: {
+		name: "",
+		description: "",
+		shortDescription: "",
+		categoryId: 0,
+		brand: "",
+		sku: "",
+		originalPrice: 0,
+		discountPercentage: 0,
+		weight: 0,
+		dimensions: {
+			length: 0,
+			width: 0,
+			height: 0,
+		},
+		mainImage: "",
+		rating: 0,
+	},
 });
 
 // Delete confirmation modal
 const showDeleteModal = ref(false);
 const deletingProduct = ref<Product | undefined>(undefined);
 
-// Form data
-const form = ref({
-	name: "",
-	slug: "",
-	description: "",
-	shortDescription: "",
-	categoryId: 0,
-	brand: "",
-	sku: "",
-	originalPrice: 0,
-	discountPercentage: 0,
-	weight: 0,
-	dimensions: {
-		length: 0,
-		width: 0,
-		height: 0,
-	},
-	images: [] as string[],
-	mainImage: "",
-	tags: [] as string[],
-	isActive: true,
-	isFeatured: false,
-	isNew: false,
-	rating: 0,
-	reviewCount: 0,
-	viewCount: 0,
-});
-
+// Additional form data for non-validated fields
 const additionalImagesText = ref("");
-const tagsText = ref("");
 
 // Computed properties
 const activeProducts = computed(() => products.value?.filter((p) => p.isActive) || []);
@@ -116,30 +116,8 @@ const handleAddProduct = () => {
 	showForm.value = true;
 
 	// Reset form
-	form.value = {
-		name: "",
-		slug: "",
-		description: "",
-		shortDescription: "",
-		categoryId: 0,
-		brand: "",
-		sku: "",
-		originalPrice: 0,
-		discountPercentage: 0,
-		weight: 0,
-		dimensions: { length: 0, width: 0, height: 0 },
-		images: [],
-		mainImage: "",
-		tags: [],
-		isActive: true,
-		isFeatured: false,
-		isNew: false,
-		rating: 0,
-		reviewCount: 0,
-		viewCount: 0,
-	};
+	resetForm();
 	additionalImagesText.value = "";
-	tagsText.value = "";
 
 	console.log("After - showForm:", showForm.value);
 	console.log("After - isFormEditing:", isFormEditing.value);
@@ -159,14 +137,26 @@ const handleEditProduct = (product: Product) => {
 	showForm.value = true;
 
 	// Populate form with product data
-	form.value = { ...product };
+	setFieldValue("name", product.name);
+	setFieldValue("sku", product.sku);
+	setFieldValue("brand", product.brand);
+	setFieldValue("categoryId", product.categoryId);
+	setFieldValue("originalPrice", product.originalPrice);
+	setFieldValue("discountPercentage", product.discountPercentage);
+	setFieldValue("weight", product.weight);
+	setFieldValue("rating", product.rating);
+	setFieldValue("description", product.description);
+	setFieldValue("shortDescription", product.shortDescription);
+	setFieldValue("mainImage", product.mainImage);
+	setFieldValue("dimensions.length", product.dimensions.length);
+	setFieldValue("dimensions.width", product.dimensions.width);
+	setFieldValue("dimensions.height", product.dimensions.height);
+
 	additionalImagesText.value = product.images.join("\n");
-	tagsText.value = product.tags.join(", ");
 
 	console.log("After - showForm:", showForm.value);
 	console.log("After - isFormEditing:", isFormEditing.value);
 	console.log("After - editingProduct:", editingProduct.value);
-	console.log("Form populated:", form.value);
 	console.log("=== END EDIT PRODUCT ===");
 };
 
@@ -190,19 +180,12 @@ const onSubmit = handleSubmit(async (values) => {
 	console.log("=== FORM SUBMITTED ===");
 	console.log("Form values:", values);
 	console.log("Additional images:", additionalImagesText.value);
-	console.log("Tags:", tagsText.value);
 
 	// Process additional images
 	const images = additionalImagesText.value
 		.split("\n")
 		.map((url) => url.trim())
 		.filter((url) => url.length > 0);
-
-	// Process tags
-	const tags = tagsText.value
-		.split(",")
-		.map((tag) => tag.trim())
-		.filter((tag) => tag.length > 0);
 
 	// Generate slug if not provided
 	const slug = values.name
@@ -214,36 +197,36 @@ const onSubmit = handleSubmit(async (values) => {
 		...values,
 		slug,
 		images,
-		tags,
-		isActive: form.value.isActive,
-		isFeatured: form.value.isFeatured,
-		isNew: form.value.isNew,
-		reviewCount: form.value.reviewCount,
-		viewCount: form.value.viewCount,
+		tags: [], // Empty tags for now
+		isActive: true,
+		isFeatured: false,
+		isNew: false,
+		reviewCount: 0,
+		viewCount: 0,
 	};
 
 	console.log("Processed product data:", productData);
 
-	// TODO: Implement actual save logic
-	alert("Form submitted! Check console for data.");
+	try {
+		if (isFormEditing.value && editingProduct.value) {
+			// Update existing product
+			console.log("Updating product:", editingProduct.value.id);
+			await updateProduct({
+				id: editingProduct.value.id,
+				product: productData,
+			});
+		} else {
+			// Create new product
+			console.log("Creating new product");
+			await createProduct(productData);
+		}
 
-	// Close form after submission
-	handleCloseForm();
-});
-
-// Watch for changes in additionalImagesText and tagsText to update form
-watch(additionalImagesText, (newValue) => {
-	form.value.images = newValue
-		.split("\n")
-		.map((url) => url.trim())
-		.filter((url) => url.length > 0);
-});
-
-watch(tagsText, (newValue) => {
-	form.value.tags = newValue
-		.split(",")
-		.map((tag) => tag.trim())
-		.filter((tag) => tag.length > 0);
+		// Close form after submission
+		handleCloseForm();
+	} catch (error) {
+		console.error("Error saving product:", error);
+		alert("Error saving product. Please try again.");
+	}
 });
 
 const handleDeleteProduct = (product: Product) => {
@@ -285,12 +268,13 @@ const handleActivateProduct = async (product: Product) => {
 		<!-- Header -->
 		<div class="flex items-center justify-between">
 			<h1 class="text-2xl font-bold text-gray-900">Products Management</h1>
-			<button
+			<Button
 				@click="handleAddProduct"
-				class="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+				:disabled="isCreating || isUpdating"
+				class="bg-blue-600 hover:bg-blue-700"
 			>
-				Add Product
-			</button>
+				{{ isCreating ? "Creating..." : "Add Product" }}
+			</Button>
 		</div>
 
 		<!-- Active Products Table -->
@@ -510,7 +494,7 @@ const handleActivateProduct = async (product: Product) => {
 			</div>
 		</div>
 
-		<!-- Simple Test Modal -->
+		<!-- Product Form Modal -->
 		<div v-if="showForm" class="fixed inset-0 z-50 overflow-y-auto">
 			<div class="flex min-h-screen items-center justify-center p-4">
 				<!-- Backdrop -->
@@ -540,7 +524,7 @@ const handleActivateProduct = async (product: Product) => {
 					</div>
 
 					<!-- Product Form -->
-					<form @submit="onSubmit" class="space-y-6">
+					<form @submit.prevent="onSubmit" class="space-y-6">
 						<!-- Basic Information -->
 						<div class="grid grid-cols-1 gap-6 md:grid-cols-2">
 							<FormField v-slot="{ componentField }" name="name">
@@ -551,10 +535,9 @@ const handleActivateProduct = async (product: Product) => {
 											type="text"
 											placeholder="Enter product name"
 											v-bind="componentField"
-											:model-value="form.name"
+											:model-value="values.name"
 											@update:model-value="
 												(value) => {
-													form.name = String(value);
 													setFieldValue('name', String(value));
 												}
 											"
@@ -572,10 +555,9 @@ const handleActivateProduct = async (product: Product) => {
 											type="text"
 											placeholder="Enter SKU"
 											v-bind="componentField"
-											:model-value="form.sku"
+											:model-value="values.sku"
 											@update:model-value="
 												(value) => {
-													form.sku = String(value);
 													setFieldValue('sku', String(value));
 												}
 											"
@@ -593,10 +575,9 @@ const handleActivateProduct = async (product: Product) => {
 											type="text"
 											placeholder="Enter brand"
 											v-bind="componentField"
-											:model-value="form.brand"
+											:model-value="values.brand"
 											@update:model-value="
 												(value) => {
-													form.brand = String(value);
 													setFieldValue('brand', String(value));
 												}
 											"
@@ -611,10 +592,9 @@ const handleActivateProduct = async (product: Product) => {
 									<FormLabel>Category *</FormLabel>
 									<FormControl>
 										<Select
-											:model-value="form.categoryId"
+											:model-value="values.categoryId"
 											@update:model-value="
 												(value) => {
-													form.categoryId = Number(value);
 													setFieldValue('categoryId', Number(value));
 												}
 											"
@@ -648,10 +628,9 @@ const handleActivateProduct = async (product: Product) => {
 											min="0"
 											placeholder="0.00"
 											v-bind="componentField"
-											:model-value="form.originalPrice"
+											:model-value="values.originalPrice"
 											@update:model-value="
 												(value) => {
-													form.originalPrice = Number(value);
 													setFieldValue('originalPrice', Number(value));
 												}
 											"
@@ -671,10 +650,9 @@ const handleActivateProduct = async (product: Product) => {
 											max="100"
 											placeholder="0"
 											v-bind="componentField"
-											:model-value="form.discountPercentage"
+											:model-value="values.discountPercentage"
 											@update:model-value="
 												(value) => {
-													form.discountPercentage = Number(value);
 													setFieldValue('discountPercentage', Number(value));
 												}
 											"
@@ -694,10 +672,9 @@ const handleActivateProduct = async (product: Product) => {
 											min="0"
 											placeholder="0.00"
 											v-bind="componentField"
-											:model-value="form.weight"
+											:model-value="values.weight"
 											@update:model-value="
 												(value) => {
-													form.weight = Number(value);
 													setFieldValue('weight', Number(value));
 												}
 											"
@@ -718,10 +695,9 @@ const handleActivateProduct = async (product: Product) => {
 											max="5"
 											placeholder="0.0"
 											v-bind="componentField"
-											:model-value="form.rating"
+											:model-value="values.rating"
 											@update:model-value="
 												(value) => {
-													form.rating = Number(value);
 													setFieldValue('rating', Number(value));
 												}
 											"
@@ -742,10 +718,9 @@ const handleActivateProduct = async (product: Product) => {
 										placeholder="Enter product description"
 										class="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex min-h-[80px] w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
 										v-bind="componentField"
-										:model-value="form.description"
+										:model-value="values.description"
 										@update:model-value="
 											(value: any) => {
-												form.description = String(value);
 												setFieldValue('description', String(value));
 											}
 										"
@@ -764,10 +739,9 @@ const handleActivateProduct = async (product: Product) => {
 										placeholder="Enter short description"
 										class="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex min-h-[60px] w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
 										v-bind="componentField"
-										:model-value="form.shortDescription"
+										:model-value="values.shortDescription"
 										@update:model-value="
 											(value: any) => {
-												form.shortDescription = String(value);
 												setFieldValue('shortDescription', String(value));
 											}
 										"
@@ -784,7 +758,14 @@ const handleActivateProduct = async (product: Product) => {
 								<div>
 									<label class="block text-xs text-gray-600">Length</label>
 									<input
-										v-model.number="form.dimensions.length"
+										:value="values.dimensions?.length || 0"
+										@input="
+											(e) =>
+												setFieldValue(
+													'dimensions.length',
+													Number((e.target as HTMLInputElement).value),
+												)
+										"
 										type="number"
 										step="0.1"
 										min="0"
@@ -795,7 +776,14 @@ const handleActivateProduct = async (product: Product) => {
 								<div>
 									<label class="block text-xs text-gray-600">Width</label>
 									<input
-										v-model.number="form.dimensions.width"
+										:value="values.dimensions?.width || 0"
+										@input="
+											(e) =>
+												setFieldValue(
+													'dimensions.width',
+													Number((e.target as HTMLInputElement).value),
+												)
+										"
 										type="number"
 										step="0.1"
 										min="0"
@@ -806,7 +794,14 @@ const handleActivateProduct = async (product: Product) => {
 								<div>
 									<label class="block text-xs text-gray-600">Height</label>
 									<input
-										v-model.number="form.dimensions.height"
+										:value="values.dimensions?.height || 0"
+										@input="
+											(e) =>
+												setFieldValue(
+													'dimensions.height',
+													Number((e.target as HTMLInputElement).value),
+												)
+										"
 										type="number"
 										step="0.1"
 										min="0"
@@ -826,10 +821,9 @@ const handleActivateProduct = async (product: Product) => {
 										type="url"
 										placeholder="https://example.com/image.jpg"
 										v-bind="componentField"
-										:model-value="form.mainImage"
+										:model-value="values.mainImage"
 										@update:model-value="
 											(value: any) => {
-												form.mainImage = String(value);
 												setFieldValue('mainImage', String(value));
 											}
 										"
@@ -850,48 +844,6 @@ const handleActivateProduct = async (product: Product) => {
 								placeholder="https://example.com/image1.jpg&#10;https://example.com/image2.jpg"
 							></textarea>
 						</div>
-
-						<!-- Tags -->
-						<div>
-							<label class="block text-sm font-medium text-gray-700">Tags (comma separated)</label>
-							<input
-								v-model="tagsText"
-								type="text"
-								class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-								placeholder="fashion, summer, casual"
-							/>
-						</div>
-
-						<!-- Flags -->
-						<div class="grid grid-cols-1 gap-4 md:grid-cols-3">
-							<div class="flex items-center">
-								<input
-									v-model="form.isActive"
-									type="checkbox"
-									id="isActive"
-									class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-								/>
-								<label for="isActive" class="ml-2 block text-sm text-gray-900">Active</label>
-							</div>
-							<div class="flex items-center">
-								<input
-									v-model="form.isFeatured"
-									type="checkbox"
-									id="isFeatured"
-									class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-								/>
-								<label for="isFeatured" class="ml-2 block text-sm text-gray-900">Featured</label>
-							</div>
-							<div class="flex items-center">
-								<input
-									v-model="form.isNew"
-									type="checkbox"
-									id="isNew"
-									class="mt-1 block rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-								/>
-								<label for="isNew" class="ml-2 block text-sm text-gray-900">New</label>
-							</div>
-						</div>
 					</form>
 
 					<!-- Buttons -->
@@ -899,8 +851,16 @@ const handleActivateProduct = async (product: Product) => {
 						<Button variant="outline" @click="handleCloseForm" class="w-full sm:w-auto">
 							Cancel
 						</Button>
-						<Button type="submit" class="w-full sm:w-auto">
-							{{ isFormEditing ? "Update Product" : "Create Product" }}
+						<Button @click="onSubmit" :disabled="isCreating || isUpdating" class="w-full sm:w-auto">
+							{{
+								isFormEditing
+									? isUpdating
+										? "Updating..."
+										: "Update Product"
+									: isCreating
+										? "Creating..."
+										: "Create Product"
+							}}
 						</Button>
 					</div>
 				</div>

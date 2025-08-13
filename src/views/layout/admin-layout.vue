@@ -11,8 +11,31 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/sonner";
-import { RouterView } from "vue-router";
+import { RouterView, useRoute } from "vue-router";
+import { computed } from "vue";
 import "vue-sonner/style.css";
+
+const route = useRoute();
+
+// Get current page title based on route
+const currentPageTitle = computed(() => {
+	switch (route.name) {
+		case 'admin-dashboard':
+			return 'Dashboard';
+		case 'admin-products':
+			return 'Products';
+		case 'admin-orders':
+			return 'Orders';
+		case 'admin-users':
+			return 'Users';
+		case 'admin-review':
+			return 'Reviews';
+		case 'admin-settings':
+			return 'Settings';
+		default:
+			return 'Admin';
+	}
+});
 </script>
 
 <template>
@@ -31,11 +54,11 @@ import "vue-sonner/style.css";
 						<Breadcrumb>
 							<BreadcrumbList>
 								<BreadcrumbItem class="hidden md:block">
-									<BreadcrumbLink href="#"> Building Your Application </BreadcrumbLink>
+									<BreadcrumbLink href="/admin">Admin Panel</BreadcrumbLink>
 								</BreadcrumbItem>
 								<BreadcrumbSeparator class="hidden md:block" />
 								<BreadcrumbItem>
-									<BreadcrumbPage>Data Fetching</BreadcrumbPage>
+									<BreadcrumbPage>{{ currentPageTitle }}</BreadcrumbPage>
 								</BreadcrumbItem>
 							</BreadcrumbList>
 						</Breadcrumb>

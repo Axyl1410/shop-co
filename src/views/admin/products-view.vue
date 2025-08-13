@@ -339,7 +339,7 @@ const handleActivateProduct = async (product: Product) => {
 									<div class="flex items-center">
 										<div class="h-10 w-10 flex-shrink-0">
 											<img
-												:src="product.mainImage"
+												:src="`/src/assets${product.mainImage}`"
 												:alt="product.name"
 												class="h-10 w-10 rounded object-cover"
 											/>

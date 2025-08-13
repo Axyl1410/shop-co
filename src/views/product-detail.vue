@@ -10,7 +10,7 @@
 					</BreadcrumbItem>
 					<BreadcrumbSeparator />
 					<BreadcrumbItem>
-						<BreadcrumbLink href="/shop#men-clothes">Products</BreadcrumbLink>
+						<BreadcrumbLink href="/product">Products</BreadcrumbLink>
 					</BreadcrumbItem>
 					<BreadcrumbSeparator />
 					<BreadcrumbItem>
@@ -21,6 +21,7 @@
 			<section class="mt-8 mb-11">
 				<div class="grid grid-cols-1 gap-5 md:grid-cols-2">
 					<ProductImageGallery
+
 						:product="product ?? null"
 						:is-loading="isLoading"
 						:selected-image-index="selectedImageIndex"

@@ -42,7 +42,7 @@ const route = useRoute();
 const router = useRouter();
 
 // Search functionality
-const { searchQuery, searchedProducts, clearSearch, setSearchQuery } = useProductSearch(products);
+const { searchQuery, searchedProducts, clearSearch } = useProductSearch(products);
 
 const sortParam = computed(() => (route.query.sort as string) || "most-popular");
 const sort = ref(sortParam.value);
@@ -179,9 +179,7 @@ const totalProductsCount = computed(() => (products.value ? products.value.lengt
 				<div class="flex items-center justify-between">
 					<div class="flex w-full flex-col justify-between sm:flex-row sm:items-center">
 						<h1 class="text-2xl font-bold md:text-[32px]">
-							<span v-if="searchQuery.trim()">
-								Kết quả tìm kiếm
-							</span>
+							<span v-if="searchQuery.trim()"> Kết quả tìm kiếm </span>
 							<span v-else>
 								{{ route.query.category || "Casual" }}
 							</span>
@@ -218,35 +216,42 @@ const totalProductsCount = computed(() => (products.value ? products.value.lengt
 						<MobileFilters />
 					</div>
 				</div>
-				<div v-if="filteredProducts.length > 0" class="sm:grid-col-2 mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+				<div
+					v-if="filteredProducts.length > 0"
+					class="sm:grid-col-2 mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3"
+				>
 					<ProductCard v-for="item in filteredProducts" :data="item" :key="item.id" />
 				</div>
-				
+
 				<!-- No results message -->
 				<div v-else class="mt-8 text-center">
 					<div class="mx-auto max-w-md">
 						<div class="rounded-lg bg-gray-50 p-8">
-							<svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+							<svg
+								class="mx-auto h-12 w-12 text-gray-400"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke="currentColor"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+								/>
 							</svg>
 							<h3 class="mt-4 text-lg font-medium text-gray-900">
-								<span v-if="searchQuery.trim()">
-									Không tìm thấy sản phẩm nào
-								</span>
-								<span v-else>
-									Không có sản phẩm nào
-								</span>
+								<span v-if="searchQuery.trim()"> Không tìm thấy sản phẩm nào </span>
+								<span v-else> Không có sản phẩm nào </span>
 							</h3>
 							<p class="mt-2 text-sm text-gray-500">
 								<span v-if="searchQuery.trim()">
 									Thử tìm kiếm với từ khóa khác hoặc kiểm tra lại chính tả.
 								</span>
-								<span v-else>
-									Thử thay đổi bộ lọc hoặc quay lại sau.
-								</span>
+								<span v-else> Thử thay đổi bộ lọc hoặc quay lại sau. </span>
 							</p>
 							<div v-if="searchQuery.trim()" class="mt-4">
-								<button 
+								<button
 									@click="clearSearch"
 									class="rounded-md bg-black px-4 py-2 text-sm font-medium text-white hover:bg-gray-800"
 								>

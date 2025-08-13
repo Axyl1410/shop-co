@@ -18,7 +18,6 @@ import {
 	PaginationNext,
 	PaginationPrevious,
 } from "@/components/ui/pagination";
-import SearchInput from "@/components/ui/search-input.vue";
 import {
 	Select,
 	SelectContent,
@@ -148,22 +147,6 @@ const totalProductsCount = computed(() => (products.value ? products.value.lengt
 				</BreadcrumbItem>
 			</BreadcrumbList>
 		</Breadcrumb>
-		<!-- Search Section -->
-		<div class="mb-6">
-			<div class="mx-auto max-w-2xl">
-				<SearchInput
-					v-model="searchQuery"
-					placeholder="Tìm kiếm sản phẩm theo tên, thương hiệu, mô tả..."
-					@clear="clearSearch"
-				/>
-			</div>
-			<div v-if="searchQuery.trim()" class="mt-2 text-center text-sm text-gray-600">
-				Đang tìm kiếm: <span class="font-medium">"{{ searchQuery }}"</span>
-				<button @click="clearSearch" class="ml-2 text-blue-600 hover:text-blue-800">
-					Xóa tìm kiếm
-				</button>
-			</div>
-		</div>
 
 		<div class="flex gap-8">
 			<div
@@ -218,7 +201,7 @@ const totalProductsCount = computed(() => (products.value ? products.value.lengt
 				</div>
 				<div
 					v-if="filteredProducts.length > 0"
-					class="sm:grid-col-2 mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3"
+					class="sm:grid-col-2 mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
 				>
 					<ProductCard v-for="item in filteredProducts" :data="item" :key="item.id" />
 				</div>

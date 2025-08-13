@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useAuthStore } from "@/stores/use-auth-store";
 import { useBillStore } from "@/stores/use-bill-store";
 import { useCartStore } from "@/stores/use-cart-store";
 import axios from "axios";
@@ -12,6 +13,7 @@ import { computed, ref } from "vue";
 
 const billStore = useBillStore();
 const cartStore = useCartStore();
+const authStore = useAuthStore();
 const { getTotalPrice, cart } = cartStore;
 const { getBank } = billStore;
 
@@ -46,10 +48,9 @@ const handleSubmit = async () => {
 	isLoading.value = true;
 
 	try {
-		// Create order data structure similar to data.json
 		const orderData = {
 			orderNumber: `ORD-${Date.now()}`,
-			userId: 1, // Assuming user ID 1 for now
+			userId: authStore.user.id,
 			status: "pending",
 			subtotal: subtotal.value,
 			tax: tax.value,
@@ -82,6 +83,7 @@ const handleSubmit = async () => {
 		const orderPayload = {
 			order: orderData,
 			orderItems: orderItems,
+
 			shippingAddress: {
 				fullName: formData.value.fullName,
 				phone: formData.value.phone,

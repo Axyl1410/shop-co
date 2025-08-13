@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { BadgeCheck, Bell, ChevronsUpDown, CreditCard, LogOut, Sparkles } from "lucide-vue-next";
+import { BadgeCheck, Bell, LogOut, Settings, User } from "lucide-vue-next";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -19,11 +19,17 @@ import {
 } from "@/components/ui/sidebar";
 import { useAuthStore } from "@/stores/use-auth-store";
 import { storeToRefs } from "pinia";
+import { useRouter } from "vue-router";
 
 const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
-
+const router = useRouter();
 const { isMobile } = useSidebar();
+
+const handleLogout = () => {
+	authStore.logout();
+	router.push("/login");
+};
 </script>
 
 <template>
@@ -37,13 +43,12 @@ const { isMobile } = useSidebar();
 					>
 						<Avatar class="h-8 w-8 rounded-lg">
 							<AvatarImage :src="user.avatar" :alt="user.username" />
-							<AvatarFallback class="rounded-lg"> CN </AvatarFallback>
+							<AvatarFallback class="rounded-lg"> AD </AvatarFallback>
 						</Avatar>
 						<div class="grid flex-1 text-left text-sm leading-tight">
 							<span class="truncate font-medium">{{ user.username }}</span>
-							<span class="truncate text-xs">{{ user.email }}</span>
+							<span class="truncate text-xs">Administrator</span>
 						</div>
-						<ChevronsUpDown class="ml-auto size-4" />
 					</SidebarMenuButton>
 				</DropdownMenuTrigger>
 				<DropdownMenuContent
@@ -56,19 +61,23 @@ const { isMobile } = useSidebar();
 						<div class="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
 							<Avatar class="h-8 w-8 rounded-lg">
 								<AvatarImage :src="user.avatar" :alt="user.username" />
-								<AvatarFallback class="rounded-lg"> CN </AvatarFallback>
+								<AvatarFallback class="rounded-lg"> AD </AvatarFallback>
 							</Avatar>
 							<div class="grid flex-1 text-left text-sm leading-tight">
 								<span class="truncate font-semibold">{{ user.username }}</span>
-								<span class="truncate text-xs">{{ user.email }}</span>
+								<span class="truncate text-xs">Administrator</span>
 							</div>
 						</div>
 					</DropdownMenuLabel>
 					<DropdownMenuSeparator />
 					<DropdownMenuGroup>
-						<DropdownMenuItem>
-							<Sparkles />
-							Upgrade to Pro
+						<DropdownMenuItem @click="router.push('/admin/profile')">
+							<User />
+							Profile
+						</DropdownMenuItem>
+						<DropdownMenuItem @click="router.push('/admin/settings')">
+							<Settings />
+							Settings
 						</DropdownMenuItem>
 					</DropdownMenuGroup>
 					<DropdownMenuSeparator />
@@ -78,16 +87,12 @@ const { isMobile } = useSidebar();
 							Account
 						</DropdownMenuItem>
 						<DropdownMenuItem>
-							<CreditCard />
-							Billing
-						</DropdownMenuItem>
-						<DropdownMenuItem>
 							<Bell />
 							Notifications
 						</DropdownMenuItem>
 					</DropdownMenuGroup>
 					<DropdownMenuSeparator />
-					<DropdownMenuItem>
+					<DropdownMenuItem @click="handleLogout">
 						<LogOut />
 						Log out
 					</DropdownMenuItem>

@@ -157,7 +157,7 @@
       "dimensions": {
         "length": 70,
         "width": 50,
-        "height": 2
+        "height": 4
       },
       "images": [
         "/images/pic1.png",
@@ -165,19 +165,15 @@
         "/images/pic11.png"
       ],
       "mainImage": "/images/pic1.png",
-      "tags": [
-        "casual",
-        "cotton",
-        "tape-details"
-      ],
+      "tags": [],
       "isActive": true,
-      "isFeatured": true,
-      "isNew": true,
+      "isFeatured": false,
+      "isNew": false,
       "rating": 4.5,
-      "reviewCount": 12,
-      "viewCount": 150,
+      "reviewCount": 0,
+      "viewCount": 0,
       "createdAt": "2024-01-01T00:00:00Z",
-      "updatedAt": "2024-01-15T10:30:00Z"
+      "updatedAt": "2025-08-13T19:23:04.281Z"
     },
     {
       "id": "2",

@@ -159,9 +159,17 @@
         "width": 50,
         "height": 2
       },
-      "images": ["/images/pic1.png", "/images/pic10.png", "/images/pic11.png"],
+      "images": [
+        "/images/pic1.png",
+        "/images/pic10.png",
+        "/images/pic11.png"
+      ],
       "mainImage": "/images/pic1.png",
-      "tags": ["casual", "cotton", "tape-details"],
+      "tags": [
+        "casual",
+        "cotton",
+        "tape-details"
+      ],
       "isActive": true,
       "isFeatured": true,
       "isNew": true,
@@ -188,9 +196,18 @@
         "width": 40,
         "height": 3
       },
-      "images": ["/images/pic2.png", "/images/pic12.png", "/images/pic13.png"],
+      "images": [
+        "/images/pic2.png",
+        "/images/pic12.png",
+        "/images/pic13.png"
+      ],
       "mainImage": "/images/pic2.png",
-      "tags": ["jeans", "skinny", "stretch", "modern"],
+      "tags": [
+        "jeans",
+        "skinny",
+        "stretch",
+        "modern"
+      ],
       "isActive": true,
       "isFeatured": true,
       "isNew": false,
@@ -217,9 +234,18 @@
         "width": 55,
         "height": 2
       },
-      "images": ["/images/pic3.png", "/images/pic14.png", "/images/pic15.png"],
+      "images": [
+        "/images/pic3.png",
+        "/images/pic14.png",
+        "/images/pic15.png"
+      ],
       "mainImage": "/images/pic3.png",
-      "tags": ["shirt", "checked", "classic", "versatile"],
+      "tags": [
+        "shirt",
+        "checked",
+        "classic",
+        "versatile"
+      ],
       "isActive": true,
       "isFeatured": false,
       "isNew": true,
@@ -246,9 +272,18 @@
         "width": 52,
         "height": 2
       },
-      "images": ["/images/pic4.png", "/images/pic5.png", "/images/pic6.png"],
+      "images": [
+        "/images/pic4.png",
+        "/images/pic5.png",
+        "/images/pic6.png"
+      ],
       "mainImage": "/images/pic4.png",
-      "tags": ["t-shirt", "striped", "casual", "modern"],
+      "tags": [
+        "t-shirt",
+        "striped",
+        "casual",
+        "modern"
+      ],
       "isActive": true,
       "isFeatured": false,
       "isNew": false,
@@ -275,9 +310,18 @@
         "width": 54,
         "height": 2
       },
-      "images": ["/images/pic7.png", "/images/pic8.png", "/images/pic9.png"],
+      "images": [
+        "/images/pic7.png",
+        "/images/pic8.png",
+        "/images/pic9.png"
+      ],
       "mainImage": "/images/pic7.png",
-      "tags": ["polo", "contrast", "elegant", "smart-casual"],
+      "tags": [
+        "polo",
+        "contrast",
+        "elegant",
+        "smart-casual"
+      ],
       "isActive": true,
       "isFeatured": true,
       "isNew": false,
@@ -1183,11 +1227,13 @@
       "orderId": 1,
       "rating": 5,
       "title": "Excellent Quality",
-      "content": "Finding clothes that align with my personal style used to be a challenge until I discovered Shop.co. The range of options they offer is truly remarkable, catering to a variety of tastes and occasions.",
+      "content": "The T-shirt I received is of excellent quality. The fabric feels premium, and the design is exactly as shown on the website. Highly recommend!",
       "images": [],
       "isVerified": true,
       "isHelpful": 12,
-      "createdAt": "2024-01-20T10:00:00Z"
+      "createdAt": "2024-01-20T10:00:00Z",
+      "reply": "test2",
+      "replyDate": "2025-08-12T15:51:59.597Z"
     },
     {
       "id": "2",
@@ -1200,7 +1246,9 @@
       "images": [],
       "isVerified": true,
       "isHelpful": 8,
-      "createdAt": "2024-01-21T14:00:00Z"
+      "createdAt": "2024-01-21T14:00:00Z",
+      "reply": "Thank you",
+      "replyDate": "2024-01-22T09:00:00Z"
     },
     {
       "id": "3",
@@ -1213,7 +1261,9 @@
       "images": [],
       "isVerified": true,
       "isHelpful": 15,
-      "createdAt": "2024-01-22T09:00:00Z"
+      "createdAt": "2024-01-22T09:00:00Z",
+      "reply": "",
+      "replyDate": ""
     },
     {
       "id": "4",
@@ -1226,7 +1276,9 @@
       "images": [],
       "isVerified": true,
       "isHelpful": 6,
-      "createdAt": "2024-01-23T16:00:00Z"
+      "createdAt": "2024-01-23T16:00:00Z",
+      "reply": "",
+      "replyDate": ""
     },
     {
       "id": "5",
@@ -1239,7 +1291,9 @@
       "images": [],
       "isVerified": true,
       "isHelpful": 10,
-      "createdAt": "2024-01-24T11:00:00Z"
+      "createdAt": "2024-01-24T11:00:00Z",
+      "reply": "",
+      "replyDate": ""
     }
   ],
   "wishlist": [

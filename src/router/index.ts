@@ -124,6 +124,11 @@ const router = createRouter({
 					name: "admin-settings",
 					component: () => import("@/views/admin/settings-view.vue"),
 				},
+					{
+					path: "review",
+					name: "admin-review",
+					component: () => import("@/views/admin/review-view.vue"),
+				},
 			],
 		},
 		{

@@ -70,12 +70,23 @@ export class AuthService {
 	static async getCurrentUser(token: string): Promise<User | null> {
 		try {
 			const tokenParts = token.split("_");
-			if (tokenParts.length < 2) return null;
+			if (tokenParts.length < 2) {
+				console.log("Invalid token format:", token);
+				return null;
+			}
 
-			const userId = parseInt(tokenParts[1]);
+			const userId = tokenParts[1]; // Keep as string, don't parse to int
+			console.log("Extracted userId from token:", userId);
+			
 			const response = await axios.get(`${API_BASE_URL}/users/${userId}`);
+			console.log("User API response:", response.data);
 			return response.data;
-		} catch {
+		} catch (error) {
+			console.error("Error getting current user:", error);
+			if (axios.isAxiosError(error)) {
+				console.error("Axios error status:", error.response?.status);
+				console.error("Axios error data:", error.response?.data);
+			}
 			return null;
 		}
 	}

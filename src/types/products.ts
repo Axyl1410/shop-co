@@ -28,10 +28,12 @@ export interface Product {
 	viewCount: number;
 	createdAt: string;
 	updatedAt: string;
+	variants?: ProductVariant[];
 }
 
 export interface ProductVariant {
 	id: number;
+	name: string;
 	productId: number;
 	size: string;
 	color: string;

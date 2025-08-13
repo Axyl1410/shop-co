@@ -326,6 +326,120 @@
       "viewCount": 160,
       "createdAt": "2024-01-01T00:00:00Z",
       "updatedAt": "2024-01-15T10:30:00Z"
+    },
+    {
+      "id": "6",
+      "name": "Sleeve Striped T-shirt",
+      "slug": "sleeve-striped-tshirt",
+      "description": "Casual t-shirt with striped sleeves for a trendy look. Comfortable cotton blend with modern design.",
+      "shortDescription": "T-shirt with striped sleeves",
+      "categoryId": 1,
+      "brand": "ShopCo",
+      "sku": "TSH-002",
+      "originalPrice": 150,
+      "discountPercentage": 20,
+      "weight": 0.25,
+      "dimensions": {
+        "length": 70,
+        "width": 50,
+        "height": 2
+      },
+      "images": [
+        "/images/pic8.png",
+        "/images/pic9.png",
+        "/images/pic10.png"
+      ],
+      "mainImage": "/images/pic8.png",
+      "tags": [
+        "casual",
+        "striped",
+        "trendy",
+        "cotton"
+      ],
+      "isActive": true,
+      "isFeatured": false,
+      "isNew": true,
+      "rating": 4.4,
+      "reviewCount": 8,
+      "viewCount": 95,
+      "createdAt": "2024-01-01T00:00:00Z",
+      "updatedAt": "2024-01-15T10:30:00Z"
+    },
+    {
+      "id": "7",
+      "name": "Classic Denim Jacket",
+      "slug": "classic-denim-jacket",
+      "description": "Timeless denim jacket with classic styling. Perfect for layering and casual wear.",
+      "shortDescription": "Classic denim jacket",
+      "categoryId": 2,
+      "brand": "ShopCo",
+      "sku": "JAC-001",
+      "originalPrice": 350,
+      "discountPercentage": 15,
+      "weight": 0.8,
+      "dimensions": {
+        "length": 75,
+        "width": 60,
+        "height": 3
+      },
+      "images": [
+        "/images/pic9.png",
+        "/images/pic10.png",
+        "/images/pic11.png"
+      ],
+      "mainImage": "/images/pic9.png",
+      "tags": [
+        "denim",
+        "jacket",
+        "classic",
+        "casual"
+      ],
+      "isActive": true,
+      "isFeatured": true,
+      "isNew": false,
+      "rating": 4.7,
+      "reviewCount": 12,
+      "viewCount": 180,
+      "createdAt": "2024-01-01T00:00:00Z",
+      "updatedAt": "2024-01-15T10:30:00Z"
+    },
+    {
+      "id": "8",
+      "name": "Formal White Shirt",
+      "slug": "formal-white-shirt",
+      "description": "Crisp white formal shirt for professional settings. Made from premium cotton with perfect fit.",
+      "shortDescription": "Formal white shirt",
+      "categoryId": 3,
+      "brand": "ShopCo",
+      "sku": "SHI-002",
+      "originalPrice": 200,
+      "discountPercentage": 0,
+      "weight": 0.3,
+      "dimensions": {
+        "length": 75,
+        "width": 55,
+        "height": 2
+      },
+      "images": [
+        "/images/pic10.png",
+        "/images/pic11.png",
+        "/images/pic12.png"
+      ],
+      "mainImage": "/images/pic10.png",
+      "tags": [
+        "formal",
+        "white",
+        "professional",
+        "cotton"
+      ],
+      "isActive": true,
+      "isFeatured": false,
+      "isNew": true,
+      "rating": 4.8,
+      "reviewCount": 15,
+      "viewCount": 220,
+      "createdAt": "2024-01-01T00:00:00Z",
+      "updatedAt": "2024-01-15T10:30:00Z"
     }
   ],
   "product_variants": [

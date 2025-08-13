@@ -28,7 +28,6 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { useProducts } from "@/hook";
 import { useCategories } from "@/hook/use-categories";
-import { useProductSearch } from "@/hook/use-product-search";
 import { calculatePrice } from "@/lib/utils";
 import type { Category } from "@/types/category";
 import { Sliders } from "lucide-vue-next";
@@ -40,8 +39,7 @@ const { categories } = useCategories();
 const route = useRoute();
 const router = useRouter();
 
-// Search functionality
-const { searchQuery, searchedProducts, clearSearch } = useProductSearch(products);
+// Search removed: keep UI only in template
 
 const sortParam = computed(() => (route.query.sort as string) || "most-popular");
 const sort = ref(sortParam.value);
@@ -50,7 +48,6 @@ watch(sort, (val) => {
 });
 
 // URL parameters
-const searchParam = computed(() => (route.query.search as string) || "");
 const categoryParam = computed(() => route.query.category as string | undefined);
 const minPriceParam = computed(() => {
 	const v = Number(route.query.minPrice);
@@ -61,26 +58,32 @@ const maxPriceParam = computed(() => {
 	return Number.isFinite(v) && v >= 0 ? v : undefined;
 });
 
-// Initialize search from URL
-searchQuery.value = searchParam.value;
+// Temporary price filter state (before applying)
+const tempMinPrice = ref(minPriceParam.value || 0);
+const tempMaxPrice = ref(maxPriceParam.value || 150);
 
-// Watch for search query changes and update URL
-watch(searchQuery, (newValue) => {
+// Apply filter function
+const applyPriceFilter = () => {
 	const query = { ...route.query };
-	if (newValue.trim()) {
-		query.search = newValue;
+	
+	if (tempMinPrice.value > 0) {
+		query.minPrice = tempMinPrice.value.toString();
 	} else {
-		delete query.search;
+		delete query.minPrice;
 	}
+	
+	if (tempMaxPrice.value < 150) {
+		query.maxPrice = tempMaxPrice.value.toString();
+	} else {
+		delete query.maxPrice;
+	}
+	
+	// Reset to page 1 when applying filter
+	delete query.page;
 	router.replace({ query });
-});
+};
 
-// Watch for URL search param changes
-watch(searchParam, (newValue) => {
-	if (newValue !== searchQuery.value) {
-		searchQuery.value = newValue;
-	}
-});
+// No search syncing
 
 const categorySlugToId = computed(() => {
 	const map = new Map<string, number>();
@@ -92,8 +95,8 @@ const categorySlugToId = computed(() => {
 });
 
 const filteredProducts = computed(() => {
-	// Start with searched products instead of all products
-	const list = searchedProducts.value ? [...searchedProducts.value] : [];
+	// Start from all products; ignore keyword searching
+	const list = products.value ? [...products.value] : [];
 
 	// category filter
 	let filtered = list;
@@ -129,6 +132,85 @@ const filteredProducts = computed(() => {
 });
 
 const totalProductsCount = computed(() => (products.value ? products.value.length : 0));
+
+// Pagination logic
+const itemsPerPage = 5; // 5 sản phẩm mỗi trang
+
+// Get current page from URL or default to 1
+const pageParam = computed(() => {
+	const page = Number(route.query.page);
+	return Number.isFinite(page) && page > 0 ? page : 1;
+});
+
+const currentPage = ref(pageParam.value);
+
+// Watch for URL changes and update current page
+watch(pageParam, (newPage) => {
+	if (newPage !== currentPage.value) {
+		currentPage.value = newPage;
+	}
+});
+
+// Watch for current page changes and update URL
+watch(currentPage, (newPage) => {
+	const query = { ...route.query };
+	if (newPage > 1) {
+		query.page = newPage.toString();
+	} else {
+		delete query.page;
+	}
+	router.replace({ query });
+});
+
+// Watch for URL price changes and update temp values
+watch([minPriceParam, maxPriceParam], ([newMin, newMax]) => {
+	tempMinPrice.value = newMin || 0;
+	tempMaxPrice.value = newMax || 150;
+});
+
+const totalPages = computed(() => {
+	const pages = Math.ceil(filteredProducts.value.length / itemsPerPage);
+	console.log(`Total products: ${filteredProducts.value.length}, Items per page: ${itemsPerPage}, Total pages: ${pages}`);
+	return pages;
+});
+
+const paginatedProducts = computed(() => {
+	const startIndex = (currentPage.value - 1) * itemsPerPage;
+	const endIndex = startIndex + itemsPerPage;
+	return filteredProducts.value.slice(startIndex, endIndex);
+});
+
+const visiblePages = computed(() => {
+	const pages = [];
+	const maxVisible = 3;
+	
+	if (totalPages.value <= maxVisible) {
+		for (let i = 1; i <= totalPages.value; i++) {
+			pages.push(i);
+		}
+	} else {
+		if (currentPage.value <= 2) {
+			pages.push(1, 2, 3);
+		} else if (currentPage.value >= totalPages.value - 1) {
+			pages.push(totalPages.value - 2, totalPages.value - 1, totalPages.value);
+		} else {
+			pages.push(currentPage.value - 1, currentPage.value, currentPage.value + 1);
+		}
+	}
+	
+	return pages;
+});
+
+const showEllipsis = computed(() => {
+	return totalPages.value > 3 && (currentPage.value > 2 || currentPage.value < totalPages.value - 1);
+});
+
+// Expose for filter panel
+defineExpose({
+	tempMinPrice,
+	tempMaxPrice,
+	applyPriceFilter,
+});
 </script>
 
 <template>
@@ -161,21 +243,9 @@ const totalProductsCount = computed(() => (products.value ? products.value.lengt
 			<div class="flex flex-1 flex-col">
 				<div class="flex items-center justify-between">
 					<div class="flex w-full flex-col justify-between sm:flex-row sm:items-center">
-						<h1 class="text-2xl font-bold md:text-[32px]">
-							<span v-if="searchQuery.trim()"> Kết quả tìm kiếm </span>
-							<span v-else>
-								{{ route.query.category || "Casual" }}
-							</span>
-						</h1>
+						<h1 class="text-2xl font-bold md:text-[32px]">{{ route.query.category || "Casual" }}</h1>
 						<div class="flex flex-col lg:flex-row">
-							<p class="mr-3 text-sm text-black/60 md:text-base">
-								<span v-if="searchQuery.trim()">
-									Tìm thấy {{ filteredProducts.length }} sản phẩm
-								</span>
-								<span v-else>
-									Showing {{ filteredProducts.length }} of {{ totalProductsCount }} Products
-								</span>
-							</p>
+							<p class="mr-3 text-sm text-black/60 md:text-base">Showing {{ filteredProducts.length }} of {{ totalProductsCount }} Products</p>
 							<div className="flex items-center">
 								<p>Sort by:</p>
 								<Select v-model="sort">
@@ -200,10 +270,10 @@ const totalProductsCount = computed(() => (products.value ? products.value.lengt
 					</div>
 				</div>
 				<div
-					v-if="filteredProducts.length > 0"
+					v-if="paginatedProducts.length > 0"
 					class="sm:grid-col-2 mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
 				>
-					<ProductCard v-for="item in filteredProducts" :data="item" :key="item.id" />
+					<ProductCard v-for="item in paginatedProducts" :data="item" :key="item.id" />
 				</div>
 
 				<!-- No results message -->
@@ -223,47 +293,53 @@ const totalProductsCount = computed(() => (products.value ? products.value.lengt
 									d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
 								/>
 							</svg>
-							<h3 class="mt-4 text-lg font-medium text-gray-900">
-								<span v-if="searchQuery.trim()"> Không tìm thấy sản phẩm nào </span>
-								<span v-else> Không có sản phẩm nào </span>
-							</h3>
+							<h3 class="mt-4 text-lg font-medium text-gray-900">Không có sản phẩm nào</h3>
 							<p class="mt-2 text-sm text-gray-500">
-								<span v-if="searchQuery.trim()">
-									Thử tìm kiếm với từ khóa khác hoặc kiểm tra lại chính tả.
-								</span>
-								<span v-else> Thử thay đổi bộ lọc hoặc quay lại sau. </span>
+								Thử thay đổi bộ lọc hoặc quay lại sau.
 							</p>
-							<div v-if="searchQuery.trim()" class="mt-4">
-								<button
-									@click="clearSearch"
-									class="rounded-md bg-black px-4 py-2 text-sm font-medium text-white hover:bg-gray-800"
-								>
-									Xóa tìm kiếm
-								</button>
-							</div>
 						</div>
 					</div>
 				</div>
 				<hr className="border-t-black/10 my-8" />
-				<Pagination v-slot="{ page }" :items-per-page="10" :total="30" :default-page="2">
-					<PaginationContent v-slot="{ items }">
-						<PaginationPrevious />
-
-						<template v-for="(item, index) in items" :key="index">
-							<PaginationItem
-								v-if="item.type === 'page'"
-								:value="item.value"
-								:is-active="item.value === page"
-							>
-								{{ item.value }}
-							</PaginationItem>
-						</template>
-
-						<PaginationEllipsis :index="4" />
-
-						<PaginationNext />
-					</PaginationContent>
-				</Pagination>
+				
+				<!-- Custom Pagination -->
+				<div class="flex items-center justify-center gap-2 mt-8">
+					<button 
+						class="flex items-center gap-1 px-3 py-2 text-sm font-medium text-gray-600 hover:text-black transition-colors"
+						:disabled="currentPage === 1"
+						@click="currentPage > 1 && (currentPage--)"
+					>
+						<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+						</svg>
+						Previous
+					</button>
+					
+					<button 
+						v-for="page in visiblePages" 
+						:key="page"
+						class="px-3 py-2 text-sm font-medium rounded-md transition-colors"
+						:class="page === currentPage 
+							? 'bg-black text-white' 
+							: 'text-gray-600 hover:text-black hover:bg-gray-100'"
+						@click="currentPage = page"
+					>
+						{{ page }}
+					</button>
+					
+					<span v-if="showEllipsis" class="px-2 text-gray-400">...</span>
+					
+					<button 
+						class="flex items-center gap-1 px-3 py-2 text-sm font-medium text-gray-600 hover:text-black transition-colors"
+						:disabled="currentPage === totalPages"
+						@click="currentPage < totalPages && (currentPage++)"
+					>
+						Next
+						<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+						</svg>
+					</button>
+				</div>
 			</div>
 		</div>
 	</div>

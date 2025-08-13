@@ -570,7 +570,7 @@ function handleLogout() {
 									<img :src="product.images?.[0] || '/placeholder.jpg'" :alt="product.name" class="h-12 w-12 rounded object-cover" />
 									<div class="flex-1">
 										<h4 class="text-sm font-medium">{{ product.name }}</h4>
-										<p class="text-xs text-gray-500">{{ product.originalPrice }}đ</p>
+										<p class="text-xs text-gray-500">{{ product.originalPrice }}$</p>
 									</div>
 								</div>
 								<Button variant="outline" size="sm" class="w-full" @click="openReviewForm(product)">

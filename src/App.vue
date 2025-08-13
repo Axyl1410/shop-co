@@ -2,6 +2,8 @@
 import { watch } from "vue";
 import { useRoute } from "vue-router";
 import { useAuthStore } from "./stores/use-auth-store";
+import { Toaster } from "@/components/ui/sonner";
+import "vue-sonner/style.css";
 
 const authStore = useAuthStore();
 const route = useRoute();
@@ -21,5 +23,6 @@ watch(
 </script>
 
 <template>
+	<Toaster />
 	<RouterView />
 </template>

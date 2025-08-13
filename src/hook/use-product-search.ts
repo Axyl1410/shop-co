@@ -16,7 +16,7 @@ export function useProductSearch(products: Ref<Product[] | undefined>) {
 	// Search products based on multiple criteria
 	const searchedProducts = computed(() => {
 		if (!products.value || !searchQuery.value.trim()) {
-			return products.value || [];
+			return [];
 		}
 
 		const query = normalizeString(searchQuery.value);

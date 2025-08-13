@@ -1,56 +1,19 @@
 <script setup lang="ts">
 import { Search, X } from "lucide-vue-next";
-import { ref, watch } from "vue";
+import { ref } from "vue";
 
 interface Props {
-	modelValue?: string;
 	placeholder?: string;
-	debounce?: number;
-}
-
-interface Emits {
-	(e: "update:modelValue", value: string): void;
-	(e: "search", value: string): void;
-	(e: "clear"): void;
 }
 
 const props = withDefaults(defineProps<Props>(), {
-	modelValue: "",
 	placeholder: "Tìm kiếm sản phẩm...",
-	debounce: 300,
 });
 
-const emit = defineEmits<Emits>();
-
-const localValue = ref(props.modelValue);
-let debounceTimer: NodeJS.Timeout | null = null;
-
-// Watch for external changes
-watch(
-	() => props.modelValue,
-	(newValue) => {
-		localValue.value = newValue;
-	},
-);
-
-// Watch for local changes and emit with debounce
-watch(localValue, (newValue) => {
-	emit("update:modelValue", newValue);
-
-	// Clear existing timer
-	if (debounceTimer) {
-		clearTimeout(debounceTimer);
-	}
-
-	// Set new timer for debounced search
-	debounceTimer = setTimeout(() => {
-		emit("search", newValue);
-	}, props.debounce);
-});
+const localValue = ref("");
 
 const clearSearch = () => {
 	localValue.value = "";
-	emit("clear");
 };
 </script>
 
@@ -67,7 +30,7 @@ const clearSearch = () => {
 			<button
 				v-if="localValue"
 				@click="clearSearch"
-				class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+				class="absolute right-3 top-1/2 -translate-y-1/2 text-blue-500 hover:text-blue-600"
 			>
 				<X class="h-4 w-4" />
 			</button>

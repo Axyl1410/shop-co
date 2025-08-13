@@ -10,7 +10,14 @@ import {
 	BreadcrumbPage,
 	BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-
+import {
+	Pagination,
+	PaginationContent,
+	PaginationEllipsis,
+	PaginationItem,
+	PaginationNext,
+	PaginationPrevious,
+} from "@/components/ui/pagination";
 import {
 	Select,
 	SelectContent,
@@ -222,7 +229,6 @@ defineExpose({
 				</BreadcrumbItem>
 			</BreadcrumbList>
 		</Breadcrumb>
-		
 
 		<div class="flex gap-8">
 			<div
@@ -265,7 +271,7 @@ defineExpose({
 				</div>
 				<div
 					v-if="paginatedProducts.length > 0"
-					class="sm:grid-col-2 mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3"
+					class="sm:grid-col-2 mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
 				>
 					<ProductCard v-for="item in paginatedProducts" :data="item" :key="item.id" />
 				</div>

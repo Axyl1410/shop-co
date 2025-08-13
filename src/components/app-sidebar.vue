@@ -12,165 +12,121 @@ import {
 	SidebarRail,
 } from "@/components/ui/sidebar";
 import {
-	AudioWaveform,
-	BookOpen,
-	Bot,
-	Command,
-	Frame,
-	GalleryVerticalEnd,
-	Map,
-	PieChart,
-	Settings2,
-	SquareTerminal,
+	BarChart3,
+	Package,
+	ShoppingCart,
+	Users,
+	Settings,
+	Star,
+	Home,
 } from "lucide-vue-next";
+import { useRoute } from "vue-router";
+import { computed } from "vue";
 
 const props = withDefaults(defineProps<SidebarProps>(), {
 	collapsible: "icon",
 });
 
-// This is sample data.
-const data = {
+const route = useRoute();
+
+// Admin navigation data based on router
+const adminNavData = {
 	user: {
-		name: "shadcn",
-		email: "m@example.com",
-		avatar: "/avatars/shadcn.jpg",
+		name: "Admin",
+		email: "admin@shop-co.com",
+		avatar: "/avatars/admin.jpg",
 	},
 	teams: [
 		{
-			name: "Acme Inc",
-			logo: GalleryVerticalEnd,
-			plan: "Enterprise",
-		},
-		{
-			name: "Acme Corp.",
-			logo: AudioWaveform,
-			plan: "Startup",
-		},
-		{
-			name: "Evil Corp.",
-			logo: Command,
-			plan: "Free",
+			name: "Shop Co",
+			logo: Package,
+			plan: "Admin",
 		},
 	],
 	navMain: [
 		{
-			title: "Playground",
-			url: "#",
-			icon: SquareTerminal,
-			isActive: true,
-			items: [
-				{
-					title: "History",
-					url: "#",
-				},
-				{
-					title: "Starred",
-					url: "#",
-				},
-				{
-					title: "Settings",
-					url: "#",
-				},
-			],
+			title: "Dashboard",
+			url: "/admin",
+			icon: Home,
+			isActive: route.name === "admin-dashboard",
 		},
 		{
-			title: "Models",
-			url: "#",
-			icon: Bot,
-			items: [
-				{
-					title: "Genesis",
-					url: "#",
-				},
-				{
-					title: "Explorer",
-					url: "#",
-				},
-				{
-					title: "Quantum",
-					url: "#",
-				},
-			],
+			title: "Products",
+			url: "/admin/products",
+			icon: Package,
+			isActive: route.name === "admin-products",
 		},
 		{
-			title: "Documentation",
+			title: "Orders",
+			url: "/admin/orders",
+			icon: ShoppingCart,
+			isActive: route.name === "admin-orders",
+		},
+		{
+			title: "Users",
+			url: "/admin/users",
+			icon: Users,
+			isActive: route.name === "admin-users",
+		},
+		{
+			title: "Reviews",
+			url: "/admin/review",
+			icon: Star,
+			isActive: route.name === "admin-review",
+		},
+		{
+			title: "Analytics",
 			url: "#",
-			icon: BookOpen,
-			items: [
-				{
-					title: "Introduction",
-					url: "#",
-				},
-				{
-					title: "Get Started",
-					url: "#",
-				},
-				{
-					title: "Tutorials",
-					url: "#",
-				},
-				{
-					title: "Changelog",
-					url: "#",
-				},
-			],
+			icon: BarChart3,
+			isActive: false,
 		},
 		{
 			title: "Settings",
-			url: "#",
-			icon: Settings2,
-			items: [
-				{
-					title: "General",
-					url: "#",
-				},
-				{
-					title: "Team",
-					url: "#",
-				},
-				{
-					title: "Billing",
-					url: "#",
-				},
-				{
-					title: "Limits",
-					url: "#",
-				},
-			],
+			url: "/admin/settings",
+			icon: Settings,
+			isActive: route.name === "admin-settings",
 		},
 	],
 	projects: [
 		{
-			name: "Design Engineering",
-			url: "#",
-			icon: Frame,
+			name: "Product Management",
+			url: "/admin/products",
+			icon: Package,
 		},
 		{
-			name: "Sales & Marketing",
-			url: "#",
-			icon: PieChart,
+			name: "Order Management",
+			url: "/admin/orders",
+			icon: ShoppingCart,
 		},
 		{
-			name: "Travel",
-			url: "#",
-			icon: Map,
+			name: "User Management",
+			url: "/admin/users",
+			icon: Users,
 		},
 	],
 };
+
+// Update active states when route changes
+const updateActiveStates = computed(() => {
+	return adminNavData.navMain.map(item => ({
+		...item,
+		isActive: route.path === item.url
+	}));
+});
 </script>
 
 <template>
 	<Sidebar v-bind="props" class="no-scrollbar">
 		<SidebarHeader>
-			<TeamSwitcher :teams="data.teams" />
+			<TeamSwitcher :teams="adminNavData.teams" />
 		</SidebarHeader>
 
 		<SidebarContent>
-			<NavMain :items="data.navMain" />
-			<NavProjects :projects="data.projects" />
+			<NavMain :items="updateActiveStates" />
+			<NavProjects :projects="adminNavData.projects" />
 		</SidebarContent>
 		<SidebarFooter>
-			<NavUser :user="data.user" />
+			<NavUser :user="adminNavData.user" />
 		</SidebarFooter>
 		<SidebarRail />
 	</Sidebar>

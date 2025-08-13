@@ -1,5 +1,3 @@
-import { ServerAxiosConfig } from "@/constant";
-import type {} from "@/types";
 import type { Category } from "@/types/category";
 import { useQuery } from "@tanstack/vue-query";
 import axios from "axios";
@@ -10,7 +8,7 @@ export function useCategories() {
 	const query = useQuery<Category[]>({
 		queryKey: ["categories"],
 		queryFn: async (): Promise<Category[]> => {
-			const response = await axios(`${ServerAxiosConfig.baseURL}/categories`);
+			const response = await axios("http://localhost:3000/categories");
 			return response.data;
 		},
 	});

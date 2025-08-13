@@ -10,7 +10,7 @@
 					</BreadcrumbItem>
 					<BreadcrumbSeparator />
 					<BreadcrumbItem>
-						<BreadcrumbLink href="/shop#men-clothes">Products</BreadcrumbLink>
+						<BreadcrumbLink href="/product">Products</BreadcrumbLink>
 					</BreadcrumbItem>
 					<BreadcrumbSeparator />
 					<BreadcrumbItem>
@@ -96,11 +96,13 @@
 </template>
 
 <script setup lang="ts">
-
 import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import { toast } from "vue-sonner";
 
+import ProductImageGallery from "@/components/section/product/ProductImageGallery.vue";
+import ProductInfo from "@/components/section/product/ProductInfor.vue";
+import ProductTabs from "@/components/section/product/ProductTab.vue";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -109,9 +111,6 @@ import {
 	BreadcrumbPage,
 	BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import ProductImageGallery from "@/components/section/product/ProductImageGallery.vue";
-import ProductInfo from "@/components/section/product/ProductInfor.vue";
-import ProductTabs from "@/components/section/product/ProductTab.vue";
 
 import ProductListSec from "@/components/section/home/product-list-sec.vue";
 import { useProductDetail } from "@/hook/use-product-detail";

@@ -1,8 +1,8 @@
 export interface Order {
     id: string;
     orderNumber: string;
-    userId: number;
-    status: string; // e.g., 'pending', 'completed', 'cancelled'
+    userId: string; // Changed back to string to match data.json
+    status: string; // e.g., 'pending', 'processing', 'shipped', 'delivered', 'cancelled'
     subtotal: number;
     tax: number;
     shipping: number;
@@ -20,7 +20,7 @@ export interface Order {
 
 export interface OrderItem {
     id: number;
-    orderId: number;
+    orderId: string; // Changed back to string to match data.json
     productVariantId: number;
     productName: string;
     productSku: string;

@@ -51,7 +51,7 @@ const productMap = computed(() => {
 // Map orderId -> order
 const orderMap = computed(() => {
 	const map: Record<string, Order> = {};
-	data.orders.forEach((o) => (map[o.id.toString()] = { ...o, id: o.id }));
+	data.orders.forEach((o) => (map[o.id.toString()] = { ...o, id: o.id } as Order));
 	return map;
 });
 
@@ -89,7 +89,7 @@ function openReplyModal(review: Review) {
 	replyModalOpen.value = true;
 }
 
-// Gửi phản hồi (thực tế nên gọi API)
+
 async function submitReply() {
 	if (!selectedReview.value) return;
 	

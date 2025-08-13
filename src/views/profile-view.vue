@@ -9,7 +9,6 @@ import {
 	ArrowRight,
 	Crown,
 	HelpCircle,
-	History,
 	LogOut,
 	MapPin,
 	PencilLine,
@@ -17,6 +16,7 @@ import {
 	ShoppingBag,
 	Star,
 	MessageSquare,
+	History,
 } from "lucide-vue-next";
 import { storeToRefs } from "pinia";
 import { computed, onMounted, ref } from "vue";
@@ -26,6 +26,7 @@ import data from "@/../data.json";
 import { toast } from "vue-sonner";
 import Rating from "@/components/ui/Rating.vue";
 import { formatDate } from "@/lib/utils";
+import HistoryOrder from "@/components/section/profile/history-order.vue";
 
 type MinimalProduct = {
 	id: string;
@@ -61,10 +62,13 @@ const authStore = useAuthStore();
 const { user } = storeToRefs(authStore);
 const ordersCount = ref(0);
 
-// Reviews state
-const userReviews = ref<Review[]>([]);
+// State
+const showHistoryOrder = ref(false);
 const showReviewForm = ref(false);
 const selectedProduct = ref<MinimalProduct | null>(null);
+
+// Reviews state
+const userReviews = ref<Review[]>([]);
 const newReview = ref({
 	rating: 5,
 	title: "",
@@ -452,12 +456,12 @@ function handleLogout() {
 
 					<!-- actions -->
 					<div class="flex flex-col gap-3">
-						<Button variant="outline" class="justify-between">
+						<Button variant="outline" class="justify-between" @click="showHistoryOrder = !showHistoryOrder">
 							<span class="inline-flex items-center gap-2">
 								<History class="size-4" />
 								Lịch sử đơn hàng
 							</span>
-							<ArrowRight class="size-4 opacity-60" />
+							<ArrowRight class="size-4 opacity-60" :class="{ 'rotate-90': showHistoryOrder }" />
 						</Button>
 						<Button variant="outline" class="justify-between">
 							<span class="inline-flex items-center gap-2">
@@ -515,6 +519,11 @@ function handleLogout() {
 					</div>
 				</CardContent>
 			</Card>
+		</div>
+
+		<!-- History Order Section -->
+		<div v-if="showHistoryOrder" class="mt-6">
+			<HistoryOrder />
 		</div>
 
 		<!-- Reviews Section -->

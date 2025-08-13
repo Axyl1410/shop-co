@@ -63,6 +63,12 @@ const router = createRouter({
 					component: () => import("@/views/shop-view.vue"),
 				},
 				{
+					path: "/checkout",
+					name: "checkout",
+					component: () => import("@/views/checkout-view.vue"),
+					beforeEnter: requireAuth,
+				},
+				{
 					path: "/:pathMatch(.*)*",
 					name: "not-found",
 					component: () => import("@/views/not-found-view.vue"),
@@ -124,7 +130,7 @@ const router = createRouter({
 					name: "admin-settings",
 					component: () => import("@/views/admin/settings-view.vue"),
 				},
-					{
+				{
 					path: "review",
 					name: "admin-review",
 					component: () => import("@/views/admin/review-view.vue"),

@@ -106,11 +106,6 @@ const getSalePrice = (product: Product) => {
 };
 
 const handleAddProduct = () => {
-	console.log("=== ADD PRODUCT CLICKED ===");
-	console.log("Before - showForm:", showForm.value);
-	console.log("Before - isFormEditing:", isFormEditing.value);
-	console.log("Before - editingProduct:", editingProduct.value);
-
 	editingProduct.value = undefined;
 	isFormEditing.value = false;
 	showForm.value = true;
@@ -118,20 +113,9 @@ const handleAddProduct = () => {
 	// Reset form
 	resetForm();
 	additionalImagesText.value = "";
-
-	console.log("After - showForm:", showForm.value);
-	console.log("After - isFormEditing:", isFormEditing.value);
-	console.log("After - editingProduct:", editingProduct.value);
-	console.log("=== END ADD PRODUCT ===");
 };
 
 const handleEditProduct = (product: Product) => {
-	console.log("=== EDIT PRODUCT CLICKED ===");
-	console.log("Product:", product);
-	console.log("Before - showForm:", showForm.value);
-	console.log("Before - isFormEditing:", isFormEditing.value);
-	console.log("Before - editingProduct:", editingProduct.value);
-
 	editingProduct.value = product;
 	isFormEditing.value = true;
 	showForm.value = true;
@@ -153,34 +137,15 @@ const handleEditProduct = (product: Product) => {
 	setFieldValue("dimensions.height", product.dimensions.height);
 
 	additionalImagesText.value = product.images.join("\n");
-
-	console.log("After - showForm:", showForm.value);
-	console.log("After - isFormEditing:", isFormEditing.value);
-	console.log("After - editingProduct:", editingProduct.value);
-	console.log("=== END EDIT PRODUCT ===");
 };
 
 const handleCloseForm = () => {
-	console.log("=== CLOSE FORM CLICKED ===");
-	console.log("Before - showForm:", showForm.value);
-	console.log("Before - isFormEditing:", isFormEditing.value);
-	console.log("Before - editingProduct:", editingProduct.value);
-
 	showForm.value = false;
 	editingProduct.value = undefined;
 	isFormEditing.value = false;
-
-	console.log("After - showForm:", showForm.value);
-	console.log("After - isFormEditing:", isFormEditing.value);
-	console.log("After - editingProduct:", editingProduct.value);
-	console.log("=== END CLOSE FORM ===");
 };
 
 const onSubmit = handleSubmit(async (values) => {
-	console.log("=== FORM SUBMITTED ===");
-	console.log("Form values:", values);
-	console.log("Additional images:", additionalImagesText.value);
-
 	// Process additional images
 	const images = additionalImagesText.value
 		.split("\n")
@@ -205,8 +170,6 @@ const onSubmit = handleSubmit(async (values) => {
 		viewCount: 0,
 	};
 
-	console.log("Processed product data:", productData);
-
 	try {
 		if (isFormEditing.value && editingProduct.value) {
 			// Update existing product
@@ -230,18 +193,12 @@ const onSubmit = handleSubmit(async (values) => {
 });
 
 const handleDeleteProduct = (product: Product) => {
-	console.log("=== DELETE PRODUCT CLICKED ===");
-	console.log("Product:", product);
-
 	deletingProduct.value = product;
 	showDeleteModal.value = true;
 };
 
 const confirmDelete = async () => {
 	if (deletingProduct.value) {
-		console.log("=== CONFIRMING DELETE ===");
-		console.log("Deleting product:", deletingProduct.value);
-
 		await deleteProduct(deletingProduct.value.id);
 
 		// Close modal
@@ -251,7 +208,6 @@ const confirmDelete = async () => {
 };
 
 const cancelDelete = () => {
-	console.log("=== CANCELLING DELETE ===");
 	showDeleteModal.value = false;
 	deletingProduct.value = undefined;
 };

@@ -21,7 +21,6 @@
 			<section class="mt-8 mb-11">
 				<div class="grid grid-cols-1 gap-5 md:grid-cols-2">
 					<ProductImageGallery
-
 						:product="product ?? null"
 						:is-loading="isLoading"
 						:selected-image-index="selectedImageIndex"
@@ -97,11 +96,13 @@
 </template>
 
 <script setup lang="ts">
-
 import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import { toast } from "vue-sonner";
 
+import ProductImageGallery from "@/components/section/product/ProductImageGallery.vue";
+import ProductInfo from "@/components/section/product/ProductInfor.vue";
+import ProductTabs from "@/components/section/product/ProductTab.vue";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -110,9 +111,6 @@ import {
 	BreadcrumbPage,
 	BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import ProductImageGallery from "@/components/section/product/ProductImageGallery.vue";
-import ProductInfo from "@/components/section/product/ProductInfor.vue";
-import ProductTabs from "@/components/section/product/ProductTab.vue";
 
 import ProductListSec from "@/components/section/home/product-list-sec.vue";
 import { useProductDetail } from "@/hook/use-product-detail";

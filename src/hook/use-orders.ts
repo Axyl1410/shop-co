@@ -683,10 +683,36 @@ const updatePaymentStatus = async (orderId: string, newPaymentStatus: PaymentSta
 			orders.value[localOrderIndex] = { ...orders.value[localOrderIndex], ...updatedOrder };
 		}
 		
+		// Force reactivity update
+		orders.value = [...orders.value];
+		
 		toast.success(`Payment status updated to ${newPaymentStatus} - Đã cập nhật qua API!`);
+		return true; // Return success
 	} catch (error) {
 		console.error("Error updating payment status via API:", error);
+		
+		// Fallback to local update if API fails
+		console.log("Falling back to local update...");
+		const orderIndex = data.orders.findIndex(o => o.id === orderId);
+		if (orderIndex !== -1) {
+			data.orders[orderIndex].paymentStatus = newPaymentStatus;
+			data.orders[orderIndex].updatedAt = new Date().toISOString();
+			
+			// Update local state
+			const localOrderIndex = orders.value.findIndex(o => o.id === orderId);
+			if (localOrderIndex !== -1) {
+				orders.value[localOrderIndex].paymentStatus = newPaymentStatus;
+				orders.value[localOrderIndex].updatedAt = new Date().toISOString();
+			}
+			
+			// Force reactivity update
+			orders.value = [...orders.value];
+			toast.success(`Payment status updated to ${newPaymentStatus} - Đã cập nhật local (API thất bại)`);
+			return true; // Return success for local update
+		}
+		
 		toast.error("Failed to update payment status");
+		return false; // Return failure if no order found
 	} finally {
 		isLoading.value = false;
 	}

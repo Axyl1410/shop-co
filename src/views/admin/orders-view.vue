@@ -77,6 +77,11 @@ const returnShippingAdminResponse = ref("");
 const returnShippingPaymentProof = ref<File[]>([]);
 const isApprovingReturnShipping = ref(false);
 
+// Payment status update state
+const showPaymentStatusModal = ref(false);
+const selectedPaymentOrder = ref<string>("");
+const selectedPaymentStatus = ref<PaymentStatus>("pending");
+
 // Get user info
 const getUserInfo = (userId: string) => {
 	const user = data.users.find(u => u.id.toString() === userId);
@@ -282,6 +287,40 @@ const handleReturnShippingApproval = async () => {
 		alert("Có lỗi xảy ra khi duyệt gửi trả hàng.");
 	} finally {
 		isApprovingReturnShipping.value = false;
+	}
+};
+
+// Open payment status update modal
+const openPaymentStatusModal = (orderId: string, currentPaymentStatus: PaymentStatus) => {
+	selectedPaymentOrder.value = orderId;
+	selectedPaymentStatus.value = currentPaymentStatus;
+	showPaymentStatusModal.value = true;
+};
+
+// Handle payment status update
+const handlePaymentStatusUpdate = async () => {
+	if (!selectedPaymentOrder.value) return;
+	
+	try {
+		// Import useOrders hook to update payment status
+		const { useOrders } = await import('@/hook/use-orders');
+		const { updatePaymentStatus } = useOrders();
+		
+		const success = await updatePaymentStatus(selectedPaymentOrder.value, selectedPaymentStatus.value);
+		
+		if (success) {
+			// Close modal on success
+			showPaymentStatusModal.value = false;
+			selectedPaymentOrder.value = "";
+			selectedPaymentStatus.value = "pending";
+			
+			alert(`Đã cập nhật trạng thái thanh toán thành công!`);
+		} else {
+			alert("Không thể cập nhật trạng thái thanh toán. Vui lòng thử lại.");
+		}
+	} catch (error) {
+		console.error('Error updating payment status:', error);
+		alert("Có lỗi xảy ra khi cập nhật trạng thái thanh toán.");
 	}
 };
 
@@ -606,9 +645,12 @@ onMounted(() => {
 									</span>
 								</td>
 								<td class="px-6 py-4 whitespace-nowrap">
-									<span :class="getPaymentBadgeColor(order.paymentStatus)">
-										{{ order.paymentStatus }}
-									</span>
+									<div class="flex items-center space-x-2">
+										<span :class="getPaymentBadgeColor(order.paymentStatus)">
+											{{ order.paymentStatus }}
+										</span>
+										
+									</div>
 								</td>
 								<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
 									<div v-if="order.status === 'cancelled'">
@@ -694,6 +736,20 @@ onMounted(() => {
 											@click="openReturnShippingApprovalModal(order.id)"
 										>
 											<Package class="h-4 w-4" />
+										</Button>
+										
+										<!-- Payment Status Update Button -->
+										<Button
+											variant="outline"
+											size="sm"
+											class="text-blue-600 border-blue-200 hover:bg-blue-50"
+											@click="openPaymentStatusModal(order.id, order.paymentStatus as PaymentStatus)"
+											title="Cập nhật trạng thái thanh toán"
+										>
+											<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-credit-card">
+												<rect width="20" height="14" x="2" y="5" rx="2"/>
+												<line x1="2" x2="22" y1="10" y2="10"/>
+											</svg>
 										</Button>
 									</div>
 								</td>
@@ -1260,6 +1316,61 @@ onMounted(() => {
 							:class="isApprovingReturnShipping ? 'opacity-50 cursor-not-allowed' : ''"
 						>
 							{{ isApprovingReturnShipping ? 'Đang xử lý...' : 'Duyệt' }}
+						</Button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Payment Status Update Modal -->
+		<div v-if="showPaymentStatusModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+			<div class="w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
+				<h2 class="text-xl font-semibold mb-4">Cập nhật trạng thái thanh toán</h2>
+				
+				<div class="space-y-4">
+					<!-- Order Info -->
+					<div v-if="selectedPaymentOrder" class="bg-gray-50 border border-gray-200 rounded-lg p-3">
+						<div class="text-sm text-gray-600">
+							<strong>Đơn hàng:</strong> {{ orders.find(o => o.id === selectedPaymentOrder)?.orderNumber || 'N/A' }}
+						</div>
+						<div class="text-sm text-gray-600">
+							<strong>Trạng thái hiện tại:</strong> 
+							<span :class="getPaymentBadgeColor(orders.find(o => o.id === selectedPaymentOrder)?.paymentStatus || '')">
+								{{ orders.find(o => o.id === selectedPaymentOrder)?.paymentStatus || 'N/A' }}
+							</span>
+						</div>
+					</div>
+					
+					<div>
+						<label class="block text-sm font-medium text-gray-700 mb-2">Trạng thái thanh toán mới</label>
+						<select v-model="selectedPaymentStatus" class="w-full rounded border px-3 py-2">
+							<option v-for="status in paymentStatusOptions" :key="status.value" :value="status.value">
+								{{ status.label }}
+							</option>
+						</select>
+					</div>
+					
+					<div class="bg-blue-50 border border-blue-200 rounded-lg p-3">
+						<div class="flex items-center space-x-2 text-blue-800">
+							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-info">
+								<circle cx="12" cy="12" r="10"/>
+								<path d="m9 12 3 3 3-3"/>
+								<path d="M12 6v.01"/>
+							</svg>
+							<span class="text-sm font-medium">Thông tin</span>
+						</div>
+						<p class="text-sm text-blue-700 mt-1">
+							Chọn trạng thái thanh toán mới cho đơn hàng này. Thay đổi này sẽ được cập nhật ngay lập tức.
+						</p>
+					</div>
+
+					<div class="flex justify-end space-x-2">
+						<Button variant="outline" @click="showPaymentStatusModal = false">Hủy</Button>
+						<Button 
+							@click="handlePaymentStatusUpdate"
+							class="bg-blue-600 hover:bg-blue-700 text-white"
+						>
+							Cập nhật trạng thái thanh toán
 						</Button>
 					</div>
 				</div>

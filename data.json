@@ -580,7 +580,7 @@
       "color": "Dark Blue",
       "colorCode": "#191970",
       "sku": "JEA-001-28-DBL",
-      "salePrice": 208,
+      "salePrice": 209,
       "stockQuantity": 25
     },
     {
@@ -590,7 +590,7 @@
       "color": "Dark Blue",
       "colorCode": "#191970",
       "sku": "JEA-001-30-DBL",
-      "salePrice": 208,
+      "salePrice": 209,
       "stockQuantity": 30
     },
     {
@@ -600,7 +600,7 @@
       "color": "Dark Blue",
       "colorCode": "#191970",
       "sku": "JEA-001-32-DBL",
-      "salePrice": 208,
+      "salePrice": 210,
       "stockQuantity": 35
     },
     {
@@ -610,7 +610,7 @@
       "color": "Dark Blue",
       "colorCode": "#191970",
       "sku": "JEA-001-34-DBL",
-      "salePrice": 208,
+      "salePrice": 211,
       "stockQuantity": 30
     },
     {
@@ -620,7 +620,7 @@
       "color": "Dark Blue",
       "colorCode": "#191970",
       "sku": "JEA-001-36-DBL",
-      "salePrice": 208,
+      "salePrice": 212,
       "stockQuantity": 25
     },
     {
@@ -630,7 +630,7 @@
       "color": "Light Blue",
       "colorCode": "#87CEEB",
       "sku": "JEA-001-28-LBL",
-      "salePrice": 208,
+      "salePrice": 209,
       "stockQuantity": 18
     },
     {
@@ -640,7 +640,7 @@
       "color": "Light Blue",
       "colorCode": "#87CEEB",
       "sku": "JEA-001-30-LBL",
-      "salePrice": 208,
+      "salePrice": 20,
       "stockQuantity": 22
     },
     {
@@ -1087,7 +1087,7 @@
       "id": "2",
       "orderNumber": "ORD-2024-002",
       "userId": "3a03",
-      "status": "received",
+      "status": "delivered",
       "subtotal": 520,
       "tax": 52,
       "shipping": 15,
@@ -1100,7 +1100,7 @@
       "paymentStatus": "paid",
       "notes": "",
       "createdAt": "2024-01-16T14:20:00Z",
-      "updatedAt": "2025-08-13T20:49:01.496Z",
+      "updatedAt": "2025-08-14T02:30:59.302Z",
       "cancellationReason": "ĐỔI Ý"
     },
     {
@@ -1134,7 +1134,7 @@
       "id": "4",
       "orderNumber": "ORD-2024-004",
       "userId": "3a03",
-      "status": "cancelled",
+      "status": "delivered",
       "subtotal": 180,
       "tax": 18,
       "shipping": 10,
@@ -1144,10 +1144,10 @@
       "shippingAddressId": 4,
       "billingAddressId": 4,
       "paymentMethod": "debit_card",
-      "paymentStatus": "pending",
+      "paymentStatus": "paid",
       "notes": "",
       "createdAt": "2024-01-18T16:45:00Z",
-      "updatedAt": "2025-08-13T19:28:43.478Z",
+      "updatedAt": "2025-08-14T01:53:23.577Z",
       "cancellationReason": "chưa thanh toán"
     },
     {

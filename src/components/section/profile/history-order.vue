@@ -713,7 +713,7 @@ function closeReturnShippingModal() {
 							</div>
 						</div>
 						<div class="text-right">
-							<div class="text-2xl font-bold text-gray-900">{{ order.total.toLocaleString() }}đ</div>
+							<div class="text-2xl font-bold text-gray-900">${{ order.total.toLocaleString() }} ~ {{ (order.total * 26000).toLocaleString() }}VND</div>
 							<div class="text-sm text-gray-600">{{ order.items.length }} sản phẩm</div>
 						</div>
 					</div>
@@ -1086,7 +1086,8 @@ function closeReturnShippingModal() {
 						<p class="text-sm text-blue-700">
 							• Yêu cầu hoàn trả chỉ áp dụng cho đơn hàng đã giao hàng<br>
 							• Admin sẽ xem xét và duyệt yêu cầu của bạn<br>
-							• Bạn sẽ nhận được thông báo khi có kết quả
+							• Bạn sẽ nhận được thông báo khi có kết quả <br>
+							• Địa chỉ gửi về: 371 Nguyễn Kiệm, Phường Hạnh Thông Tây, Hồ Chí Minh
 						</p>
 					</div>
 					

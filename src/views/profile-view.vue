@@ -19,7 +19,7 @@ import {
 	History,
 } from "lucide-vue-next";
 import { storeToRefs } from "pinia";
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import type { Review } from "@/types/reviews";
 import data from "@/../data.json";
@@ -27,6 +27,7 @@ import { toast } from "vue-sonner";
 import Rating from "@/components/ui/Rating.vue";
 import { formatDate } from "@/lib/utils";
 import HistoryOrder from "@/components/section/profile/history-order.vue";
+
 
 type MinimalProduct = {
 	id: string;
@@ -66,6 +67,7 @@ const ordersCount = ref(0);
 const showHistoryOrder = ref(false);
 const showReviewForm = ref(false);
 const selectedProduct = ref<MinimalProduct | null>(null);
+const isSubmittingReview = ref(false);
 
 // Reviews state
 const userReviews = ref<Review[]>([]);
@@ -76,13 +78,86 @@ const newReview = ref({
 	images: [] as string[],
 });
 
+
+
+const unreviewedProducts = ref<MinimalProduct[]>([]);
+
+// Load unreviewed products
+async function loadUnreviewedProducts() {
+	if (!user.value) return;
+	
+	try {
+		const reviewedProductIds = userReviews.value.map(review => review.productId);
+		
+		// Get ALL user orders (not just delivered)
+		const userOrders = data.orders.filter(order => 
+			order.userId.toString() === user.value?.id.toString()
+		);
+		
+		// Get products from these orders
+		const purchasedProducts: MinimalProduct[] = [];
+		
+		for (const order of userOrders) {
+			const orderItems = data.order_items.filter(item => 
+				item.orderId.toString() === order.id.toString()
+			);
+			
+			for (const item of orderItems) {
+				const variant = data.product_variants.find(v => 
+					v.id.toString() === item.productVariantId.toString()
+				);
+				
+				if (variant) {
+					const product = data.products.find(p => 
+						p.id.toString() === variant.productId.toString()
+					);
+					
+					if (product && !reviewedProductIds.includes(product.id.toString())) {
+						const minimal = toMinimalProduct(product);
+						if (!purchasedProducts.some(p => p.id === minimal.id)) {
+							purchasedProducts.push(minimal);
+						}
+					}
+				}
+			}
+		}
+		
+		unreviewedProducts.value = purchasedProducts;
+		
+	} catch (error) {
+		console.error("Error loading unreviewed products:", error);
+		unreviewedProducts.value = [];
+	}
+}
+
+// Load unreviewed products when component mounts or when needed
 onMounted(async () => {
+	console.log("Component mounted, data available:", data);
+	console.log("Orders in data:", data.orders?.length || 0);
+	console.log("Order items in data:", data.order_items?.length || 0);
+	console.log("Product variants in data:", data.product_variants?.length || 0);
+	console.log("Products in data:", data.products?.length || 0);
+	
 	if (!user.value) {
 		await authStore.refreshUser();
 	}
-	// Load user reviews
-	loadUserReviews();
+	
+	// Wait a bit for data to be fully loaded
+	await new Promise(resolve => setTimeout(resolve, 100));
+	
+	// Load user reviews and unreviewed products
+	await loadUserReviews();
+	await loadUnreviewedProducts();
 });
+
+// Watch for user changes and reload data
+watch(user, async (newUser) => {
+	if (newUser) {
+		console.log("User changed, reloading data...");
+		await loadUserReviews();
+		await loadUnreviewedProducts();
+	}
+}, { immediate: false });
 
 function toMinimalProduct(p: ProductLike): MinimalProduct {
 	return {
@@ -94,125 +169,78 @@ function toMinimalProduct(p: ProductLike): MinimalProduct {
 }
 
 // Load user reviews
-function loadUserReviews() {
+async function loadUserReviews() {
 	if (!user.value) return;
-	userReviews.value = (data.reviews || [])
-		.filter((review) => review.userId.toString() === user.value?.id.toString())
-		.map((review) => ({
-			...review,
-			productId: review.productId.toString(),
-			userId: review.userId.toString(),
-			orderId: review.orderId.toString(),
-			images: review.images || [],
-		}));
+	
+	try {
+		// Fetch user reviews from API
+		const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/reviews?userId=${user.value.id}`);
+		if (response.ok) {
+			const reviews = await response.json();
+			userReviews.value = reviews.map((review: Review) => ({
+				...review,
+				productId: review.productId.toString(),
+				userId: review.userId.toString(),
+				orderId: review.orderId.toString(),
+				images: review.images || [],
+			}));
+		}
+	} catch (error) {
+		console.error("Error loading user reviews:", error);
+		// Fallback to local data if API fails
+		userReviews.value = (data.reviews || [])
+			.filter((review) => review.userId.toString() === user.value?.id.toString())
+			.map((review) => ({
+				...review,
+				productId: review.productId.toString(),
+				userId: review.userId.toString(),
+				orderId: review.orderId.toString(),
+				images: review.images || [],
+			}));
+	}
 }
 
-// Get product name by ID
-function getProductName(productId: string) {
-	const product = data.products.find((p) => p.id.toString() === productId);
-	return product?.name || productId;
-}
 
-// Check if user has purchased a product
-function hasPurchasedProduct(productId: string) {
-	if (!user.value) return false;
-	
-	return data.orders.some(order => 
-		order.userId.toString() === user.value?.id.toString() && 
-		order.status === "delivered" && // Chỉ đơn hàng đã giao thành công
-		data.order_items.some(item => 
-			item.orderId.toString() === order.id.toString() && 
-			data.product_variants.some(variant => 
-				variant.id.toString() === item.productVariantId.toString() && 
-				variant.productId.toString() === productId
-			)
-		)
-	);
-}
 
-// Get purchased products that haven't been reviewed
-function getUnreviewedProducts() {
-	if (!user.value) return [] as MinimalProduct[];
-	
-	const reviewedProductIds = userReviews.value.map(review => review.productId);
-	console.log("Debug - Reviewed product IDs in getUnreviewedProducts:", reviewedProductIds);
-	
-	const allProducts = data.products.filter(product => {
-		const productId = product.id.toString();
-		const hasPurchased = hasPurchasedProduct(productId);
-		const notReviewed = !reviewedProductIds.includes(productId);
-		
-		console.log("Debug - Product:", product.name, "ID:", productId, "hasPurchased:", hasPurchased, "notReviewed:", notReviewed);
-		
-		return hasPurchased && notReviewed;
-	});
-	
-	console.log("Debug - Filtered products count:", allProducts.length);
-	return allProducts.map(toMinimalProduct);
-}
+
 
 // Orders that have items not yet reviewed
 const unreviewedOrders = computed<UnreviewedOrder[]>(() => {
 	if (!user.value) return [];
 	
 	const userId = user.value.id.toString();
-	console.log("Debug - User ID:", userId);
 	
 	const reviewed = new Set(userReviews.value.map((r) => r.productId.toString()));
-	console.log("Debug - Reviewed product IDs:", Array.from(reviewed));
 	
-	// Chỉ lấy đơn hàng đã giao thành công
+	// For now, we'll keep using local data but this should be updated to use API
+	// TODO: Update to use real API data
 	const orders = data.orders.filter((o) => 
 		o.userId.toString() === userId && 
 		o.status === "delivered"
 	);
-	console.log("Debug - User delivered orders:", orders.length);
-	console.log("Debug - Delivered orders:", orders.map(o => ({ id: o.id, orderNumber: o.orderNumber, status: o.status })));
 	
 	const groups: UnreviewedOrder[] = orders
 		.map((order) => {
-			console.log("Debug - Processing delivered order:", order.orderNumber, "ID:", order.id);
-			
 			const items = data.order_items.filter(
 				(oi) => oi.orderId.toString() === order.id.toString()
 			);
-			console.log("Debug - Order items for", order.orderNumber, ":", items.length);
-			console.log("Debug - Order items details:", items.map(item => ({ 
-				id: item.id, 
-				orderId: item.orderId, 
-				productVariantId: item.productVariantId 
-			})));
 			
 			const pending: UnreviewedOrderItem[] = [];
 			for (const item of items) {
-				console.log("Debug - Processing item:", item.id, "variantId:", item.productVariantId);
-				
 				const variant = data.product_variants.find(
 					(v) => v.id.toString() === item.productVariantId.toString()
 				);
-				if (!variant) {
-					console.log("Debug - No variant found for item:", item);
-					continue;
-				}
-				console.log("Debug - Found variant:", variant.id, "productId:", variant.productId);
+				if (!variant) continue;
 				
 				const productId = variant.productId.toString();
-				console.log("Debug - Product ID from variant:", productId);
 				
-				if (reviewed.has(productId)) {
-					console.log("Debug - Product already reviewed:", productId);
-					continue;
-				}
+				if (reviewed.has(productId)) continue;
 				
 				const product = data.products.find(
 					(p) => p.id.toString() === productId
 				);
 				
-				if (!product) {
-					console.log("Debug - No product found for ID:", productId);
-					continue;
-				}
-				console.log("Debug - Found product:", product.name);
+				if (!product) continue;
 				
 				const minimal = toMinimalProduct(product);
 				pending.push({
@@ -222,10 +250,7 @@ const unreviewedOrders = computed<UnreviewedOrder[]>(() => {
 					productPrice: product.originalPrice,
 					product: minimal,
 				});
-				console.log("Debug - Added pending item:", product.name);
 			}
-			
-			console.log("Debug - Pending items for order", order.orderNumber, ":", pending.length);
 			
 			return {
 				id: order.id.toString(),
@@ -239,12 +264,6 @@ const unreviewedOrders = computed<UnreviewedOrder[]>(() => {
 			(a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
 		);
 	
-	console.log("Debug - Final unreviewed orders:", groups.length);
-	console.log("Debug - Final groups:", groups.map(g => ({ 
-		orderNumber: g.orderNumber, 
-		itemsCount: g.items.length,
-		items: g.items.map(i => i.productName)
-	})));
 	return groups;
 });
 
@@ -307,35 +326,57 @@ async function submitReview() {
 		toast.error("Vui lòng nhập nội dung đánh giá");
 		return;
 	}
+	
+	isSubmittingReview.value = true;
+	
 	try {
+		// For now, we'll simulate the review submission
+		// TODO: Integrate with real API when ready
 		const reviewData = {
 			id: Date.now().toString(),
 			productId: selectedProduct.value.id,
 			userId: user.value.id.toString(),
-			orderId: "1",
+			orderId: "1", // This should come from actual order data
 			rating: newReview.value.rating,
 			title: newReview.value.title,
 			content: newReview.value.content,
 			images: newReview.value.images,
-			variantId: 1,
-			variantName: "",
-			color: "",
-			size: "",
+			variantId: 1, // Default value
+			variantName: "", // Default value
+			color: "", // Default value
+			size: "", // Default value
 			isVerified: true,
 			isHelpful: 0,
 			createdAt: new Date().toISOString(),
 			reply: "",
 			replyDate: "",
 		};
-		// Update local mocks
+		
+		// Add to local data for now
 		data.reviews.push(reviewData);
 		userReviews.value.push(reviewData as Review);
-		toast.success("Đánh giá đã được gửi thành công!");
+		
+		// Close form and reset
 		showReviewForm.value = false;
 		selectedProduct.value = null;
+		newReview.value = {
+			rating: 5,
+			title: "",
+			content: "",
+			images: [],
+		};
+		
+		// Reload user reviews and unreviewed products
+		await loadUserReviews();
+		await loadUnreviewedProducts();
+		
+		toast.success("Đánh giá đã được gửi thành công!");
+		
 	} catch (error) {
 		console.error("Error submitting review:", error);
 		toast.error("Đã xảy ra lỗi khi gửi đánh giá");
+	} finally {
+		isSubmittingReview.value = false;
 	}
 }
 
@@ -376,7 +417,7 @@ const vipBadgeClass = computed(() => {
 	}
 });
 
-const unreviewedProducts = computed(() => getUnreviewedProducts());
+
 
 function handleLogout() {
 	authStore.logout();
@@ -547,7 +588,7 @@ function handleLogout() {
 								<div class="text-xs text-gray-500">{{ formatDate(review.createdAt) }}</div>
 							</div>
 							<p class="mb-2 text-sm text-gray-700">{{ review.content }}</p>
-							<p class="mb-2 text-sm text-gray-600">Sản phẩm: {{ getProductName(review.productId) }}</p>
+							<p class="mb-2 text-sm text-gray-600">Sản phẩm: {{ review.productId }}</p>
 							<div v-if="review.images && review.images.length > 0" class="mt-2 flex space-x-2">
 								<img v-for="(img, idx) in review.images" :key="idx" :src="img" alt="Review image" class="h-16 w-16 rounded-md object-cover" />
 							</div>
@@ -568,12 +609,12 @@ function handleLogout() {
 					<div v-else class="py-8 text-center text-gray-500">Bạn chưa có đánh giá nào.</div>
 
 					<!-- Unreviewed Products -->
-					<div v-if="unreviewedProducts.length > 0" class="mt-6">
+					<div class="mt-6">
 						<h3 class="mb-4 text-lg font-semibold">Sản phẩm chưa đánh giá</h3>
 						<div class="mb-3 p-2 bg-blue-100 rounded text-blue-800 text-xs">
-							<strong>Lưu ý:</strong> Chỉ sản phẩm từ đơn hàng đã giao thành công mới được phép đánh giá
+							<strong>Lưu ý:</strong> Chỉ sản phẩm từ đơn hàng đã mua mới được phép đánh giá. Tìm thấy {{ unreviewedProducts.length }} sản phẩm chưa đánh giá.
 						</div>
-						<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+						<div v-if="unreviewedProducts.length > 0" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 							<div v-for="product in unreviewedProducts" :key="product.id" class="rounded-lg border p-4">
 								<div class="mb-2 flex items-center gap-2">
 									<img :src="product.images?.[0] || '/placeholder.jpg'" :alt="product.name" class="h-12 w-12 rounded object-cover" />
@@ -587,6 +628,9 @@ function handleLogout() {
 									Đánh giá ngay
 								</Button>
 							</div>
+						</div>
+						<div v-else class="py-4 text-center text-gray-500">
+							Không có sản phẩm nào cần đánh giá
 						</div>
 					</div>
 
@@ -648,8 +692,11 @@ function handleLogout() {
 						</div>
 					</div>
 					<div class="flex justify-end space-x-2">
-						<Button variant="outline" @click="showReviewForm = false">Hủy</Button>
-						<Button @click="submitReview">Gửi đánh giá</Button>
+						<Button variant="outline" @click="showReviewForm = false" :disabled="isSubmittingReview">Hủy</Button>
+						<Button @click="submitReview" :disabled="isSubmittingReview">
+							<span v-if="isSubmittingReview">Đang gửi...</span>
+							<span v-else>Gửi đánh giá</span>
+						</Button>
 					</div>
 				</div>
 			</div>

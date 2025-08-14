@@ -50,7 +50,7 @@ const handleSubmit = async () => {
 	try {
 		const orderData = {
 			orderNumber: `ORD-${Date.now()}`,
-			userId: authStore.user.id,
+			userId: authStore.user?.id,
 			status: "pending",
 			subtotal: subtotal.value,
 			tax: tax.value,
@@ -286,7 +286,7 @@ const handleSubmit = async () => {
 									</div>
 									<div class="text-right">
 										<p class="text-sm font-medium text-gray-900">
-											{{ (item.price || 0) * item.quantity }} VND
+											{{ ((item.price || 0) * item.quantity * 26000).toLocaleString("vi-VN") }} VND
 										</p>
 										<p class="text-xs text-gray-500">Qty: {{ item.quantity }}</p>
 									</div>

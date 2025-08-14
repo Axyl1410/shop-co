@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Review from "@/components/section/home/review.vue";
 import { toTypedSchema } from "@vee-validate/zod";
 import { useForm } from "vee-validate";
 import { computed, ref } from "vue";
@@ -45,7 +46,6 @@ const formSchema = toTypedSchema(
 		originalPrice: z.number().min(0, "Price must be positive"),
 		discountPercentage: z.number().min(0).max(100, "Discount must be between 0-100%"),
 		weight: z.number().min(0, "Weight must be positive"),
-		rating: z.number().min(0).max(5, "Rating must be between 0-5"),
 		description: z.string().min(1, "Description is required"),
 		shortDescription: z.string().min(1, "Short description is required"),
 		mainImage: z.string().min(1, "Main image is required"),
@@ -64,7 +64,7 @@ const { handleSubmit, setFieldValue, values, resetForm } = useForm({
 		name: "",
 		description: "",
 		shortDescription: "",
-		categoryId: 0,
+		categoryId: undefined as number | undefined,
 		brand: "",
 		sku: "",
 		originalPrice: 0,
@@ -76,7 +76,6 @@ const { handleSubmit, setFieldValue, values, resetForm } = useForm({
 			height: 0,
 		},
 		mainImage: "",
-		rating: 0,
 	},
 });
 
@@ -86,6 +85,91 @@ const deletingProduct = ref<Product | undefined>(undefined);
 
 // Additional form data for non-validated fields
 const additionalImagesText = ref("");
+const mainImageFile = ref<File | null>(null);
+const additionalImageFiles = ref<File[]>([]);
+
+// Preview URLs for images
+const mainImagePreview = ref<string>("");
+const additionalImagePreviews = ref<string[]>([]);
+
+// File input refs
+const mainImageInputRef = ref<HTMLInputElement>();
+const additionalImagesInputRef = ref<HTMLInputElement>();
+
+// Handle main image upload
+const handleMainImageUpload = (event: Event) => {
+	const target = event.target as HTMLInputElement;
+	if (target.files && target.files[0]) {
+		const file = target.files[0];
+		if (file.type.startsWith("image/")) {
+			if (file.size > 5 * 1024 * 1024) {
+				alert("File quá lớn. Kích thước tối đa là 5MB");
+				return;
+			}
+
+			mainImageFile.value = file;
+			const reader = new FileReader();
+			reader.onload = (e) => {
+				if (e.target?.result) {
+					mainImagePreview.value = e.target.result as string;
+					setFieldValue("mainImage", e.target.result as string);
+				}
+			};
+			reader.readAsDataURL(file);
+		} else {
+			alert("File không phải là ảnh");
+		}
+	}
+	target.value = "";
+};
+
+// Handle additional images upload
+const handleAdditionalImagesUpload = (event: Event) => {
+	const target = event.target as HTMLInputElement;
+	if (target.files) {
+		const files = Array.from(target.files);
+		const maxImages = 10; // Giới hạn tối đa 10 ảnh
+
+		if (additionalImageFiles.value.length + files.length > maxImages) {
+			alert(`Bạn chỉ có thể upload tối đa ${maxImages} ảnh`);
+			return;
+		}
+
+		files.forEach((file) => {
+			if (file.type.startsWith("image/")) {
+				if (file.size > 5 * 1024 * 1024) {
+					alert(`File ${file.name} quá lớn. Kích thước tối đa là 5MB`);
+					return;
+				}
+
+				additionalImageFiles.value.push(file);
+				const reader = new FileReader();
+				reader.onload = (e) => {
+					if (e.target?.result) {
+						additionalImagePreviews.value.push(e.target.result as string);
+					}
+				};
+				reader.readAsDataURL(file);
+			} else {
+				alert(`File ${file.name} không phải là ảnh`);
+			}
+		});
+	}
+	target.value = "";
+};
+
+// Remove additional image
+const removeAdditionalImage = (index: number) => {
+	additionalImageFiles.value.splice(index, 1);
+	additionalImagePreviews.value.splice(index, 1);
+};
+
+// Clear main image
+const clearMainImage = () => {
+	mainImageFile.value = null;
+	mainImagePreview.value = "";
+	setFieldValue("mainImage", "");
+};
 
 // Computed properties
 const activeProducts = computed(() => products.value?.filter((p) => p.isActive) || []);
@@ -113,12 +197,22 @@ const handleAddProduct = () => {
 	// Reset form
 	resetForm();
 	additionalImagesText.value = "";
+	mainImageFile.value = null;
+	additionalImageFiles.value = [];
+	mainImagePreview.value = "";
+	additionalImagePreviews.value = [];
 };
 
 const handleEditProduct = (product: Product) => {
 	editingProduct.value = product;
 	isFormEditing.value = true;
 	showForm.value = true;
+
+	// Reset file upload values
+	mainImageFile.value = null;
+	additionalImageFiles.value = [];
+	mainImagePreview.value = "";
+	additionalImagePreviews.value = [];
 
 	// Populate form with product data
 	setFieldValue("name", product.name);
@@ -128,7 +222,6 @@ const handleEditProduct = (product: Product) => {
 	setFieldValue("originalPrice", product.originalPrice);
 	setFieldValue("discountPercentage", product.discountPercentage);
 	setFieldValue("weight", product.weight);
-	setFieldValue("rating", product.rating);
 	setFieldValue("description", product.description);
 	setFieldValue("shortDescription", product.shortDescription);
 	setFieldValue("mainImage", product.mainImage);
@@ -137,6 +230,8 @@ const handleEditProduct = (product: Product) => {
 	setFieldValue("dimensions.height", product.dimensions.height);
 
 	additionalImagesText.value = product.images.join("\n");
+	mainImagePreview.value = product.mainImage;
+	additionalImagePreviews.value = product.images;
 };
 
 const handleCloseForm = () => {
@@ -146,11 +241,18 @@ const handleCloseForm = () => {
 };
 
 const onSubmit = handleSubmit(async (values) => {
-	// Process additional images
-	const images = additionalImagesText.value
+	// Process additional images from both text input and file uploads
+	const images: string[] = [];
+
+	// Add images from text input
+	const textImages = additionalImagesText.value
 		.split("\n")
 		.map((url) => url.trim())
 		.filter((url) => url.length > 0);
+	images.push(...textImages);
+
+	// Add images from file uploads
+	images.push(...additionalImagePreviews.value);
 
 	// Generate slug if not provided
 	const slug = values.name
@@ -168,6 +270,7 @@ const onSubmit = handleSubmit(async (values) => {
 		isNew: false,
 		reviewCount: 0,
 		viewCount: 0,
+		rating: 0, // Default rating for new products
 	};
 
 	try {
@@ -259,11 +362,6 @@ const handleActivateProduct = async (product: Product) => {
 								<th
 									class="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase"
 								>
-									Rating
-								</th>
-								<th
-									class="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase"
-								>
 									Status
 								</th>
 								<th
@@ -306,10 +404,6 @@ const handleActivateProduct = async (product: Product) => {
 										</span>
 									</div>
 								</td>
-								<td class="px-6 py-4 text-sm whitespace-nowrap text-gray-900">
-									<div class="text-sm text-gray-900">{{ product.rating }}/5</div>
-									<div class="text-xs text-gray-500">{{ product.reviewCount }} reviews</div>
-								</td>
 								<td class="px-6 py-4 whitespace-nowrap">
 									<span
 										class="inline-flex rounded-full bg-green-100 px-2 text-xs leading-5 font-semibold text-green-800"
@@ -334,7 +428,7 @@ const handleActivateProduct = async (product: Product) => {
 								</td>
 							</tr>
 							<tr v-if="activeProducts.length === 0">
-								<td colspan="6" class="px-6 py-4 text-center text-gray-500">
+								<td colspan="5" class="px-6 py-4 text-center text-gray-500">
 									No active products found
 								</td>
 							</tr>
@@ -370,11 +464,6 @@ const handleActivateProduct = async (product: Product) => {
 								<th
 									class="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase"
 								>
-									Rating
-								</th>
-								<th
-									class="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase"
-								>
 									Status
 								</th>
 								<th
@@ -390,7 +479,7 @@ const handleActivateProduct = async (product: Product) => {
 									<div class="flex items-center">
 										<div class="h-10 w-10 flex-shrink-0">
 											<img
-												:src="product.mainImage"
+												:src="`/src/assets${product.mainImage}`"
 												:alt="product.name"
 												class="h-10 w-10 rounded object-cover"
 											/>
@@ -416,10 +505,6 @@ const handleActivateProduct = async (product: Product) => {
 											${{ product.originalPrice.toFixed(2) }}
 										</span>
 									</div>
-								</td>
-								<td class="px-6 py-4 text-sm whitespace-nowrap text-gray-900">
-									<div class="text-sm text-gray-900">{{ product.rating }}/5</div>
-									<div class="text-xs text-gray-500">{{ product.reviewCount }} reviews</div>
 								</td>
 								<td class="px-6 py-4 whitespace-nowrap">
 									<span
@@ -548,13 +633,13 @@ const handleActivateProduct = async (product: Product) => {
 									<FormLabel>Category *</FormLabel>
 									<FormControl>
 										<Select
-											:model-value="values.categoryId"
+											:model-value="values.categoryId ? values.categoryId.toString() : ''"
 											@update:model-value="
 												(value) => {
-													setFieldValue('categoryId', Number(value));
+													setFieldValue('categoryId', value ? Number(value) : undefined);
 												}
 											"
-											v-bind="componentField"
+											:name="componentField.name"
 										>
 											<SelectTrigger>
 												<SelectValue placeholder="Select Category" />
@@ -640,21 +725,19 @@ const handleActivateProduct = async (product: Product) => {
 								</FormItem>
 							</FormField>
 
-							<FormField v-slot="{ componentField }" name="rating">
+							<FormField v-slot="{ componentField }" name="description">
 								<FormItem>
-									<FormLabel>Rating *</FormLabel>
+									<FormLabel>Description *</FormLabel>
 									<FormControl>
-										<Input
-											type="number"
-											step="0.1"
-											min="0"
-											max="5"
-											placeholder="0.0"
+										<textarea
+											rows="3"
+											placeholder="Enter product description"
+											class="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex min-h-[80px] w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
 											v-bind="componentField"
-											:model-value="values.rating"
+											:model-value="values.description"
 											@update:model-value="
-												(value) => {
-													setFieldValue('rating', Number(value));
+												(value: any) => {
+													setFieldValue('description', String(value));
 												}
 											"
 										/>
@@ -662,163 +745,240 @@ const handleActivateProduct = async (product: Product) => {
 									<FormMessage />
 								</FormItem>
 							</FormField>
-						</div>
 
-						<!-- Description -->
-						<FormField v-slot="{ componentField }" name="description">
-							<FormItem>
-								<FormLabel>Description *</FormLabel>
-								<FormControl>
-									<textarea
-										rows="3"
-										placeholder="Enter product description"
-										class="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex min-h-[80px] w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-										v-bind="componentField"
-										:model-value="values.description"
-										@update:model-value="
-											(value: any) => {
-												setFieldValue('description', String(value));
-											}
-										"
-									/>
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						</FormField>
+							<FormField v-slot="{ componentField }" name="shortDescription">
+								<FormItem>
+									<FormLabel>Short Description *</FormLabel>
+									<FormControl>
+										<textarea
+											rows="2"
+											placeholder="Enter short description"
+											class="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex min-h-[60px] w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+											v-bind="componentField"
+											:model-value="values.shortDescription"
+											@update:model-value="
+												(value: any) => {
+													setFieldValue('shortDescription', String(value));
+												}
+											"
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							</FormField>
 
-						<FormField v-slot="{ componentField }" name="shortDescription">
-							<FormItem>
-								<FormLabel>Short Description *</FormLabel>
-								<FormControl>
-									<textarea
-										rows="2"
-										placeholder="Enter short description"
-										class="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex min-h-[60px] w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-										v-bind="componentField"
-										:model-value="values.shortDescription"
-										@update:model-value="
-											(value: any) => {
-												setFieldValue('shortDescription', String(value));
-											}
-										"
-									/>
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						</FormField>
-
-						<!-- Dimensions -->
-						<div>
-							<label class="block text-sm font-medium text-gray-700">Dimensions (cm)</label>
-							<div class="grid grid-cols-3 gap-4">
-								<div>
-									<label class="block text-xs text-gray-600">Length</label>
-									<input
-										:value="values.dimensions?.length || 0"
-										@input="
-											(e) =>
-												setFieldValue(
-													'dimensions.length',
-													Number((e.target as HTMLInputElement).value),
-												)
-										"
-										type="number"
-										step="0.1"
-										min="0"
-										class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-										placeholder="0.0"
-									/>
+							<!-- Dimensions -->
+							<div>
+								<label class="block text-sm font-medium text-gray-700">Dimensions (cm)</label>
+								<div class="grid grid-cols-3 gap-4">
+									<div>
+										<label class="block text-xs text-gray-600">Length</label>
+										<input
+											:value="values.dimensions?.length || 0"
+											@input="
+												(e) =>
+													setFieldValue(
+														'dimensions.length',
+														Number((e.target as HTMLInputElement).value),
+													)
+											"
+											type="number"
+											step="0.1"
+											min="0"
+											class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+											placeholder="0.0"
+										/>
+									</div>
+									<div>
+										<label class="block text-xs text-gray-600">Width</label>
+										<input
+											:value="values.dimensions?.width || 0"
+											@input="
+												(e) =>
+													setFieldValue(
+														'dimensions.width',
+														Number((e.target as HTMLInputElement).value),
+													)
+											"
+											type="number"
+											step="0.1"
+											min="0"
+											class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+											placeholder="0.0"
+										/>
+									</div>
+									<div>
+										<label class="block text-xs text-gray-600">Height</label>
+										<input
+											:value="values.dimensions?.height || 0"
+											@input="
+												(e) =>
+													setFieldValue(
+														'dimensions.height',
+														Number((e.target as HTMLInputElement).value),
+													)
+											"
+											type="number"
+											step="0.1"
+											min="0"
+											class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+											placeholder="0.0"
+										/>
+									</div>
 								</div>
-								<div>
-									<label class="block text-xs text-gray-600">Width</label>
-									<input
-										:value="values.dimensions?.width || 0"
-										@input="
-											(e) =>
-												setFieldValue(
-													'dimensions.width',
-													Number((e.target as HTMLInputElement).value),
-												)
-										"
-										type="number"
-										step="0.1"
-										min="0"
-										class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-										placeholder="0.0"
-									/>
-								</div>
-								<div>
-									<label class="block text-xs text-gray-600">Height</label>
-									<input
-										:value="values.dimensions?.height || 0"
-										@input="
-											(e) =>
-												setFieldValue(
-													'dimensions.height',
-													Number((e.target as HTMLInputElement).value),
-												)
-										"
-										type="number"
-										step="0.1"
-										min="0"
-										class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-										placeholder="0.0"
-									/>
+							</div>
+
+							<!-- Images -->
+							<FormField v-slot="{ componentField }" name="mainImage">
+								<FormItem>
+									<FormLabel>Main Image *</FormLabel>
+									<FormControl>
+										<div class="flex items-center space-x-2">
+											<Input
+												type="url"
+												placeholder="https://example.com/image.jpg"
+												v-bind="componentField"
+												:model-value="values.mainImage"
+												@update:model-value="
+													(value: any) => {
+														setFieldValue('mainImage', String(value));
+													}
+												"
+											/>
+											<input
+												type="file"
+												accept="image/*"
+												@change="handleMainImageUpload"
+												class="hidden"
+												id="mainImageInput"
+												ref="mainImageInputRef"
+											/>
+											<Button
+												type="button"
+												@click="() => mainImageInputRef?.click()"
+												class="flex-shrink-0"
+											>
+												Upload
+											</Button>
+											<Button
+												type="button"
+												@click="clearMainImage"
+												v-if="mainImagePreview"
+												class="flex-shrink-0"
+												variant="outline"
+											>
+												Clear
+											</Button>
+										</div>
+										<div v-if="mainImagePreview" class="mt-2">
+											<img
+												:src="mainImagePreview"
+												alt="Main Image Preview"
+												class="h-20 w-20 rounded-md object-cover"
+											/>
+										</div>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							</FormField>
+
+							<div>
+								<label class="block text-sm font-medium text-gray-700"
+									>Additional Images (one per line)</label
+								>
+								<div class="space-y-3">
+									<!-- File upload option -->
+									<div class="flex flex-wrap items-center gap-2">
+										<input
+											type="file"
+											accept="image/*"
+											@change="handleAdditionalImagesUpload"
+											class="hidden"
+											id="additionalImagesInput"
+											ref="additionalImagesInputRef"
+										/>
+										<button
+											type="button"
+											@click="() => additionalImagesInputRef?.click()"
+											class="flex cursor-pointer items-center rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+										>
+											Choose Additional Images
+										</button>
+										<div
+											v-if="additionalImagePreviews.length > 0"
+											class="flex flex-wrap items-center gap-2"
+										>
+											<span
+												v-for="(preview, index) in additionalImagePreviews"
+												:key="index"
+												class="flex items-center rounded-md bg-gray-200 p-1"
+											>
+												<img
+													:src="`/src/assets${Review.mainImage}`"
+													alt="Additional Image Preview"
+													class="h-10 w-10 rounded-md object-cover"
+												/>
+												<button
+													type="button"
+													@click="removeAdditionalImage(index)"
+													class="ml-1 text-red-600 hover:text-red-900"
+												>
+													<svg
+														class="h-4 w-4"
+														fill="none"
+														viewBox="0 0 24 24"
+														stroke="currentColor"
+													>
+														<path
+															stroke-linecap="round"
+															stroke-linejoin="round"
+															stroke-width="2"
+															d="M6 18L18 6M6 6l12 12"
+														/>
+													</svg>
+												</button>
+											</span>
+										</div>
+									</div>
+
+									<!-- Text input option for URLs -->
+									<div>
+										<label class="mb-1 block text-xs text-gray-600"
+											>Or enter image URLs (one per line):</label
+										>
+										<textarea
+											v-model="additionalImagesText"
+											rows="3"
+											class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+											placeholder="https://example.com/image1.jpg&#10;https://example.com/image2.jpg"
+										></textarea>
+									</div>
 								</div>
 							</div>
 						</div>
 
-						<!-- Images -->
-						<FormField v-slot="{ componentField }" name="mainImage">
-							<FormItem>
-								<FormLabel>Main Image URL *</FormLabel>
-								<FormControl>
-									<Input
-										type="url"
-										placeholder="https://example.com/image.jpg"
-										v-bind="componentField"
-										:model-value="values.mainImage"
-										@update:model-value="
-											(value: any) => {
-												setFieldValue('mainImage', String(value));
-											}
-										"
-									/>
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						</FormField>
-
-						<div>
-							<label class="block text-sm font-medium text-gray-700"
-								>Additional Images (one per line)</label
+						<!-- Buttons -->
+						<div class="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end sm:space-x-3">
+							<Button variant="outline" @click="handleCloseForm" class="w-full sm:w-auto">
+								Cancel
+							</Button>
+							<Button
+								@click="onSubmit"
+								:disabled="isCreating || isUpdating"
+								class="w-full sm:w-auto"
 							>
-							<textarea
-								v-model="additionalImagesText"
-								rows="3"
-								class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-								placeholder="https://example.com/image1.jpg&#10;https://example.com/image2.jpg"
-							></textarea>
+								{{
+									isFormEditing
+										? isUpdating
+											? "Updating..."
+											: "Update Product"
+										: isCreating
+											? "Creating..."
+											: "Create Product"
+								}}
+							</Button>
 						</div>
 					</form>
-
-					<!-- Buttons -->
-					<div class="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end sm:space-x-3">
-						<Button variant="outline" @click="handleCloseForm" class="w-full sm:w-auto">
-							Cancel
-						</Button>
-						<Button @click="onSubmit" :disabled="isCreating || isUpdating" class="w-full sm:w-auto">
-							{{
-								isFormEditing
-									? isUpdating
-										? "Updating..."
-										: "Update Product"
-									: isCreating
-										? "Creating..."
-										: "Create Product"
-							}}
-						</Button>
-					</div>
 				</div>
 			</div>
 		</div>

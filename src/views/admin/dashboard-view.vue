@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ServerAxiosConfig } from "@/constant";
+import { fetchOrdersData, getDefaultData, getDefaultOptions } from "@/services/ChartConfig.ts";
 import axios from "axios";
 import {
 	CategoryScale,
@@ -14,7 +15,6 @@ import {
 } from "chart.js";
 import { computed, onMounted, ref } from "vue";
 import { Line } from "vue-chartjs";
-import { fetchOrdersData, getDefaultData, getDefaultOptions } from "@/services/ChartConfig.ts";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 

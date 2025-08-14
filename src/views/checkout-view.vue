@@ -9,6 +9,7 @@ import { useAuthStore } from "@/stores/use-auth-store";
 import { useBillStore } from "@/stores/use-bill-store";
 import { useCartStore } from "@/stores/use-cart-store";
 import axios from "axios";
+import { storeToRefs } from "pinia";
 import { computed, ref } from "vue";
 
 const billStore = useBillStore();
@@ -16,6 +17,7 @@ const cartStore = useCartStore();
 const authStore = useAuthStore();
 const { getTotalPrice, cart } = cartStore;
 const { getBank } = billStore;
+const { user } = storeToRefs(authStore);
 
 // Form data
 const formData = ref({
@@ -50,7 +52,7 @@ const handleSubmit = async () => {
 	try {
 		const orderData = {
 			orderNumber: `ORD-${Date.now()}`,
-			userId: authStore.user?.id,
+			userId: user.value?.id || 0,
 			status: "pending",
 			subtotal: subtotal.value,
 			tax: tax.value,

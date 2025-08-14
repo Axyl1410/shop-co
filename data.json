@@ -580,7 +580,7 @@
       "color": "Dark Blue",
       "colorCode": "#191970",
       "sku": "JEA-001-28-DBL",
-      "salePrice": 209,
+      "salePrice": 208,
       "stockQuantity": 25
     },
     {
@@ -590,7 +590,7 @@
       "color": "Dark Blue",
       "colorCode": "#191970",
       "sku": "JEA-001-30-DBL",
-      "salePrice": 209,
+      "salePrice": 208,
       "stockQuantity": 30
     },
     {
@@ -600,7 +600,7 @@
       "color": "Dark Blue",
       "colorCode": "#191970",
       "sku": "JEA-001-32-DBL",
-      "salePrice": 210,
+      "salePrice": 208,
       "stockQuantity": 35
     },
     {
@@ -610,7 +610,7 @@
       "color": "Dark Blue",
       "colorCode": "#191970",
       "sku": "JEA-001-34-DBL",
-      "salePrice": 211,
+      "salePrice": 208,
       "stockQuantity": 30
     },
     {
@@ -620,7 +620,7 @@
       "color": "Dark Blue",
       "colorCode": "#191970",
       "sku": "JEA-001-36-DBL",
-      "salePrice": 212,
+      "salePrice": 208,
       "stockQuantity": 25
     },
     {
@@ -630,7 +630,7 @@
       "color": "Light Blue",
       "colorCode": "#87CEEB",
       "sku": "JEA-001-28-LBL",
-      "salePrice": 209,
+      "salePrice": 208,
       "stockQuantity": 18
     },
     {
@@ -640,7 +640,7 @@
       "color": "Light Blue",
       "colorCode": "#87CEEB",
       "sku": "JEA-001-30-LBL",
-      "salePrice": 20,
+      "salePrice": 208,
       "stockQuantity": 22
     },
     {
@@ -1071,7 +1071,7 @@
       "paymentStatus": "paid",
       "notes": "Please deliver in the morning",
       "createdAt": "2024-01-15T10:30:00Z",
-      "updatedAt": "2025-08-14T02:55:07.501Z",
+      "updatedAt": "2025-08-13T20:31:50.349Z",
       "refundRequest": {
         "status": "rejected",
         "reason": "Lỗi size",
@@ -1087,7 +1087,7 @@
       "id": "2",
       "orderNumber": "ORD-2024-002",
       "userId": "3a03",
-      "status": "delivered",
+      "status": "received",
       "subtotal": 520,
       "tax": 52,
       "shipping": 15,
@@ -1100,7 +1100,7 @@
       "paymentStatus": "paid",
       "notes": "",
       "createdAt": "2024-01-16T14:20:00Z",
-      "updatedAt": "2025-08-14T02:30:59.302Z",
+      "updatedAt": "2025-08-13T20:49:01.496Z",
       "cancellationReason": "ĐỔI Ý"
     },
     {
@@ -1134,7 +1134,7 @@
       "id": "4",
       "orderNumber": "ORD-2024-004",
       "userId": "3a03",
-      "status": "delivered",
+      "status": "cancelled",
       "subtotal": 180,
       "tax": 18,
       "shipping": 10,
@@ -1144,10 +1144,10 @@
       "shippingAddressId": 4,
       "billingAddressId": 4,
       "paymentMethod": "debit_card",
-      "paymentStatus": "paid",
+      "paymentStatus": "pending",
       "notes": "",
       "createdAt": "2024-01-18T16:45:00Z",
-      "updatedAt": "2025-08-14T01:53:23.577Z",
+      "updatedAt": "2025-08-13T19:28:43.478Z",
       "cancellationReason": "chưa thanh toán"
     },
     {
@@ -1188,6 +1188,90 @@
         "shippingDate": "2025-08-13T21:32:03.592Z",
         "estimatedDelivery": "2025-08-18",
         "notes": ""
+      }
+    },
+    {
+      "id": "175a",
+      "order": {
+        "orderNumber": "ORD-1755143611380",
+        "userId": "admin",
+        "status": "pending",
+        "subtotal": 5408000,
+        "tax": 540800,
+        "shipping": 50000,
+        "discount": 0,
+        "total": 5998800,
+        "currency": "VND",
+        "shippingAddressId": 1,
+        "billingAddressId": 1,
+        "paymentMethod": "cash_on_delivery",
+        "paymentStatus": "pending",
+        "notes": "",
+        "createdAt": "2025-08-14T03:53:31.380Z",
+        "updatedAt": "2025-08-14T03:53:31.380Z"
+      },
+      "orderItems": [
+        {
+          "productVariantId": "13",
+          "productName": "Skinny Fit Jeans",
+          "productSku": "JEA-001-26-DBL",
+          "size": "26",
+          "color": "Dark Blue",
+          "quantity": 1,
+          "unitPrice": 208,
+          "totalPrice": 208
+        }
+      ],
+      "shippingAddress": {
+        "fullName": "Nguyễn Trường Giang",
+        "phone": "0353067717",
+        "address": "Ho Chi Minh",
+        "city": "Ho Chi Minh",
+        "state": "Tan Binh",
+        "zipCode": "700000",
+        "country": "Vietnam"
+      }
+    },
+    {
+      "id": "4a19",
+      "order": {
+        "orderNumber": "ORD-1755143949772",
+        "userId": "admin",
+        "status": "pending",
+        "subtotal": 9360000,
+        "tax": 936000,
+        "shipping": 50000,
+        "discount": 0,
+        "total": 10346000,
+        "currency": "VND",
+        "shippingAddressId": 1,
+        "billingAddressId": 1,
+        "paymentMethod": "cash_on_delivery",
+        "paymentStatus": "pending",
+        "notes": "",
+        "createdAt": "2025-08-14T03:59:09.772Z",
+        "updatedAt": "2025-08-14T03:59:09.772Z"
+      },
+      "orderItems": [
+        {
+          "productVariantId": "26",
+          "productName": "Checked Shirt",
+          "productSku": "SHI-001-L-RED",
+          "size": "L",
+          "color": "Red Check",
+          "quantity": 2,
+          "unitPrice": 180,
+          "totalPrice": 360
+        }
+      ],
+      "shippingAddress": {
+        "fullName": "Nguyễn Trường Giang",
+        "phone": "0353067717",
+        "address": "Ho Chi Minh",
+        "city": "Ho Chi Minh",
+        "state": "Tan Binh",
+        "zipCode": "700000",
+        "country": "Vietnam"
       }
     }
   ],

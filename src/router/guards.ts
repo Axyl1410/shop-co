@@ -15,3 +15,19 @@ export function requireAuth(
 		next();
 	}
 }
+
+export function requireAdmin(
+	to: RouteLocationNormalized,
+	from: RouteLocationNormalized,
+	next: NavigationGuardNext,
+) {
+	const authStore = useAuthStore();
+	const { isAuthenticated, user } = storeToRefs(authStore);
+	if (!isAuthenticated.value) {
+		next({ name: "login", query: { redirect: to.fullPath } });
+	} else if (user.value?.role !== "admin") {
+		next({ name: "home" });
+	} else {
+		next();
+	}
+}

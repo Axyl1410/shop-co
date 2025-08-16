@@ -1,54 +1,56 @@
 <script setup lang="ts">
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useAuth } from "@/hook";
-import { reactive, ref } from "vue";
+import { toTypedSchema } from "@vee-validate/zod";
+import { useForm } from "vee-validate";
+import { ref } from "vue";
 import { useRouter } from "vue-router";
+import * as z from "zod";
 
+const isLoading = ref(false);
 const error = ref<string | undefined>("");
-const isLoading = ref<boolean>(false);
 
 const router = useRouter();
 const { register } = useAuth();
 
-const form = reactive({
-	username: "",
-	email: "",
-	password: "",
-	confirmPassword: "",
-	firstName: "",
-	lastName: "",
-	phone: "",
-	avatar: "",
+const formSchema = toTypedSchema(
+	z
+		.object({
+			username: z.string().min(1, "Username is required"),
+			email: z.email("Invalid email"),
+			firstName: z.string().min(1, "First name is required"),
+			lastName: z.string().min(1, "Last name is required"),
+			phone: z.string().min(1, "Phone is required"),
+			password: z.string().min(3, "Password must be at least 3 characters"),
+			confirmPassword: z.string().min(1, "Please confirm your password"),
+			avatar: z.url("Invalid URL").optional().or(z.literal("")),
+		})
+		.refine((data) => data.password === data.confirmPassword, {
+			message: "Passwords do not match",
+			path: ["confirmPassword"],
+		}),
+);
+
+const { handleSubmit, isFieldDirty } = useForm({
+	validationSchema: formSchema,
 });
 
-const handleRegister = async () => {
+const onSubmit = handleSubmit(async (values) => {
 	try {
 		isLoading.value = true;
 		error.value = "";
-
-		if (form.password !== form.confirmPassword) {
-			error.value = "Passwords do not match";
-			return;
-		}
-
-		if (form.password.length < 3) {
-			error.value = "Password must be at least 3 characters";
-			return;
-		}
-
 		const res = await register({
-			username: form.username,
-			email: form.email,
-			password: form.password,
-			firstName: form.firstName,
-			lastName: form.lastName,
-			phone: form.phone,
-			avatar: form.avatar || "/avatars/default.jpg",
+			username: values.username,
+			email: values.email,
+			password: values.password,
+			firstName: values.firstName,
+			lastName: values.lastName,
+			phone: values.phone,
+			avatar: values.avatar || "/avatars/default.jpg",
 		});
-
 		if (res.success) {
 			error.value = "";
 			router.push("/");
@@ -60,124 +62,163 @@ const handleRegister = async () => {
 	} finally {
 		isLoading.value = false;
 	}
-};
+});
 </script>
 
 <template>
 	<div class="flex flex-col gap-6">
 		<Card>
+			<CardHeader class="text-center">
+				<CardTitle class="text-xl">Create an account</CardTitle>
+				<CardDescription>Enter your details to register</CardDescription>
+			</CardHeader>
 			<CardContent>
-				<form class="p-6 md:p-8">
+				<form @submit="onSubmit">
 					<div class="flex flex-col gap-6">
-						<div class="flex flex-col items-center text-center">
-							<h1 class="text-2xl font-bold">Create an account</h1>
-							<p class="text-muted-foreground text-balance">Enter your details to register</p>
-						</div>
-
 						<div class="grid gap-4">
-							<div class="grid gap-3">
-								<Label for="username">Username</Label>
-								<Input
-									id="username"
-									type="text"
-									placeholder="john doe"
-									v-model="form.username"
-									required
-									:disabled="isLoading"
-								/>
-							</div>
-
-							<div class="grid gap-3">
-								<Label for="email">Email</Label>
-								<Input
-									id="email"
-									type="email"
-									placeholder="john@example.com"
-									v-model="form.email"
-									required
-									:disabled="isLoading"
-								/>
-							</div>
-
+							<FormField
+								v-slot="{ componentField }"
+								name="username"
+								:validate-on-blur="!isFieldDirty"
+							>
+								<FormItem>
+									<FormLabel>Username</FormLabel>
+									<FormControl>
+										<Input
+											type="text"
+											placeholder="john doe"
+											v-bind="componentField"
+											:disabled="isLoading"
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							</FormField>
+							<FormField v-slot="{ componentField }" name="email" :validate-on-blur="!isFieldDirty">
+								<FormItem>
+									<FormLabel>Email</FormLabel>
+									<FormControl>
+										<Input
+											type="email"
+											placeholder="john@example.com"
+											v-bind="componentField"
+											:disabled="isLoading"
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							</FormField>
 							<div class="grid grid-cols-2 gap-4">
-								<div class="grid gap-3">
-									<Label for="firstName">First Name</Label>
-									<Input
-										id="firstName"
-										type="text"
-										placeholder="John"
-										v-model="form.firstName"
-										required
-										:disabled="isLoading"
-									/>
-								</div>
-								<div class="grid gap-3">
-									<Label for="lastName">Last Name</Label>
-									<Input
-										id="lastName"
-										type="text"
-										placeholder="Doe"
-										v-model="form.lastName"
-										required
-										:disabled="isLoading"
-									/>
-								</div>
+								<FormField
+									v-slot="{ componentField }"
+									name="firstName"
+									:validate-on-blur="!isFieldDirty"
+								>
+									<FormItem>
+										<FormLabel>First Name</FormLabel>
+										<FormControl>
+											<Input
+												type="text"
+												placeholder="John"
+												v-bind="componentField"
+												:disabled="isLoading"
+											/>
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								</FormField>
+								<FormField
+									v-slot="{ componentField }"
+									name="lastName"
+									:validate-on-blur="!isFieldDirty"
+								>
+									<FormItem>
+										<FormLabel>Last Name</FormLabel>
+										<FormControl>
+											<Input
+												type="text"
+												placeholder="Doe"
+												v-bind="componentField"
+												:disabled="isLoading"
+											/>
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								</FormField>
 							</div>
-
-							<div class="grid gap-3">
-								<Label for="phone">Phone</Label>
-								<Input
-									id="phone"
-									type="tel"
-									placeholder="+1-555-0123"
-									v-model="form.phone"
-									required
-									:disabled="isLoading"
-								/>
-							</div>
-
-							<div class="grid gap-3">
-								<Label for="password">Password</Label>
-								<Input
-									id="password"
-									type="password"
-									placeholder="Enter your password"
-									v-model="form.password"
-									required
-									:disabled="isLoading"
-								/>
-							</div>
-
-							<div class="grid gap-3">
-								<Label for="confirmPassword">Confirm Password</Label>
-								<Input
-									id="confirmPassword"
-									type="password"
-									placeholder="Confirm your password"
-									v-model="form.confirmPassword"
-									required
-									:disabled="isLoading"
-								/>
-							</div>
-
-							<div class="grid gap-3">
-								<Label for="avatar">Avatar URL (Optional)</Label>
-								<Input
-									id="avatar"
-									type="url"
-									placeholder="https://example.com/avatar.jpg"
-									v-model="form.avatar"
-									:disabled="isLoading"
-								/>
-							</div>
+							<FormField v-slot="{ componentField }" name="phone" :validate-on-blur="!isFieldDirty">
+								<FormItem>
+									<FormLabel>Phone</FormLabel>
+									<FormControl>
+										<Input
+											type="tel"
+											placeholder="+1-555-0123"
+											v-bind="componentField"
+											:disabled="isLoading"
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							</FormField>
+							<FormField
+								v-slot="{ componentField }"
+								name="password"
+								:validate-on-blur="!isFieldDirty"
+							>
+								<FormItem>
+									<FormLabel>Password</FormLabel>
+									<FormControl>
+										<Input
+											type="password"
+											placeholder="Enter your password"
+											v-bind="componentField"
+											:disabled="isLoading"
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							</FormField>
+							<FormField
+								v-slot="{ componentField }"
+								name="confirmPassword"
+								:validate-on-blur="!isFieldDirty"
+							>
+								<FormItem>
+									<FormLabel>Confirm Password</FormLabel>
+									<FormControl>
+										<Input
+											type="password"
+											placeholder="Confirm your password"
+											v-bind="componentField"
+											:disabled="isLoading"
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							</FormField>
+							<FormField
+								v-slot="{ componentField }"
+								name="avatar"
+								:validate-on-blur="!isFieldDirty"
+							>
+								<FormItem>
+									<FormLabel>Avatar URL (Optional)</FormLabel>
+									<FormControl>
+										<Input
+											type="url"
+											placeholder="https://example.com/avatar.jpg"
+											v-bind="componentField"
+											:disabled="isLoading"
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							</FormField>
 						</div>
-
-						<Button type="submit" class="w-full" @click="handleRegister" :disabled="isLoading">
-							Create Account
+						<Button type="submit" class="w-full" :disabled="isLoading">
+							{{ isLoading ? "Loading..." : "Create Account" }}
 						</Button>
-
 						<p v-if="error" class="w-full text-center text-sm text-red-500">{{ error }}</p>
-
 						<div
 							class="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t"
 						>
@@ -185,7 +226,6 @@ const handleRegister = async () => {
 								Or continue with
 							</span>
 						</div>
-
 						<div class="grid grid-cols-3 gap-4">
 							<Button variant="outline" type="button" class="w-full" disabled>
 								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -215,10 +255,9 @@ const handleRegister = async () => {
 								<span class="sr-only">Register with Meta</span>
 							</Button>
 						</div>
-
 						<div class="text-center text-sm">
 							Already have an account?
-							<RouterLink to="/login" class="underline underline-offset-4"> Sign in </RouterLink>
+							<RouterLink to="/login" class="underline underline-offset-4">Sign in</RouterLink>
 						</div>
 					</div>
 				</form>

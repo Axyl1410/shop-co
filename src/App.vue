@@ -1,18 +1,15 @@
 <script setup lang="ts">
-import { Toaster } from "@/components/ui/sonner";
 import { watch } from "vue";
-import { RouterView, useRoute } from "vue-router";
-import "vue-sonner/style.css";
-import Footer from "./components/layout/footer.vue";
-import Navbar from "./components/layout/navbar/navbar.vue";
-import TopBanner from "./components/layout/top-banner.vue";
+import { useRoute } from "vue-router";
 import { useAuthStore } from "./stores/use-auth-store";
+import { Toaster } from "@/components/ui/sonner";
+import "vue-sonner/style.css";
 
 const authStore = useAuthStore();
 const route = useRoute();
 
 watch(
-	() => route.params.id,
+	() => route.fullPath,
 	() => {
 		window.scrollTo({
 			top: 0,
@@ -26,11 +23,6 @@ watch(
 </script>
 
 <template>
-	<div vaul-drawer-wrapper id="app" class="bg-white">
-		<Toaster close-button />
-		<TopBanner />
-		<Navbar />
-		<RouterView />
-		<Footer />
-	</div>
+	<Toaster />
+	<RouterView />
 </template>

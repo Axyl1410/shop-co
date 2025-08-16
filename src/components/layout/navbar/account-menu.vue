@@ -6,7 +6,7 @@ import {
 	DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import type { User } from "@/types";
-import { RouterLink } from "vue-router";
+import { RouterLink, useRouter } from "vue-router";
 
 interface Props {
 	isAuthenticated: boolean;
@@ -14,7 +14,14 @@ interface Props {
 	logout: () => void;
 }
 
-defineProps<Props>();
+const props = defineProps<Props>();
+
+const router = useRouter();
+
+const handleLogout = () => {
+	props.logout();
+	router.push("/");
+};
 </script>
 
 <template>
@@ -42,7 +49,7 @@ defineProps<Props>();
 			</DropdownMenuItem>
 
 			<DropdownMenuSeparator />
-			<DropdownMenuItem @click="logout">Sign out</DropdownMenuItem>
+			<DropdownMenuItem @click="handleLogout">Sign out</DropdownMenuItem>
 		</template>
 		<template v-else>
 			<DropdownMenuItem as-child>

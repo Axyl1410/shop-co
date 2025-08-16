@@ -11,16 +11,16 @@ import {
 	SheetTitle,
 	SheetTrigger,
 } from "@/components/ui/sheet";
-import type { CartType, Product } from "@/types";
+import type { CartType } from "@/types";
 import { ShoppingCart } from "lucide-vue-next";
 import { defineProps } from "vue";
 
 interface Props {
 	totalItems: number;
 	data: CartType[];
-	clearItemFromCart: (product: Product) => void;
-	addToCart: (product: Product, quantity: number) => void;
-	removeFromCart: (product: Product, quantity: number) => void;
+	clearItemFromCart: (product: CartType) => void;
+	addToCart: (product: CartType, quantity: number) => void;
+	removeFromCart: (product: CartType, quantity: number) => void;
 	getTotalPrice: number;
 }
 

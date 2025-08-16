@@ -15,8 +15,8 @@ import { RouterLink } from "vue-router";
 			<p class="text-primary mt-6 text-lg font-medium text-pretty sm:text-xl/8">
 				Sorry, we couldn't find the page you're looking for.
 			</p>
-			<div class="mt-10 flex items-center justify-center gap-x-6">
-				<Button as-child> <RouterLink to="/"> Go back home </RouterLink> </Button>
+			<div class="mt-10 flex items-center justify-center gap-x-2">
+				<Button as-child> <RouterLink to="/">Go Back </RouterLink> </Button>
 				<Button as-child variant="outline">
 					<a
 						href="https://github.com/Axyl1410/"

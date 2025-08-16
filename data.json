@@ -159,11 +159,7 @@
         "width": 50,
         "height": 4
       },
-      "images": [
-        "/images/pic1.png",
-        "/images/pic10.png",
-        "/images/pic11.png"
-      ],
+      "images": ["/images/pic1.png", "/images/pic10.png", "/images/pic11.png"],
       "mainImage": "/images/pic1.png",
       "tags": [],
       "isActive": true,
@@ -192,18 +188,9 @@
         "width": 40,
         "height": 3
       },
-      "images": [
-        "/images/pic2.png",
-        "/images/pic12.png",
-        "/images/pic13.png"
-      ],
+      "images": ["/images/pic2.png", "/images/pic12.png", "/images/pic13.png"],
       "mainImage": "/images/pic2.png",
-      "tags": [
-        "jeans",
-        "skinny",
-        "stretch",
-        "modern"
-      ],
+      "tags": ["jeans", "skinny", "stretch", "modern"],
       "isActive": true,
       "isFeatured": true,
       "isNew": false,
@@ -230,18 +217,9 @@
         "width": 55,
         "height": 2
       },
-      "images": [
-        "/images/pic3.png",
-        "/images/pic14.png",
-        "/images/pic15.png"
-      ],
+      "images": ["/images/pic3.png", "/images/pic14.png", "/images/pic15.png"],
       "mainImage": "/images/pic3.png",
-      "tags": [
-        "shirt",
-        "checked",
-        "classic",
-        "versatile"
-      ],
+      "tags": ["shirt", "checked", "classic", "versatile"],
       "isActive": true,
       "isFeatured": false,
       "isNew": true,
@@ -268,18 +246,9 @@
         "width": 52,
         "height": 2
       },
-      "images": [
-        "/images/pic4.png",
-        "/images/pic5.png",
-        "/images/pic6.png"
-      ],
+      "images": ["/images/pic4.png", "/images/pic5.png", "/images/pic6.png"],
       "mainImage": "/images/pic4.png",
-      "tags": [
-        "t-shirt",
-        "striped",
-        "casual",
-        "modern"
-      ],
+      "tags": ["t-shirt", "striped", "casual", "modern"],
       "isActive": true,
       "isFeatured": false,
       "isNew": false,
@@ -306,18 +275,9 @@
         "width": 54,
         "height": 2
       },
-      "images": [
-        "/images/pic7.png",
-        "/images/pic8.png",
-        "/images/pic9.png"
-      ],
+      "images": ["/images/pic7.png", "/images/pic8.png", "/images/pic9.png"],
       "mainImage": "/images/pic7.png",
-      "tags": [
-        "polo",
-        "contrast",
-        "elegant",
-        "smart-casual"
-      ],
+      "tags": ["polo", "contrast", "elegant", "smart-casual"],
       "isActive": true,
       "isFeatured": true,
       "isNew": false,
@@ -344,18 +304,9 @@
         "width": 50,
         "height": 2
       },
-      "images": [
-        "/images/pic8.png",
-        "/images/pic9.png",
-        "/images/pic10.png"
-      ],
+      "images": ["/images/pic8.png", "/images/pic9.png", "/images/pic10.png"],
       "mainImage": "/images/pic8.png",
-      "tags": [
-        "casual",
-        "striped",
-        "trendy",
-        "cotton"
-      ],
+      "tags": ["casual", "striped", "trendy", "cotton"],
       "isActive": true,
       "isFeatured": false,
       "isNew": true,
@@ -382,18 +333,9 @@
         "width": 60,
         "height": 3
       },
-      "images": [
-        "/images/pic9.png",
-        "/images/pic10.png",
-        "/images/pic11.png"
-      ],
+      "images": ["/images/pic9.png", "/images/pic10.png", "/images/pic11.png"],
       "mainImage": "/images/pic9.png",
-      "tags": [
-        "denim",
-        "jacket",
-        "classic",
-        "casual"
-      ],
+      "tags": ["denim", "jacket", "classic", "casual"],
       "isActive": true,
       "isFeatured": true,
       "isNew": false,
@@ -420,18 +362,9 @@
         "width": 55,
         "height": 2
       },
-      "images": [
-        "/images/pic10.png",
-        "/images/pic11.png",
-        "/images/pic12.png"
-      ],
+      "images": ["/images/pic10.png", "/images/pic11.png", "/images/pic12.png"],
       "mainImage": "/images/pic10.png",
-      "tags": [
-        "formal",
-        "white",
-        "professional",
-        "cotton"
-      ],
+      "tags": ["formal", "white", "professional", "cotton"],
       "isActive": true,
       "isFeatured": false,
       "isNew": true,
@@ -1099,7 +1032,7 @@
       "paymentMethod": "paypal",
       "paymentStatus": "paid",
       "notes": "",
-      "createdAt": "2024-01-16T14:20:00Z",
+      "createdAt": "2024-05-16T14:20:00Z",
       "updatedAt": "2025-08-13T20:49:01.496Z",
       "cancellationReason": "ĐỔI Ý"
     },
@@ -1191,88 +1124,44 @@
       }
     },
     {
-      "id": "175a",
-      "order": {
-        "orderNumber": "ORD-1755143611380",
-        "userId": "admin",
-        "status": "pending",
-        "subtotal": 5408000,
-        "tax": 540800,
-        "shipping": 50000,
-        "discount": 0,
-        "total": 5998800,
-        "currency": "VND",
-        "shippingAddressId": 1,
-        "billingAddressId": 1,
-        "paymentMethod": "cash_on_delivery",
-        "paymentStatus": "pending",
-        "notes": "",
-        "createdAt": "2025-08-14T03:53:31.380Z",
-        "updatedAt": "2025-08-14T03:53:31.380Z"
-      },
-      "orderItems": [
-        {
-          "productVariantId": "13",
-          "productName": "Skinny Fit Jeans",
-          "productSku": "JEA-001-26-DBL",
-          "size": "26",
-          "color": "Dark Blue",
-          "quantity": 1,
-          "unitPrice": 208,
-          "totalPrice": 208
-        }
-      ],
-      "shippingAddress": {
-        "fullName": "Nguyễn Trường Giang",
-        "phone": "0353067717",
-        "address": "Ho Chi Minh",
-        "city": "Ho Chi Minh",
-        "state": "Tan Binh",
-        "zipCode": "700000",
-        "country": "Vietnam"
-      }
+      "id": "11",
+      "orderNumber": "ORD-2024-002",
+      "userId": "3a03",
+      "status": "received",
+      "subtotal": 520,
+      "tax": 52,
+      "shipping": 15,
+      "discount": 20,
+      "total": 567,
+      "currency": "USD",
+      "shippingAddressId": 2,
+      "billingAddressId": 2,
+      "paymentMethod": "paypal",
+      "paymentStatus": "paid",
+      "notes": "",
+      "createdAt": "2024-02-16T14:20:00Z",
+      "updatedAt": "2025-08-13T20:49:01.496Z",
+      "cancellationReason": "ĐỔI Ý"
     },
     {
-      "id": "4a19",
-      "order": {
-        "orderNumber": "ORD-1755143949772",
-        "userId": "admin",
-        "status": "pending",
-        "subtotal": 9360000,
-        "tax": 936000,
-        "shipping": 50000,
-        "discount": 0,
-        "total": 10346000,
-        "currency": "VND",
-        "shippingAddressId": 1,
-        "billingAddressId": 1,
-        "paymentMethod": "cash_on_delivery",
-        "paymentStatus": "pending",
-        "notes": "",
-        "createdAt": "2025-08-14T03:59:09.772Z",
-        "updatedAt": "2025-08-14T03:59:09.772Z"
-      },
-      "orderItems": [
-        {
-          "productVariantId": "26",
-          "productName": "Checked Shirt",
-          "productSku": "SHI-001-L-RED",
-          "size": "L",
-          "color": "Red Check",
-          "quantity": 2,
-          "unitPrice": 180,
-          "totalPrice": 360
-        }
-      ],
-      "shippingAddress": {
-        "fullName": "Nguyễn Trường Giang",
-        "phone": "0353067717",
-        "address": "Ho Chi Minh",
-        "city": "Ho Chi Minh",
-        "state": "Tan Binh",
-        "zipCode": "700000",
-        "country": "Vietnam"
-      }
+      "id": "12",
+      "orderNumber": "ORD-2024-002",
+      "userId": "3a03",
+      "status": "received",
+      "subtotal": 520,
+      "tax": 52,
+      "shipping": 15,
+      "discount": 20,
+      "total": 1037,
+      "currency": "USD",
+      "shippingAddressId": 2,
+      "billingAddressId": 2,
+      "paymentMethod": "paypal",
+      "paymentStatus": "paid",
+      "notes": "",
+      "createdAt": "2024-06-16T14:20:00Z",
+      "updatedAt": "2025-08-13T20:49:01.496Z",
+      "cancellationReason": "ĐỔI Ý"
     }
   ],
   "order_items": [

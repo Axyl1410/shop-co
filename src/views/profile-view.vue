@@ -1,33 +1,32 @@
 <script setup lang="ts">
+import data from "@/../data.json";
+import HistoryOrder from "@/components/section/profile/history-order.vue";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Rating from "@/components/ui/Rating.vue";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
+import { formatDate } from "@/lib/utils";
 import { useAuthStore } from "@/stores/use-auth-store";
+import type { Review } from "@/types/reviews";
 import {
 	ArrowRight,
 	Crown,
 	HelpCircle,
+	History,
 	LogOut,
 	MapPin,
+	MessageSquare,
 	PencilLine,
 	Phone,
 	ShoppingBag,
 	Star,
-	MessageSquare,
-	History,
 } from "lucide-vue-next";
 import { storeToRefs } from "pinia";
 import { computed, onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
-import type { Review } from "@/types/reviews";
-import data from "@/../data.json";
 import { toast } from "vue-sonner";
-import Rating from "@/components/ui/Rating.vue";
-import { formatDate } from "@/lib/utils";
-import HistoryOrder from "@/components/section/profile/history-order.vue";
-
 
 type MinimalProduct = {
 	id: string;
@@ -78,52 +77,49 @@ const newReview = ref({
 	images: [] as string[],
 });
 
-
-
 const unreviewedProducts = ref<MinimalProduct[]>([]);
 
 // Load unreviewed products
 async function loadUnreviewedProducts() {
 	if (!user.value) return;
-	
+
 	try {
-		const reviewedProductIds = userReviews.value.map(review => review.productId);
-		
+		const reviewedProductIds = userReviews.value.map((review) => review.productId);
+
 		// Get ALL user orders (not just delivered)
-		const userOrders = data.orders.filter(order => 
-			order.userId.toString() === user.value?.id.toString()
+		const userOrders = data.orders.filter(
+			(order) => order.userId?.toString() === user.value?.id.toString(),
 		);
-		
+
 		// Get products from these orders
 		const purchasedProducts: MinimalProduct[] = [];
-		
+
 		for (const order of userOrders) {
-			const orderItems = data.order_items.filter(item => 
-				item.orderId.toString() === order.id.toString()
+			const orderItems = data.order_items.filter(
+				(item) => item.orderId.toString() === order.id.toString(),
 			);
-			
+
 			for (const item of orderItems) {
-				const variant = data.product_variants.find(v => 
-					v.id.toString() === item.productVariantId.toString()
+				const variant = data.product_variants.find(
+					(v) => v.id.toString() === item.productVariantId.toString(),
 				);
-				
+
 				if (variant) {
-					const product = data.products.find(p => 
-						p.id.toString() === variant.productId.toString()
+					const product = data.products.find(
+						(p) => p.id.toString() === variant.productId.toString(),
 					);
-					
+
 					if (product && !reviewedProductIds.includes(product.id.toString())) {
 						const minimal = toMinimalProduct(product);
-						if (!purchasedProducts.some(p => p.id === minimal.id)) {
+						if (!purchasedProducts.some((p) => p.id === minimal.id)) {
 							purchasedProducts.push(minimal);
 						}
 					}
 				}
 			}
 		}
-		
+
 		unreviewedProducts.value = purchasedProducts;
-		
 	} catch (error) {
 		console.error("Error loading unreviewed products:", error);
 		unreviewedProducts.value = [];
@@ -137,27 +133,31 @@ onMounted(async () => {
 	console.log("Order items in data:", data.order_items?.length || 0);
 	console.log("Product variants in data:", data.product_variants?.length || 0);
 	console.log("Products in data:", data.products?.length || 0);
-	
+
 	if (!user.value) {
 		await authStore.refreshUser();
 	}
-	
+
 	// Wait a bit for data to be fully loaded
-	await new Promise(resolve => setTimeout(resolve, 100));
-	
+	await new Promise((resolve) => setTimeout(resolve, 100));
+
 	// Load user reviews and unreviewed products
 	await loadUserReviews();
 	await loadUnreviewedProducts();
 });
 
 // Watch for user changes and reload data
-watch(user, async (newUser) => {
-	if (newUser) {
-		console.log("User changed, reloading data...");
-		await loadUserReviews();
-		await loadUnreviewedProducts();
-	}
-}, { immediate: false });
+watch(
+	user,
+	async (newUser) => {
+		if (newUser) {
+			console.log("User changed, reloading data...");
+			await loadUserReviews();
+			await loadUnreviewedProducts();
+		}
+	},
+	{ immediate: false },
+);
 
 function toMinimalProduct(p: ProductLike): MinimalProduct {
 	return {
@@ -171,10 +171,12 @@ function toMinimalProduct(p: ProductLike): MinimalProduct {
 // Load user reviews
 async function loadUserReviews() {
 	if (!user.value) return;
-	
+
 	try {
 		// Fetch user reviews from API
-		const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/reviews?userId=${user.value.id}`);
+		const response = await fetch(
+			`${import.meta.env.VITE_API_URL || "http://localhost:3000"}/reviews?userId=${user.value.id}`,
+		);
 		if (response.ok) {
 			const reviews = await response.json();
 			userReviews.value = reviews.map((review: Review) => ({
@@ -200,48 +202,39 @@ async function loadUserReviews() {
 	}
 }
 
-
-
-
-
 // Orders that have items not yet reviewed
 const unreviewedOrders = computed<UnreviewedOrder[]>(() => {
 	if (!user.value) return [];
-	
+
 	const userId = user.value.id.toString();
-	
+
 	const reviewed = new Set(userReviews.value.map((r) => r.productId.toString()));
-	
+
 	// For now, we'll keep using local data but this should be updated to use API
 	// TODO: Update to use real API data
-	const orders = data.orders.filter((o) => 
-		o.userId.toString() === userId && 
-		o.status === "delivered"
+	const orders = data.orders.filter(
+		(o) => o.userId?.toString() === userId && o.status === "delivered",
 	);
-	
+
 	const groups: UnreviewedOrder[] = orders
 		.map((order) => {
-			const items = data.order_items.filter(
-				(oi) => oi.orderId.toString() === order.id.toString()
-			);
-			
+			const items = data.order_items.filter((oi) => oi.orderId.toString() === order.id.toString());
+
 			const pending: UnreviewedOrderItem[] = [];
 			for (const item of items) {
 				const variant = data.product_variants.find(
-					(v) => v.id.toString() === item.productVariantId.toString()
+					(v) => v.id.toString() === item.productVariantId.toString(),
 				);
 				if (!variant) continue;
-				
+
 				const productId = variant.productId.toString();
-				
+
 				if (reviewed.has(productId)) continue;
-				
-				const product = data.products.find(
-					(p) => p.id.toString() === productId
-				);
-				
+
+				const product = data.products.find((p) => p.id.toString() === productId);
+
 				if (!product) continue;
-				
+
 				const minimal = toMinimalProduct(product);
 				pending.push({
 					productId,
@@ -251,7 +244,7 @@ const unreviewedOrders = computed<UnreviewedOrder[]>(() => {
 					product: minimal,
 				});
 			}
-			
+
 			return {
 				id: order.id.toString(),
 				orderNumber: order.orderNumber,
@@ -260,10 +253,8 @@ const unreviewedOrders = computed<UnreviewedOrder[]>(() => {
 			};
 		})
 		.filter((g) => g.items.length > 0)
-		.sort(
-			(a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-		);
-	
+		.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
 	return groups;
 });
 
@@ -326,9 +317,9 @@ async function submitReview() {
 		toast.error("Vui lòng nhập nội dung đánh giá");
 		return;
 	}
-	
+
 	isSubmittingReview.value = true;
-	
+
 	try {
 		// For now, we'll simulate the review submission
 		// TODO: Integrate with real API when ready
@@ -351,11 +342,11 @@ async function submitReview() {
 			reply: "",
 			replyDate: "",
 		};
-		
+
 		// Add to local data for now
 		data.reviews.push(reviewData);
 		userReviews.value.push(reviewData as Review);
-		
+
 		// Close form and reset
 		showReviewForm.value = false;
 		selectedProduct.value = null;
@@ -365,13 +356,12 @@ async function submitReview() {
 			content: "",
 			images: [],
 		};
-		
+
 		// Reload user reviews and unreviewed products
 		await loadUserReviews();
 		await loadUnreviewedProducts();
-		
+
 		toast.success("Đánh giá đã được gửi thành công!");
-		
 	} catch (error) {
 		console.error("Error submitting review:", error);
 		toast.error("Đã xảy ra lỗi khi gửi đánh giá");
@@ -416,8 +406,6 @@ const vipBadgeClass = computed(() => {
 			return "bg-amber-50 text-amber-800 dark:bg-amber-500/20 dark:text-amber-200";
 	}
 });
-
-
 
 function handleLogout() {
 	authStore.logout();
@@ -497,7 +485,11 @@ function handleLogout() {
 
 					<!-- actions -->
 					<div class="flex flex-col gap-3">
-						<Button variant="outline" class="justify-between" @click="showHistoryOrder = !showHistoryOrder">
+						<Button
+							variant="outline"
+							class="justify-between"
+							@click="showHistoryOrder = !showHistoryOrder"
+						>
 							<span class="inline-flex items-center gap-2">
 								<History class="size-4" />
 								Lịch sử đơn hàng
@@ -582,7 +574,14 @@ function handleLogout() {
 						<div v-for="review in userReviews" :key="review.id" class="rounded-lg border p-4">
 							<div class="mb-2 flex items-start justify-between">
 								<div class="flex items-center space-x-2">
-									<Rating :initial-value="review.rating" :allow-fraction="true" svg-class-name="inline-block" empty-class-name="fill-gray-50" :size="16" :readonly="true" />
+									<Rating
+										:initial-value="review.rating"
+										:allow-fraction="true"
+										svg-class-name="inline-block"
+										empty-class-name="fill-gray-50"
+										:size="16"
+										:readonly="true"
+									/>
 									<span class="text-sm font-medium">{{ review.title }}</span>
 								</div>
 								<div class="text-xs text-gray-500">{{ formatDate(review.createdAt) }}</div>
@@ -590,9 +589,18 @@ function handleLogout() {
 							<p class="mb-2 text-sm text-gray-700">{{ review.content }}</p>
 							<p class="mb-2 text-sm text-gray-600">Sản phẩm: {{ review.productId }}</p>
 							<div v-if="review.images && review.images.length > 0" class="mt-2 flex space-x-2">
-								<img v-for="(img, idx) in review.images" :key="idx" :src="img" alt="Review image" class="h-16 w-16 rounded-md object-cover" />
+								<img
+									v-for="(img, idx) in review.images"
+									:key="idx"
+									:src="img"
+									alt="Review image"
+									class="h-16 w-16 rounded-md object-cover"
+								/>
 							</div>
-							<div v-if="review.reply" class="mt-3 rounded-lg border border-green-200 bg-green-50 p-3">
+							<div
+								v-if="review.reply"
+								class="mt-3 rounded-lg border border-green-200 bg-green-50 p-3"
+							>
 								<div class="mb-1 flex items-center justify-between">
 									<div class="flex items-center space-x-2">
 										<svg class="h-4 w-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
@@ -600,7 +608,9 @@ function handleLogout() {
 										</svg>
 										<span class="text-sm font-semibold text-green-700">Phản hồi từ shop</span>
 									</div>
-									<span class="text-xs text-gray-500">{{ review.replyDate ? formatDate(review.replyDate) : "-" }}</span>
+									<span class="text-xs text-gray-500">{{
+										review.replyDate ? formatDate(review.replyDate) : "-"
+									}}</span>
 								</div>
 								<p class="text-sm whitespace-pre-line text-gray-800">{{ review.reply }}</p>
 							</div>
@@ -611,20 +621,32 @@ function handleLogout() {
 					<!-- Unreviewed Products -->
 					<div class="mt-6">
 						<h3 class="mb-4 text-lg font-semibold">Sản phẩm chưa đánh giá</h3>
-						<div class="mb-3 p-2 bg-blue-100 rounded text-blue-800 text-xs">
-							<strong>Lưu ý:</strong> Chỉ sản phẩm từ đơn hàng đã mua mới được phép đánh giá. Tìm thấy {{ unreviewedProducts.length }} sản phẩm chưa đánh giá.
+						<div class="mb-3 rounded bg-blue-100 p-2 text-xs text-blue-800">
+							<strong>Lưu ý:</strong> Chỉ sản phẩm từ đơn hàng đã mua mới được phép đánh giá. Tìm
+							thấy {{ unreviewedProducts.length }} sản phẩm chưa đánh giá.
 						</div>
-						<div v-if="unreviewedProducts.length > 0" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-							<div v-for="product in unreviewedProducts" :key="product.id" class="rounded-lg border p-4">
+						<div
+							v-if="unreviewedProducts.length > 0"
+							class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+						>
+							<div
+								v-for="product in unreviewedProducts"
+								:key="product.id"
+								class="rounded-lg border p-4"
+							>
 								<div class="mb-2 flex items-center gap-2">
-									<img :src="product.images?.[0] || '/placeholder.jpg'" :alt="product.name" class="h-12 w-12 rounded object-cover" />
+									<img
+										:src="product.images?.[0] || '/placeholder.jpg'"
+										:alt="product.name"
+										class="h-12 w-12 rounded object-cover"
+									/>
 									<div class="flex-1">
 										<h4 class="text-sm font-medium">{{ product.name }}</h4>
 										<p class="text-xs text-gray-500">{{ product.originalPrice }}$</p>
 									</div>
 								</div>
 								<Button variant="outline" size="sm" class="w-full" @click="openReviewForm(product)">
-									<Star class="size-4 mr-2" />
+									<Star class="mr-2 size-4" />
 									Đánh giá ngay
 								</Button>
 							</div>
@@ -640,12 +662,24 @@ function handleLogout() {
 						<div class="space-y-4">
 							<div v-for="order in unreviewedOrders" :key="order.id" class="rounded-lg border p-4">
 								<div class="mb-3 flex items-center justify-between text-sm text-gray-600">
-									<div>Mã đơn: <span class="font-medium">{{ order.orderNumber }}</span></div>
-									<div>Ngày: <span class="font-medium">{{ formatDate(order.createdAt) }}</span></div>
+									<div>
+										Mã đơn: <span class="font-medium">{{ order.orderNumber }}</span>
+									</div>
+									<div>
+										Ngày: <span class="font-medium">{{ formatDate(order.createdAt) }}</span>
+									</div>
 								</div>
 								<div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-									<div v-for="item in order.items" :key="item.productId" class="flex items-center gap-3 rounded border p-3">
-										<img :src="item.productImage" :alt="item.productName" class="h-12 w-12 rounded object-cover" />
+									<div
+										v-for="item in order.items"
+										:key="item.productId"
+										class="flex items-center gap-3 rounded border p-3"
+									>
+										<img
+											:src="item.productImage"
+											:alt="item.productName"
+											class="h-12 w-12 rounded object-cover"
+										/>
 										<div class="flex-1">
 											<div class="text-sm font-medium">{{ item.productName }}</div>
 											<div class="text-xs text-gray-500">{{ item.productPrice }}đ</div>
@@ -658,13 +692,15 @@ function handleLogout() {
 					</div>
 
 					<!-- Debug Section (temporary) -->
-				
 				</CardContent>
 			</Card>
 		</div>
 
 		<!-- Review Form Modal -->
-		<div v-if="showReviewForm" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+		<div
+			v-if="showReviewForm"
+			class="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+		>
 			<div class="w-full max-w-2xl rounded-lg bg-white p-6 shadow-lg" @click.stop>
 				<h2 class="mb-4 text-lg font-semibold">Đánh giá sản phẩm: {{ selectedProduct?.name }}</h2>
 				<div class="space-y-4">
@@ -674,25 +710,49 @@ function handleLogout() {
 					</div>
 					<div>
 						<label class="mb-1 block text-sm font-medium text-gray-700">Tiêu đề</label>
-						<input v-model="newReview.title" type="text" placeholder="E.g. Sản phẩm rất tốt!" class="w-full rounded border border-gray-300 p-2 text-sm focus:border-blue-500 focus:ring-blue-500" />
+						<input
+							v-model="newReview.title"
+							type="text"
+							placeholder="E.g. Sản phẩm rất tốt!"
+							class="w-full rounded border border-gray-300 p-2 text-sm focus:border-blue-500 focus:ring-blue-500"
+						/>
 					</div>
 					<div>
 						<label class="mb-1 block text-sm font-medium text-gray-700">Nội dung đánh giá</label>
-						<textarea v-model="newReview.content" rows="4" placeholder="Chia sẻ trải nghiệm của bạn..." class="w-full rounded border border-gray-300 p-2 text-sm focus:border-blue-500 focus:ring-blue-500"></textarea>
+						<textarea
+							v-model="newReview.content"
+							rows="4"
+							placeholder="Chia sẻ trải nghiệm của bạn..."
+							class="w-full rounded border border-gray-300 p-2 text-sm focus:border-blue-500 focus:ring-blue-500"
+						></textarea>
 					</div>
 					<div>
 						<label class="mb-1 block text-sm font-medium text-gray-700">Hình ảnh (tùy chọn)</label>
-						<div class="text-xs text-gray-500 mb-2">Tối đa 5 ảnh, mỗi ảnh không quá 5MB</div>
-						<input type="file" @change="handleImageUpload" multiple accept="image/*" class="w-full rounded border border-gray-300 p-2 text-sm focus:border-blue-500 focus:ring-blue-500" />
+						<div class="mb-2 text-xs text-gray-500">Tối đa 5 ảnh, mỗi ảnh không quá 5MB</div>
+						<input
+							type="file"
+							@change="handleImageUpload"
+							multiple
+							accept="image/*"
+							class="w-full rounded border border-gray-300 p-2 text-sm focus:border-blue-500 focus:ring-blue-500"
+						/>
 						<div v-if="newReview.images.length > 0" class="mt-2 flex flex-wrap gap-2">
 							<div v-for="(image, index) in newReview.images" :key="index" class="relative">
 								<img :src="image" alt="Preview" class="h-16 w-16 rounded object-cover" />
-								<button @click="removeImage(index)" type="button" class="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-red-500 text-white text-xs hover:bg-red-600">×</button>
+								<button
+									@click="removeImage(index)"
+									type="button"
+									class="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-red-500 text-xs text-white hover:bg-red-600"
+								>
+									×
+								</button>
 							</div>
 						</div>
 					</div>
 					<div class="flex justify-end space-x-2">
-						<Button variant="outline" @click="showReviewForm = false" :disabled="isSubmittingReview">Hủy</Button>
+						<Button variant="outline" @click="showReviewForm = false" :disabled="isSubmittingReview"
+							>Hủy</Button
+						>
 						<Button @click="submitReview" :disabled="isSubmittingReview">
 							<span v-if="isSubmittingReview">Đang gửi...</span>
 							<span v-else>Gửi đánh giá</span>
@@ -705,5 +765,3 @@ function handleLogout() {
 </template>
 
 <style scoped></style>
-
-
